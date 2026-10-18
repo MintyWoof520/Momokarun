@@ -13,6 +13,31 @@
 
 <body>
     <!-- 加载动画 -->
+    <div class="loader-wrapper" id="loader">
+        <div class="loader-container">
+            <!-- 图片区域 -->
+            <div class="loader-image-wrapper">
+                <img class="loader-image" id="loaderImage" src="Images/head.jpg" alt="图标">
+            </div>
+
+            <!-- 进度条区域 -->
+            <div class="progress-container">
+                <div class="progress-header">
+                    <span class="progress-label">正在加载</span>
+                    <span class="progress-percent" id="percentText">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="loader-footer">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="loader-hint">正在转生异世界中</div>
+            </div>
+        </div>
+    </div>
 
     <!-- 主体 -->
     <main class="blog-content" id="blogContent">
@@ -129,7 +154,7 @@
         </div>
     </main>
 </body>
-<!-- <script src="JS/index.js"></script> -->
+<script src="JS/index.js"></script>
 <script src="Iconfont/Iconfont1/iconfont.js"></script>
 <script src="Iconfont/Iconfont2/iconfont.js"></script>
 <script src="JS/home.js"></script>
