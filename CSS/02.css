@@ -1,0 +1,44 @@
+
+.page{
+    margin: 30px;
+}
+
+.hututu{
+    width: 160px;
+}
+@font-face {
+    font-family: speak;
+    src: url(../fonts/FontsLab-FuGuShouJi-2.ttf);
+}
+@font-face {
+    font-family: speak2;
+    src: url(../fonts/YuWoErYanNiZuiKeAi-2.ttf);
+}
+p{
+    text-indent: 2em;
+    line-height: 1.6;
+}
+.baihea0 {
+    background-image: linear-gradient(to right,
+    #8888ed38,
+    #63e5cb3a,
+    #f2f2a53a);
+    border-radius: 30px;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 0 8px 3px #8888ed7c;
+}
+.baihea1 {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    font-family: "speak";
+    font-size: 1.3rem;
+    color: rgb(255, 177, 104);
+    font-style: italic;
+}
+.baihea3{
+    padding: 20px;
+    font-family: "speak2";
+    font-size: 1.1rem;
+    color: rgb(255, 167, 167);
+}
