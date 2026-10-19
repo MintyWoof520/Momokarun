@@ -378,7 +378,7 @@
 
 @media (max-width:760px) {
     #mpRoot {
-        padding: 12px;
+        padding: 40px;
     }
 
     #mpRoot .mp-card {
@@ -426,95 +426,172 @@
 
 /* ===== 绝对生效的迷你播放器样式 ===== */
 #mpRoot.mini-mode {
-  position: fixed !important;
-  inset: auto 20px 20px auto !important; /* 右下角 */
-  z-index: 9999 !important;
-  display: flex !important; 
-  padding: 0 !important;
-  pointer-events: none;
+    position: fixed !important;
+    inset: auto 20px 20px auto !important;
+    /* 右下角 */
+    z-index: 9999 !important;
+    display: flex !important;
+    padding: 0 !important;
+    pointer-events: none;
 }
 
 #mpRoot.mini-mode .mp-card {
-  pointer-events: auto;
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  width: 320px !important; /* 加宽到 320px，容下三个按钮和歌名 */
-  height: auto !important;
-  padding: 10px 16px !important;
-  gap: 12px !important;
-  border-radius: 99px !important;
-  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.1) !important;
-  background: #1a1a24 !important;
-  /* 重置大卡片的 grid 布局 */
-  grid-template-columns: unset !important;
-  grid-template-rows: unset !important;
-  grid-template-areas: unset !important;
-  cursor: pointer;
+    pointer-events: auto;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    width: 320px !important;
+    /* 加宽到 320px，容下三个按钮和歌名 */
+    height: auto !important;
+    padding: 10px 16px !important;
+    gap: 12px !important;
+    border-radius: 99px !important;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+    background: #21214b4d !important;
+    /* 重置大卡片的 grid 布局 */
+    grid-template-columns: unset !important;
+    grid-template-rows: unset !important;
+    grid-template-areas: unset !important;
+    cursor: pointer;
 }
 
 /* 隐藏不需要的元素 */
 #mpRoot.mini-mode .mp-lyrics,
 #mpRoot.mini-mode .mp-prog-area {
-  display: none !important;
+    display: none !important;
 }
 
 /* 缩小封面 */
-#mpRoot.mini-mode .mp-art { margin: 0 !important; flex-shrink: 0; }
-#mpRoot.mini-mode .mp-cover-wrap { width: 42px !important; height: 42px !important; }
-#mpRoot.mini-mode .mp-cover svg { width: 16px !important; height: 16px !important; }
+#mpRoot.mini-mode .mp-art {
+    margin: 0 !important;
+    flex-shrink: 0;
+}
+
+#mpRoot.mini-mode .mp-cover-wrap {
+    width: 42px !important;
+    height: 42px !important;
+}
+
+#mpRoot.mini-mode .mp-cover svg {
+    width: 16px !important;
+    height: 16px !important;
+}
 
 /* 歌名自适应省略 */
 #mpRoot.mini-mode .mp-meta {
-  margin: 0 !important;
-  text-align: left !important;
-  flex: 1;
-  min-width: 0; 
-  overflow: hidden;
+    margin: 0 !important;
+    text-align: left !important;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
 }
-#mpRoot.mini-mode .mp-title { 
-  font-size: 14px !important; 
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
+
+#mpRoot.mini-mode .mp-title {
+    font-size: 14px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-#mpRoot.mini-mode .mp-artist { 
-  font-size: 11px !important; 
-  margin-top: 2px !important; 
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis;
+
+#mpRoot.mini-mode .mp-artist {
+    font-size: 11px !important;
+    margin-top: 2px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* 按钮紧凑排布 */
-#mpRoot.mini-mode .mp-controls { 
-  margin: 0 !important; 
-  gap: 6px !important; 
-  flex-shrink: 0; 
+#mpRoot.mini-mode .mp-controls {
+    margin: 0 !important;
+    gap: 6px !important;
+    flex-shrink: 0;
 }
 
 #mpRoot.mini-mode .mp-btn-play {
-  width: 36px !important;
-  height: 36px !important;
-  box-shadow: none !important;
-  order: 2; /* 播放键在中间 */
+    width: 36px !important;
+    height: 36px !important;
+    box-shadow: none !important;
+    order: 2;
+    /* 播放键在中间 */
 }
-#mpRoot.mini-mode .mp-btn-play svg { width: 18px !important; height: 18px !important; }
+
+#mpRoot.mini-mode .mp-btn-play svg {
+    width: 18px !important;
+    height: 18px !important;
+}
 
 /* 切歌按钮缩小并取消背景 */
 #mpRoot.mini-mode #prevBtn,
 #mpRoot.mini-mode #nextBtn {
-  display: grid !important;
-  width: 32px !important;
-  height: 32px !important;
-  background: transparent !important;
-  border: none !important;
+    display: grid !important;
+    width: 32px !important;
+    height: 32px !important;
+    background: transparent !important;
+    border: none !important;
 }
-#mpRoot.mini-mode #prevBtn { order: 1; }
-#mpRoot.mini-mode #nextBtn { order: 3; }
+
+#mpRoot.mini-mode #prevBtn {
+    order: 1;
+}
+
+#mpRoot.mini-mode #nextBtn {
+    order: 3;
+}
 
 #mpRoot.mini-mode #prevBtn svg,
 #mpRoot.mini-mode #nextBtn svg {
-  width: 16px !important;
-  height: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
+/* ===== 手机端的迷你播放器瘦身适配 ===== */
+@media (max-width: 760px) {
+  #mpRoot.mini-mode {
+    inset: auto 12px 12px auto !important; /* 离屏幕边缘更近一点 */
+  }
+
+  #mpRoot.mini-mode .mp-card {
+    width: 260px !important; /* 宽度缩到 260px */
+    padding: 8px 12px !important; /* 减少内边距 */
+    gap: 8px !important; /* 元素之间靠得更紧凑 */
+  }
+
+  #mpRoot.mini-mode .mp-cover-wrap { 
+    width: 36px !important; 
+    height: 36px !important; 
+  }
+  
+  #mpRoot.mini-mode .mp-title { 
+    font-size: 13px !important; 
+  }
+  
+  #mpRoot.mini-mode .mp-artist { 
+    font-size: 10px !important; 
+  }
+
+  #mpRoot.mini-mode .mp-controls {
+    gap: 2px !important; /* 按钮间距极限压缩 */
+  }
+
+  #mpRoot.mini-mode .mp-btn-play {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  #mpRoot.mini-mode .mp-btn-play svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  #mpRoot.mini-mode #prevBtn,
+  #mpRoot.mini-mode #nextBtn {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  #mpRoot.mini-mode #prevBtn svg,
+  #mpRoot.mini-mode #nextBtn svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
 }

@@ -21,7 +21,7 @@
     max-width: 720px;
     background: var(--bg);
     color: var(--fg);
-    font: 18px/1.9 "Georgia", "Songti SC", "SimSun", serif;
+    /* font: 18px/1.9 "Georgia", "Songti SC", "SimSun", serif; */
     transition: background .3s, color .3s;
   }
 
