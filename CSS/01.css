@@ -170,7 +170,7 @@ body::after {
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #ffc1c1;
+    color: #ffe8e8;
     font-style: italic;
 
 }
@@ -178,7 +178,7 @@ body::after {
 .progress-percent {
     font-size: 1.4rem;
     font-weight: 600;
-    color: #b8d1c58c;
+    color: #a1aaa68c;
     font-style: italic;
     font-variant-numeric: tabular-nums;
     transition: color 0.3s;
@@ -196,7 +196,7 @@ body::after {
 .progress-fill {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, #bbffe3, #4af5ae, #1bb475, #075837);
+    background: linear-gradient(90deg, #000000, #000000);
     border-radius: 20px;
     transition: width 0.25s ease-out;
     position: relative;

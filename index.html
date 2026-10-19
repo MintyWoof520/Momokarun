@@ -7,6 +7,7 @@
     <title>赛博小窝</title>
     <link rel="stylesheet" href="CSS/01.css">
     <link rel="stylesheet" href="CSS/02.css">
+    <link rel="stylesheet" href="CSS/music.css">
     <link rel="stylesheet" href="Iconfont/Iconfont1/iconfont.css">
     <link rel="stylesheet" href="Iconfont/Iconfont2/iconfont.css">
 </head>
@@ -148,8 +149,86 @@
 
                 <!-- 音乐 -->
                 <div id="page-music" class="page">
-                    <p>再怎么点也不会有东西了啦！</p>
+                    <div id="mpRoot">
+                        <div class="mp-card">
+
+                            <!-- 封面区域 -->
+                            <div class="mp-art">
+                                <div class="mp-cover-wrap" id="coverWrap">
+                                    <!-- ⚠️ 在这里换你的图片路径！ -->
+                                    <img class="mp-cover-bg" src="Images/head.jpg" alt="封面图">
+
+                                    <!-- 中间的耳机图标 -->
+                                    <div class="mp-cover" id="cover">
+                                        <svg class="icon" aria-hidden="true">
+                                            <use xlink:href="#icon-erji"></use>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mp-meta">
+                                <h1 class="mp-title" id="title">加载中…</h1>
+                                <p class="mp-artist" id="artist">正在准备音频</p>
+                            </div>
+
+                            <div class="mp-lyrics" id="lyrics">
+                                <div class="mp-empty">歌词加载中…</div>
+                            </div>
+
+                            <div class="mp-prog-area">
+                                <div class="mp-progress" id="progress">
+                                    <div class="mp-rail">
+                                        <div class="mp-buffer" id="buffer"></div>
+                                        <div class="mp-fill" id="fill"></div>
+                                    </div>
+                                    <div class="mp-thumb" id="thumb"></div>
+                                </div>
+                                <div class="mp-time">
+                                    <span id="cur">0:00</span>
+
+                                    <!-- 👇 新增：播放模式切换按钮 -->
+                                    <button id="modeBtn"
+                                        style="background:none; border:none; color:#8f8fa3; cursor:pointer; padding:0 5px; display:flex; align-items:center;"
+                                        title="切换播放模式">
+                                        <svg id="modeIcon" viewBox="0 0 24 24"
+                                            style="width:16px; height:16px; fill:currentColor;">
+                                            <!-- 默认是列表循环的图标 -->
+                                            <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z" />
+                                        </svg>
+                                    </button>
+                                    
+                                    <span id="dur">0:00</span>
+                                </div>
+                            </div>
+
+                            <div class="mp-controls">
+                                <button class="mp-btn" id="prevBtn" aria-label="上一首">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M6 6h2v12H6zm3.5 6L18 6v12z" />
+                                    </svg>
+                                </button>
+                                <button class="mp-btn mp-btn-play" id="playBtn" aria-label="播放/暂停" disabled>
+                                    <svg class="mp-icon-play" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z" />
+                                    </svg>
+                                    <svg class="mp-icon-pause" viewBox="0 0 24 24">
+                                        <path d="M7 5h4v14H7zm6 0h4v14h-4z" />
+                                    </svg>
+                                </button>
+                                <button class="mp-btn" id="nextBtn" aria-label="下一首">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M16 6h2v12h-2zM6 6l8.5 6L6 18z" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+
                 </div>
+
             </div>
         </div>
     </main>
@@ -158,5 +237,6 @@
 <script src="Iconfont/Iconfont1/iconfont.js"></script>
 <script src="Iconfont/Iconfont2/iconfont.js"></script>
 <script src="JS/home.js"></script>
+<script src="JS/music.js"></script>
 
 </html>

@@ -91,6 +91,10 @@
 
         // 更新当前页面记录
         currentPage = pageName;
+        // 👇 通知播放器，现在切到哪个页面了
+        if (window.toggleMiniMode) {
+            window.toggleMiniMode(pageName);
+        }
 
         // 如果需要更新 URL hash
         if (updateHash) {
