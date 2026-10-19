@@ -18,21 +18,21 @@
         {
             title: '嗵嗵',
             artist: 'DOUDOU',
-            audioUrl: 'https://mintywoof.cc.cd/d/music/%E6%97%A0%E6%8D%9F/%E7%A6%8F%E7%A6%84%E5%AF%BF-DOUDOU/%E5%97%B5%E5%97%B5.flac',
+            audioUrl: 'http://192.168.2.32:5244/d/%E5%A4%A9%E7%BF%BC-%E4%B8%AA%E4%BA%BA%E7%9B%98/%E9%9F%B3%E4%B9%90/%E6%97%A0%E6%8D%9F/%E7%A6%8F%E7%A6%84%E5%AF%BF-DOUDOU/%E5%97%B5%E5%97%B5.flac',
             lrcUrl: 'Music/嗵嗵.lrc',   // 相对你的页面
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
             title: '失踪的朋友 (Demo)',
             artist: '柳爽',
-            audioUrl: 'https://mintywoof.cc.cd/d/%E7%A7%BB%E5%8A%A8music/%E6%9F%B3%E7%88%BD/%E5%A4%B1%E8%B8%AA%E7%9A%84%E6%9C%8B%E5%8F%8B%EF%BC%88demo%EF%BC%89.m4a',
+            audioUrl: 'http://192.168.2.32:5244/d/%E5%A4%A9%E7%BF%BC-%E4%B8%AA%E4%BA%BA%E7%9B%98/%E9%9F%B3%E4%B9%90/%E5%85%B6%E5%AE%83%E9%9F%B3%E8%B4%A8/%E6%9F%B3%E7%88%BD/%E5%A4%B1%E8%B8%AA%E7%9A%84%E6%9C%8B%E5%8F%8B%EF%BC%88demo%EF%BC%89.m4a',
             lrcUrl: 'Music/失踪的朋友.lrc',   // 相对你的页面
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
             title: '危险派对',
             artist: 'TU_兔斯基（翻唱）',
-            audioUrl: 'https://mintywoof.cc.cd/d/%E7%A7%BB%E5%8A%A8music/%E5%85%B6%E5%AE%83-%E4%B8%AD%E6%96%87/%E5%8D%B1%E9%99%A9%E6%B4%BE%E5%AF%B9.mp3',
+            audioUrl: 'http://192.168.2.32:5244/d/%E7%A7%BB%E5%8A%A8-%E4%B8%AA%E4%BA%BA%E7%9B%98/%E9%9F%B3%E4%B9%90/%E5%85%B6%E5%AE%83-%E4%B8%AD%E6%96%87/%E5%8D%B1%E9%99%A9%E6%B4%BE%E5%AF%B9.mp3',
             lrcUrl: 'Music/危险派对.lrc',   // 相对你的页面
             grad: ['#8b7cff', '#ff6ba8']
         }
