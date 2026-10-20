@@ -1,8 +1,3 @@
-// 解密函数
-function decode(str) {
-    return decodeURIComponent(escape(window.atob(str)));
-}
-
 (function () {
     /* ============ 曲目数据 ============ */
     const TRACK_DATA = [
@@ -69,7 +64,6 @@ function decode(str) {
 
     /* ============ 状态 ============ */
     const audio = new Audio();
-    window.audio = audio; // 👈 加上这一句，把它挂在全局！
     audio.preload = 'metadata';
     let currentIndex = 0;
     let currentLines = [];
