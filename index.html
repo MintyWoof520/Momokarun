@@ -197,7 +197,7 @@
                                             <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z" />
                                         </svg>
                                     </button>
-                                    
+
                                     <span id="dur">0:00</span>
                                 </div>
                             </div>
@@ -221,16 +221,33 @@
                                         <path d="M16 6h2v12h-2zM6 6l8.5 6L6 18z" />
                                     </svg>
                                 </button>
+
+                                <!-- 👇 新增：歌单按钮 -->
+                                <button class="mp-btn" id="playlistBtn" aria-label="播放列表" style="margin-left: 10px;">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h10v2H4z" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- 👇 新增：歌单列表弹窗（放在 mp-card 内部最下面） -->
+                            <div class="mp-playlist" id="playlistPanel">
+                                <div class="mp-playlist-header">
+                                    <span>播放列表</span>
+                                    <button id="closePlaylist" class="mp-close-btn">✕</button>
+                                </div>
+                                <div class="mp-playlist-items" id="playlistItems">
+                                    <!-- JS 会把歌曲列表渲染到这里 -->
+                                </div>
                             </div>
 
                         </div>
+
+
                     </div>
 
-
                 </div>
-
             </div>
-        </div>
     </main>
 </body>
 <script src="JS/index.js"></script>

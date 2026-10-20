@@ -427,6 +427,73 @@
         else if (!audio.paused) startLoop();
     });
 
+        /* ============ 歌单列表逻辑 ============ */
+    const playlistPanel = document.getElementById('playlistPanel');
+    document.body.appendChild(playlistPanel); // 👈 加上这句，直接把它揪到 body 底下！
+    const playlistItems = document.getElementById('playlistItems');
+    const playlistBtn = document.getElementById('playlistBtn');
+    const closePlaylist = document.getElementById('closePlaylist');
+
+    // 打开/关闭面板
+    playlistBtn.addEventListener('click', () => playlistPanel.classList.add('show'));
+    closePlaylist.addEventListener('click', () => playlistPanel.classList.remove('show'));
+
+    // 渲染歌单
+    function renderPlaylist() {
+        playlistItems.innerHTML = '';
+        TRACK_DATA.forEach((song, index) => {
+            const item = document.createElement('div');
+            item.className = 'mp-song-item';
+            if (index === currentIndex) item.classList.add('playing');
+            
+            item.innerHTML = `
+                <div class="song-title">${song.title}</div>
+                <div class="song-artist">${song.artist}</div>
+            `;
+            
+            // 点击切歌
+            item.addEventListener('click', () => {
+                if (index !== currentIndex) {
+                    loadTrack(index, true);
+                    // 刷新高亮
+                    document.querySelectorAll('.mp-song-item').forEach(el => el.classList.remove('playing'));
+                    item.classList.add('playing');
+                }
+                playlistPanel.classList.remove('show'); // 点完关掉面板
+            });
+            
+            playlistItems.appendChild(item);
+        });
+    }
+
+    // 每次切歌时，更新歌单高亮
+    const originalLoadTrack = loadTrack;
+    loadTrack = async function(index, autoplay) {
+        await originalLoadTrack(index, autoplay);
+        // 更新 UI
+        document.querySelectorAll('.mp-song-item').forEach((el, i) => {
+            el.classList.toggle('playing', i === currentIndex);
+        });
+        // 滚动到当前歌曲可见
+        const playingItem = playlistItems.querySelector('.playing');
+        if (playingItem) {
+            playingItem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+    };
+    // 点击遮罩或空白处关闭面板
+    document.addEventListener('pointerdown', (e) => {
+        if (playlistPanel.classList.contains('show')) {
+            // 如果点击的不是抽屉内部，也不是那个歌单按钮
+            if (!playlistPanel.contains(e.target) && !playlistBtn.contains(e.target)) {
+                playlistPanel.classList.remove('show');
+            }
+        }
+    });
+
+    // 初始化时渲染一次
+    renderPlaylist();
+
+
     /* ============ 初始化 ============ */
     loadTrack(0, false).then(() => { el.playBtn.disabled = false; });
     audio.addEventListener('canplay', () => { el.playBtn.disabled = false; });
