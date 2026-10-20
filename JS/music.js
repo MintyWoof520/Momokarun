@@ -67,7 +67,8 @@
         playlistPanel: document.getElementById('playlistPanel'),
         playlistItems: document.getElementById('playlistItems'),
         playlistBtn: document.getElementById('playlistBtn'),
-        closePlaylist: document.getElementById('closePlaylist')
+        closePlaylist: document.getElementById('closePlaylist'),
+        mpCard: document.querySelector('.mp-card')
     };
 
     const mpRoot = document.getElementById('mpRoot');
@@ -94,7 +95,7 @@
         return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
     }
 
-    /* ============ 强力解析 LRC（中英通吃版） ============ */
+    /* ============ 强力解析 LRC ============ */
     function parseLRC(text) {
         const out = [];
         text.replace(/\r/g, '').split('\n').forEach(raw => {
@@ -124,16 +125,12 @@
                 let segment = line.slice(textStart, textEnd);
 
                 if (tags.length > 1) {
-                    // 逐字模式：智能分词（英文按词，中文按字，保留空格）
                     const regex = /([a-zA-Z0-9']+ ?)|([\s\S])/g;
                     const parts = [];
                     let partMatch;
                     while ((partMatch = regex.exec(segment)) !== null) {
-                        if (partMatch[1]) {
-                            parts.push(partMatch[1]);
-                        } else if (partMatch[2] && (partMatch[2].trim() !== '' || partMatch[2] === ' ')) {
-                            parts.push(partMatch[2]);
-                        }
+                        if (partMatch[1]) parts.push(partMatch[1]);
+                        else if (partMatch[2] && (partMatch[2].trim() !== '' || partMatch[2] === ' ')) parts.push(partMatch[2]);
                     }
 
                     for (const part of parts) {
@@ -141,7 +138,6 @@
                         plainText += part;
                     }
                 } else {
-                    // 普通模式：原样保留
                     for (const ch of segment) {
                         chars.push({ t: currentTag.time, c: ch });
                         plainText += ch;
@@ -195,26 +191,39 @@
         el.lyrics.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
     }
 
-    /* ============ 歌词同步更新（修复不完全变色问题） ============ */
+    /* ============ 歌词同步更新（终极修复版） ============ */
     function updateLyric(t) {
         if (!currentLines.length) return;
         let idx = -1;
         for (let i = 0; i < currentLines.length; i++) {
             if (currentLines[i].time <= t + 0.08) idx = i; else break;
         }
+        
+        // 只有当前行发生变化时，才处理全量样式，防止卡顿
         if (idx !== activeIdx) {
-            const prev = el.lyrics.children[activeIdx];
-            if (prev && prev.classList) {
-                prev.classList.remove('active');
-                // 切换行时，强制把上一行所有字点亮
-                const prevLine = currentLines[activeIdx];
-                if (prevLine && prevLine.chars) {
-                    prevLine.chars.forEach(ch => {
+            // 1. 先把所有行都变成未激活，并且清除所有字的 done
+            for (let i = 0; i < currentLines.length; i++) {
+                const lineEl = el.lyrics.children[i];
+                if (lineEl) lineEl.classList.remove('active');
+                const lineData = currentLines[i];
+                if (lineData && lineData.chars) {
+                    lineData.chars.forEach(ch => {
+                        if (ch.node) ch.node.classList.remove('done');
+                    });
+                }
+            }
+
+            // 2. 把拖拽位置之前的行，全部强制设为 done（全亮）
+            for (let i = 0; i < idx; i++) {
+                const lineData = currentLines[i];
+                if (lineData && lineData.chars) {
+                    lineData.chars.forEach(ch => {
                         if (ch.node) ch.node.classList.add('done');
                     });
                 }
             }
-            
+
+            // 3. 激活当前行
             activeIdx = idx;
             const cur = el.lyrics.children[idx];
             if (cur && cur.classList) {
@@ -222,15 +231,13 @@
                 if (!autoScrollPaused) scrollToLine(cur);
             }
         }
-        
+
+        // 4. 处理当前行内部的逐字变色（如果倒退了，当前行后面的字也会褪色）
         const line = currentLines[activeIdx];
         if (line && line.chars) {
-            const lastCharTime = line.chars[line.chars.length - 1].t;
-            const isLineEnded = t >= lastCharTime; 
-
             line.chars.forEach(ch => {
                 if (!ch.node) return;
-                if (isLineEnded || t >= ch.t) {
+                if (t >= ch.t) {
                     ch.node.classList.add('done');
                 } else {
                     ch.node.classList.remove('done');
@@ -247,6 +254,7 @@
     el.lyrics.addEventListener('wheel', pauseAutoScroll, { passive: true });
     el.lyrics.addEventListener('touchmove', pauseAutoScroll, { passive: true });
     el.lyrics.addEventListener('pointerdown', pauseAutoScroll);
+    
     el.lyrics.addEventListener('click', e => {
         const node = e.target.closest('.mp-line');
         if (!node) return;
@@ -254,7 +262,7 @@
         if (isNaN(idx) || !currentLines[idx]) return;
         audio.currentTime = currentLines[idx].time;
         autoScrollPaused = false;
-        updateLyric(audio.currentTime);
+        // 注意：这里不用再调用 updateLyric 了，主循环里的 rAF 会自动接管
     });
 
     /* ============ 进度条 ============ */
@@ -289,7 +297,6 @@
         try { el.progress.releasePointerCapture(e.pointerId); } catch (_) { }
         if (isFinite(audio.duration)) audio.currentTime = dragRatio * audio.duration;
         autoScrollPaused = false;
-        updateLyric(audio.currentTime);
     }
     el.progress.addEventListener('pointerup', endDrag);
     el.progress.addEventListener('pointercancel', endDrag);
@@ -319,7 +326,7 @@
     }
     audio.addEventListener('loadedmetadata', updateDuration);
     audio.addEventListener('durationchange', updateDuration);
-    
+
     audio.addEventListener('play', () => {
         el.playBtn.classList.add('playing');
         el.coverWrap.classList.add('spinning');
@@ -330,7 +337,7 @@
             setMiniMode(true);
         }
     });
-    
+
     audio.addEventListener('pause', () => {
         el.playBtn.classList.remove('playing');
         el.coverWrap.classList.remove('spinning');
@@ -379,9 +386,7 @@
         } else if (playMode === 2) {
             if (TRACK_DATA.length > 1) {
                 let nextIdx = currentIndex;
-                while (nextIdx === currentIndex) {
-                    nextIdx = Math.floor(Math.random() * TRACK_DATA.length);
-                }
+                while (nextIdx === currentIndex) nextIdx = Math.floor(Math.random() * TRACK_DATA.length);
                 loadTrack(nextIdx, true);
             } else {
                 audio.currentTime = 0;
@@ -393,7 +398,7 @@
     audio.addEventListener('error', () => {
         el.artist.textContent = '音频加载失败，请检查链接或 CORS';
     });
-    
+
     audio.addEventListener('timeupdate', () => {
         if (!dragging && isFinite(audio.duration)) el.cur.textContent = fmtTime(audio.currentTime);
     });
@@ -431,8 +436,7 @@
         el.dur.textContent = '0:00';
 
         if (autoplay) audio.play().catch(() => { });
-        
-        // 更新歌单高亮
+
         if (el.playlistItems) {
             Array.from(el.playlistItems.children).forEach((item, i) => {
                 item.classList.toggle('playing', i === currentIndex);
@@ -512,9 +516,10 @@
         }
     });
 
-    /* ============ 歌单列表逻辑 ============ */
+    /* ============ 歌单列表逻辑（修复版，放回卡片内） ============ */
     if (el.playlistPanel && el.playlistBtn) {
-        document.body.appendChild(el.playlistPanel);
+        // 不要 appendChild 到 body 了，就让它留在 mpCard 里
+        document.body.appendChild(el.playlistPanel); 
 
         el.playlistBtn.addEventListener('click', () => el.playlistPanel.classList.add('show'));
         el.closePlaylist.addEventListener('click', () => el.playlistPanel.classList.remove('show'));
@@ -525,19 +530,19 @@
                 const item = document.createElement('div');
                 item.className = 'mp-song-item';
                 if (index === currentIndex) item.classList.add('playing');
-                
+
                 item.innerHTML = `
                     <div class="song-title">${song.title}</div>
                     <div class="song-artist">${song.artist}</div>
                 `;
-                
+
                 item.addEventListener('click', () => {
                     if (index !== currentIndex) {
                         loadTrack(index, true);
                     }
                     el.playlistPanel.classList.remove('show');
                 });
-                
+
                 el.playlistItems.appendChild(item);
             });
         }
