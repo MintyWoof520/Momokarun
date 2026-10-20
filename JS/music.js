@@ -1,3 +1,8 @@
+// 解密函数
+function decode(str) {
+    return decodeURIComponent(escape(window.atob(str)));
+}
+
 (function () {
     /* ============ 曲目数据 ============ */
     const TRACK_DATA = [
@@ -5,35 +10,42 @@
             title: '预制分手',
             artist: '门尼',
             audioUrl: 'https://openlist-railway-production-a089.up.railway.app/d/%E5%A4%A9%E7%BF%BC-%E4%B8%AA%E4%BA%BA/%E9%9F%B3%E4%B9%90/%E6%97%A0%E6%8D%9F/%E9%97%A8%E5%B0%BC/%E9%A2%84%E5%88%B6%E5%88%86%E6%89%8B.flac',
-            lrcUrl: 'Music/预制分手.lrc',   // 相对你的页面
+            lrcUrl: 'Music/预制分手.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
             title: '南三环东路',
             artist: 'DOUDOU',
-            audioUrl: 'https://openlist-railway-production-a089.up.railway.app/d/%E5%A4%A9%E7%BF%BC-%E4%B8%AA%E4%BA%BA/%E9%9F%B3%E4%B9%90/%E6%97%A0%E6%8D%9F/%E7%A6%8F%E7%A6%84%E5%AF%BF-DOUDOU/%E5%8D%97%E4%B8%89%E7%8E%AF%E4%B8%9C%E8%B7%AF.flac',
-            lrcUrl: 'Music/南三环东路.lrc',   // 相对你的页面
+            audioUrl: 'https://music-3jk.pages.dev/DOUDOU/nansanhuandonglu.mp3',
+            lrcUrl: 'Music/南三环东路.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
             title: '嗵嗵',
             artist: 'DOUDOU',
-            audioUrl: 'http://192.168.2.32:5244/d/%E5%A4%A9%E7%BF%BC-%E4%B8%AA%E4%BA%BA%E7%9B%98/%E9%9F%B3%E4%B9%90/%E6%97%A0%E6%8D%9F/%E7%A6%8F%E7%A6%84%E5%AF%BF-DOUDOU/%E5%97%B5%E5%97%B5.flac',
-            lrcUrl: 'Music/嗵嗵.lrc',   // 相对你的页面
+            audioUrl: 'https://music-3jk.pages.dev/DOUDOU/tongtong.mp3',
+            lrcUrl: 'Music/嗵嗵.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
             title: '失踪的朋友 (Demo)',
             artist: '柳爽',
-            audioUrl: 'http://192.168.2.32:5244/d/%E5%A4%A9%E7%BF%BC-%E4%B8%AA%E4%BA%BA%E7%9B%98/%E9%9F%B3%E4%B9%90/%E5%85%B6%E5%AE%83%E9%9F%B3%E8%B4%A8/%E6%9F%B3%E7%88%BD/%E5%A4%B1%E8%B8%AA%E7%9A%84%E6%9C%8B%E5%8F%8B%EF%BC%88demo%EF%BC%89.m4a',
-            lrcUrl: 'Music/失踪的朋友.lrc',   // 相对你的页面
+            audioUrl: 'https://music-3jk.pages.dev/LIUSHUANG/shizongdepengyou.m4a',
+            lrcUrl: 'Music/失踪的朋友.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
             title: '危险派对',
             artist: 'TU_兔斯基（翻唱）',
-            audioUrl: 'http://192.168.2.32:5244/d/%E7%A7%BB%E5%8A%A8-%E4%B8%AA%E4%BA%BA%E7%9B%98/%E9%9F%B3%E4%B9%90/%E5%85%B6%E5%AE%83-%E4%B8%AD%E6%96%87/%E5%8D%B1%E9%99%A9%E6%B4%BE%E5%AF%B9.mp3',
-            lrcUrl: 'Music/危险派对.lrc',   // 相对你的页面
+            audioUrl: 'https://music-3jk.pages.dev/QITA/weixianpaidui.mp3',
+            lrcUrl: 'Music/危险派对.lrc',
+            grad: ['#8b7cff', '#ff6ba8']
+        },
+        {
+            title: '看门狗',
+            artist: '门尼',
+            audioUrl: 'https://music-3jk.pages.dev/MONEY/kanmengou.mp3',
+            lrcUrl: 'Music/看门狗.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         }
     ];
