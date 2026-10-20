@@ -4,10 +4,17 @@
     /* ============ 曲目数据 ============ */
     const TRACK_DATA = [
         {
-            title: '预制分手',
+            title: '预制分手（Best Before）',
             artist: '门尼',
-            audioUrl: 'https://openlist-railway-production-a089.up.railway.app/d/%E5%A4%A9%E7%BF%BC-%E4%B8%AA%E4%BA%BA/%E9%9F%B3%E4%B9%90/%E6%97%A0%E6%8D%9F/%E9%97%A8%E5%B0%BC/%E9%A2%84%E5%88%B6%E5%88%86%E6%89%8B.flac',
+            audioUrl: 'https://music01-3bxv3bn.maozi.io/MONEY/yuzhifenshou.mp3',
             lrcUrl: 'Music/预制分手.lrc',
+            grad: ['#8b7cff', '#ff6ba8']
+        },
+        {
+            title: '看门狗',
+            artist: '门尼',
+            audioUrl: 'https://music01-3bxv3bn.maozi.io/MONEY/kanmengou.mp3',
+            lrcUrl: 'Music/看门狗.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
@@ -39,10 +46,31 @@
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
-            title: '看门狗',
-            artist: '门尼',
-            audioUrl: 'https://music01-3bxv3bn.maozi.io/MONEY/kanmengou.mp3',
-            lrcUrl: 'Music/看门狗.lrc',
+            title: 'rain',
+            artist: 'mxmtoon',
+            audioUrl: 'https://music01-3bxv3bn.maozi.io/QITA/rain.mp3',
+            lrcUrl: 'Music/rain.lrc',
+            grad: ['#8b7cff', '#ff6ba8']
+        },
+        {
+            title: 'MOM',
+            artist: '蜡笔小心',
+            audioUrl: 'https://music01-3bxv3bn.maozi.io/QITA/MOM.mp3',
+            lrcUrl: 'Music/MOM.lrc',
+            grad: ['#8b7cff', '#ff6ba8']
+        },
+        {
+            title: '真冬HEAT',
+            artist: '畠中祐',
+            audioUrl: 'https://music01-3bxv3bn.maozi.io/TESHE/zhendongHEAT.mp3',
+            lrcUrl: 'Music/真冬HEAT.lrc',
+            grad: ['#8b7cff', '#ff6ba8']
+        },
+        {
+            title: '愛のテーマ (爱的主题)',
+            artist: '矢野立美',
+            audioUrl: 'https://music01-3bxv3bn.maozi.io/TESHE/aidezhuti.flac',
+            lrcUrl: 'Music/爱的主题.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         }
     ];
