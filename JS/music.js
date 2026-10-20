@@ -11,35 +11,35 @@
         {
             title: '南三环东路',
             artist: 'DOUDOU',
-            audioUrl: 'https://music-3jk.pages.dev/DOUDOU/nansanhuandonglu.mp3',
+            audioUrl: 'https://star-mint.cc.cd/DOUDOU/nansanhuandonglu.mp3',
             lrcUrl: 'Music/南三环东路.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
             title: '嗵嗵',
             artist: 'DOUDOU',
-            audioUrl: 'https://music-3jk.pages.dev/DOUDOU/tongtong.mp3',
+            audioUrl: 'https://star-mint.cc.cd/DOUDOU/tongtong.mp3',
             lrcUrl: 'Music/嗵嗵.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
             title: '失踪的朋友 (Demo)',
             artist: '柳爽',
-            audioUrl: 'https://music-3jk.pages.dev/LIUSHUANG/shizongdepengyou.m4a',
+            audioUrl: 'https://star-mint.cc.cd/LIUSHUANG/shizongdepengyou.m4a',
             lrcUrl: 'Music/失踪的朋友.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
             title: '危险派对',
             artist: 'TU_兔斯基（翻唱）',
-            audioUrl: 'https://music-3jk.pages.dev/QITA/weixianpaidui.mp3',
+            audioUrl: 'https://star-mint.cc.cd/QITA/weixianpaidui.mp3',
             lrcUrl: 'Music/危险派对.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
             title: '看门狗',
             artist: '门尼',
-            audioUrl: 'https://music-3jk.pages.dev/MONEY/kanmengou.mp3',
+            audioUrl: 'https://star-mint.cc.cd/MONEY/kanmengou.mp3',
             lrcUrl: 'Music/看门狗.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         }
@@ -65,6 +65,8 @@
     /* ============ 状态 ============ */
     const audio = new Audio();
     audio.preload = 'metadata';
+    window.audio = audio; // 👈 暴露给全局，防止外面找不到
+
     let currentIndex = 0;
     let currentLines = [];
     let activeIdx = -1;
@@ -268,35 +270,44 @@
     }
     audio.addEventListener('loadedmetadata', updateDuration);
     audio.addEventListener('durationchange', updateDuration);
+    
     audio.addEventListener('play', () => {
         el.playBtn.classList.add('playing');
         el.coverWrap.classList.add('spinning');
         startLoop();
+
+        // 👇 联动迷你播放器 👇
+        const currentPage = window.location.hash.replace('#', '') || 'home';
+        if (currentPage !== 'music' && typeof setMiniMode === 'function') {
+            setMiniMode(true);
+        }
     });
+    
     audio.addEventListener('pause', () => {
         el.playBtn.classList.remove('playing');
         el.coverWrap.classList.remove('spinning');
         stopLoop();
-    });
-    // audio.addEventListener('ended', () => loadTrack(currentIndex + 1, true));
 
-    /* ============ 新增：播放模式控制 ============ */
-    // 模式：0 = 列表循环(loop-all), 1 = 单曲循环(loop-one), 2 = 随机播放(random)
+        // 👇 联动迷你播放器 👇
+        if (typeof setMiniMode === 'function') {
+            setMiniMode(false);
+        }
+    });
+
+    /* ============ 播放模式控制 ============ */
     let playMode = 0;
     const modeBtn = document.getElementById('modeBtn');
     const modeIcon = document.getElementById('modeIcon');
 
-    // 三种模式的 SVG 图标代码
     const icons = {
-        'loop-all': '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>', // 列表循环
-        'loop-one': '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/><text x="12" y="15" font-size="8" text-anchor="middle" fill="#8b7cff" font-weight="bold">1</text>', // 单曲循环（中间加个1）
-        'random': '<path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>' // 随机播放
+        'loop-all': '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>',
+        'loop-one': '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/><text x="12" y="15" font-size="8" text-anchor="middle" fill="#8b7cff" font-weight="bold">1</text>',
+        'random': '<path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>'
     };
 
-    // 点击切换模式
     modeBtn.addEventListener('click', (e) => {
-        e.stopPropagation(); // 防止点击时触发其他事件
-        playMode = (playMode + 1) % 3; // 0 -> 1 -> 2 -> 0
+        e.stopPropagation();
+        playMode = (playMode + 1) % 3;
         updateModeUI();
     });
 
@@ -304,30 +315,25 @@
         if (playMode === 0) {
             modeIcon.innerHTML = icons['loop-all'];
             modeBtn.title = "列表循环";
-            modeIcon.style.fill = "#8f8fa3"; // 列表模式用灰色
+            modeIcon.style.fill = "#8f8fa3";
         } else if (playMode === 1) {
             modeIcon.innerHTML = icons['loop-one'];
             modeBtn.title = "单曲循环";
-            modeIcon.style.fill = "#8b7cff"; // 单曲循环用紫色高亮
+            modeIcon.style.fill = "#8b7cff";
         } else if (playMode === 2) {
             modeIcon.innerHTML = icons['random'];
             modeBtn.title = "随机播放";
-            modeIcon.style.fill = "#8b7cff"; // 随机模式用紫色高亮
+            modeIcon.style.fill = "#8b7cff";
         }
     }
 
-    /* ============ 修改：播完之后的逻辑 ============ */
-    // 把原本的 audio.addEventListener('ended', ...) 替换成这个：
     audio.addEventListener('ended', () => {
         if (playMode === 0) {
-            // 列表循环：播下一首
             loadTrack(currentIndex + 1, true);
         } else if (playMode === 1) {
-            // 单曲循环：时间归零，重新播放当前
             audio.currentTime = 0;
             audio.play();
         } else if (playMode === 2) {
-            // 随机播放：随机挑一首（如果只有一首歌，就继续播这首）
             if (TRACK_DATA.length > 1) {
                 let nextIdx = currentIndex;
                 while (nextIdx === currentIndex) {
@@ -341,10 +347,10 @@
         }
     });
 
-
     audio.addEventListener('error', () => {
         el.artist.textContent = '音频加载失败，请检查链接或 CORS';
     });
+    
     audio.addEventListener('timeupdate', () => {
         if (!dragging && isFinite(audio.duration)) el.cur.textContent = fmtTime(audio.currentTime);
     });
@@ -358,8 +364,6 @@
 
         el.title.textContent = t.title;
         el.artist.textContent = t.artist;
-
-        // 这里删掉了改背景色的逻辑，因为现在用的是图片
 
         currentLines = [];
         activeIdx = -1;
@@ -426,10 +430,11 @@
     /* ============ 初始化 ============ */
     loadTrack(0, false).then(() => { el.playBtn.disabled = false; });
     audio.addEventListener('canplay', () => { el.playBtn.disabled = false; });
-})();
+
+})(); // 👈 大函数结束
 
 
-/* ============ 绝对不报错的迷你播放器逻辑 ============ */
+/* ============ 迷你播放器外层逻辑 ============ */
 const mpRoot = document.getElementById('mpRoot');
 const musicPage = document.getElementById('page-music');
 let isMiniMode = false;
@@ -447,11 +452,8 @@ function setMiniMode(mini) {
     }
 }
 
-// 注意这里：我们直接在 function 内部去拿 window.audio，或者用闭包
 window.toggleMiniMode = function (currentPageName) {
-    // 如果在内部找不到 audio，就去全局找
-    const myAudio = typeof audio !== 'undefined' ? audio : window.audio;
-
+    const myAudio = window.audio; // 全局找 audio
     if (currentPageName === 'music' || !myAudio || myAudio.paused) {
         setMiniMode(false);
     } else {
@@ -459,19 +461,8 @@ window.toggleMiniMode = function (currentPageName) {
     }
 };
 
-// 绑定播放和暂停事件
-audio.addEventListener('play', () => {
-    const currentPage = window.location.hash.replace('#', '') || 'home';
-    if (currentPage !== 'music') setMiniMode(true);
-});
-
-audio.addEventListener('pause', () => {
-    setMiniMode(false);
-});
-
 mpRoot.addEventListener('click', (e) => {
     if (isMiniMode) {
-        // 点击 播放、上一首、下一首 都不跳回大卡片页面
         if (e.target.closest('.mp-btn-play') ||
             e.target.closest('#prevBtn') ||
             e.target.closest('#nextBtn')) {
