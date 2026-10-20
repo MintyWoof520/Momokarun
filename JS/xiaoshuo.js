@@ -68,6 +68,7 @@
   $('prev').addEventListener('click', () => showChapter(current - 1));
   $('next').addEventListener('click', () => showChapter(current + 1));
   $('back').addEventListener('click', showToc);
+  $('backTop').addEventListener('click', showToc);
 
   document.addEventListener('keydown', e => {
     if ($('reader').classList.contains('hidden')) return;
