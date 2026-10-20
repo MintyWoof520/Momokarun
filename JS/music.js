@@ -13,35 +13,35 @@
         {
             title: '南三环东路',
             artist: 'DOUDOU',
-            audioUrl: 'https://star-mint.cc.cd/DOUDOU/nansanhuandonglu.mp3',
+            audioUrl: 'https://music01.edgeone.cool/DOUDOU/nansanhuandonglu.mp3',
             lrcUrl: 'Music/南三环东路.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
             title: '嗵嗵',
             artist: 'DOUDOU',
-            audioUrl: 'https://star-mint.cc.cd/DOUDOU/tongtong.mp3',
+            audioUrl: 'https://music01.edgeone.cool/DOUDOU/tongtong.mp3',
             lrcUrl: 'Music/嗵嗵.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
             title: '失踪的朋友 (Demo)',
             artist: '柳爽',
-            audioUrl: 'https://star-mint.cc.cd/LIUSHUANG/shizongdepengyou.m4a',
+            audioUrl: 'https://music01.edgeone.cool/LIUSHUANG/shizongdepengyou.m4a',
             lrcUrl: 'Music/失踪的朋友.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
             title: '危险派对',
             artist: 'TU_兔斯基（翻唱）',
-            audioUrl: 'https://star-mint.cc.cd/QITA/weixianpaidui.mp3',
+            audioUrl: 'https://music01.edgeone.cool/QITA/weixianpaidui.mp3',
             lrcUrl: 'Music/危险派对.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         },
         {
             title: '看门狗',
             artist: '门尼',
-            audioUrl: 'https://star-mint.cc.cd/MONEY/kanmengou.mp3',
+            audioUrl: 'https://music01.edgeone.cool/MONEY/kanmengou.mp3',
             lrcUrl: 'Music/看门狗.lrc',
             grad: ['#8b7cff', '#ff6ba8']
         }
