@@ -42,10 +42,12 @@ body {
 @font-face {
   font-family: speak1;
   src: url(../../fonts/FontsLab-FuGuShouJi-2.ttf);
+  font-display: swap;
 }
 @font-face {
   font-family: speak2;
   src: url(../../fonts/YuWoErYanNiZuiKeAi-2.ttf);
+  font-display: swap;
 }
 
 /* 美化滚动条 */
