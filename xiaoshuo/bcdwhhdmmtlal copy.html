@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小说名</title>
+<style>
+  :root {
+    --bg: #faf8f5;
+    --fg: #2b2b2b;
+    --muted: #888;
+    --accent: #8a5a2b;
+    --line: #e0d8cc;
+    --bar-bg: rgba(250, 248, 245, 0.9);
+    --danger: #c0392b;
+  }
+  body.night {
+    --bg: #1a1a1a;
+    --fg: #c9c9c9;
+    --muted: #888;
+    --accent: #c9a06a;
+    --line: #333;
+    --bar-bg: rgba(26, 26, 26, 0.9);
+    --danger: #e74c3c;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0 auto;
+    padding: 0 16px 40px;
+    max-width: 720px;
+    background: var(--bg);
+    color: var(--fg);
+    font: 18px/1.9 "Georgia", "Songti SC", "SimSun", serif;
+    transition: background .3s, color .3s;
+  }
+
+  /* 美化滚动条 */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(150, 150, 150, 0.2);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  /* ===== 顶部阅读进度线 ===== */
+  #progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--accent);
+    width: 0%;
+    z-index: 100;
+    transition: width 0.1s;
+  }
+
+  /* ===== 顶部工具栏 ===== */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    background: var(--bar-bg);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .toolbar-right { display: flex; gap: 8px; }
+  .toolbar button {
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    transition: all .2s;
+  }
+  .toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* 隐藏的返回按钮 */
+  #topBack { display: none; }
+  #topBack.show { display: block; }
+
+  /* ===== 首页头部信息 ===== */
+  .book-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin: 24px 0 32px;
+  }
+  .book-info h1 { font-size: 26px; margin: 0 0 8px; letter-spacing: 1px; }
+  .book-info .subtitle { color: var(--muted); font-size: 14px; }
+  
+  /* 清空记录按钮 */
+  #btnClear {
+    font-size: 13px;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: system-ui, sans-serif;
+  }
+  #btnClear:hover {
+    color: var(--danger);
+    border-color: var(--danger);
+  }
+
+  /* ===== 目录列表 ===== */
+  #toc {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  #toc li {
+    padding: 14px 8px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background .2s, padding-left .2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  #toc li:hover {
+    background: rgba(138, 90, 43, .06);
+    padding-left: 16px;
+    color: var(--accent);
+  }
+  
+  /* 目录里的进度标签 */
+  .toc-progress {
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--line);
+    padding: 2px 8px;
+    border-radius: 12px;
+    white-space: nowrap;
+    font-family: system-ui, sans-serif;
+  }
+  .toc-progress.done {
+    color: #fff;
+    background: var(--accent);
+  }
+
+  /* ===== 阅读区 ===== */
+  #reader { padding-top: 16px; position: relative; }
+  
+  #chapterTitle {
+    font-size: 22px;
+    margin: 16px 0 32px;
+    text-align: center;
+    color: var(--accent);
+    font-weight: normal;
+  }
+
+  #content { animation: fadeIn .4s ease both; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 正文排版 */
+  #content p {
+    margin: 0 0 1em;
+    text-indent: 2em;
+    line-height: 1.9;
+    text-align: justify;
+  }
+
+  /* 底部翻页栏 */
+  .bar {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    margin: 40px 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .bar button {
+    flex: 1;
+    padding: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    transition: all .2s;
+  }
+  .bar button:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(138, 90, 43, .06);
+  }
+  .bar button:disabled { opacity: .35; cursor: not-allowed; }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 600px) {
+    body { font-size: 17px; padding: 0 14px 40px; }
+    .book-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 顶部阅读进度线 -->
+<div id="progress-bar"></div>
+
+<div class="toolbar">
+  <div>
+    <button id="topBack">← 返回目录</button>
+  </div>
+  <div class="toolbar-right">
+    <button id="btnFontDown" title="缩小字号">A-</button>
+    <button id="btnFontUp" title="放大字号">A+</button>
+    <button id="btnNight" title="夜间模式">🌙</button>
+  </div>
+</div>
+
+<div class="book-header">
+  <div class="book-info">
+    <h1 id="bookTitle">变成动物后和大猫猫恋爱啦</h1>
+    <div class="subtitle">作者 · 一勺蓝</div>
+  </div>
+  <button id="btnClear" title="清除所有章节的阅读进度">🗑️ 清空记录</button>
+</div>
+
+<ul id="toc"></ul>
+
+<div id="reader" class="hidden">
+  <h2 id="chapterTitle"></h2>
+  <div id="content"></div>
+  <div class="bar">
+    <button id="prev">← 上一章</button>
+    <button id="back">返回目录</button>
+    <button id="next">下一章 →</button>
+  </div>
+</div>
+
+<!-- ===================== 章节模板区 ===================== -->
+<template id="ch0">
+        <h2>第1章 草原狮子嗷嗷嗷</h2>
+        <p>加班果然不是人该干的。</p>
+        <p>随喜有些郁闷地把头埋进干草堆里，满怀忧郁地叹了口气。</p>
+        <p>她本来是观光团临时雇佣的翻译，一场意外，再醒来时，就成了非洲大草原上一只还没断奶的小狮子。</p>
+        <p>从吃饱穿暖有工作也有存款的人，变成了每天都要为生存努力奋斗的野生动物，倒霉不是一般程度上的那种。</p>
+        <p>是超级无敌倒霉透顶。</p>
+        <p>好在她向来看得开，变成狮子，日子也得照样过嘛。</p>
+        <p>让随喜心态还算乐观的主要原因，就是她现在所处的狮群实力还不错。</p>
+        <p>是个有着二十只狮子的大狮群。</p>
+        <p>地主雄狮是一对兄弟，关系特别腻歪，感情很好，而且长得也很帅，拥有一头浓密的黑色鬃毛，简直帅呆了。</p>
+        <p>七只雌狮也表示了对这头浓密鬃毛的欣赏，经常贴贴。随喜还有两个亚成年姐姐，一个哥哥，和八个差不多月份的姐妹兄弟。</p>
+        <p>随喜记得自己之前看过一个视频，说动物园有一只雄狮特别能打，打败了其它的雄狮，却没有一只雌狮看得上它，连对视都没有，来回躲避目光。</p>
+        <p>就是因为这头狮子是个秃头，鬃毛稀疏，雌狮们都瞧不上。</p>
+        <p>它们喜欢盘靓条顺的帅哥，不喜欢杀马特。</p>
+        <p>雄狮的鬃毛真的很好看，大围脖很有气势。不过随喜对自己投生转世仍旧是雌性这件事还是挺高兴的，她一个外行都知道雄狮是狮群的消耗品。</p>
+        <p>铁打的雌狮流水的雄狮。</p>
+        <p>雌狮才是这片领地的真正拥有者。</p>
+        <p>长得帅不如实力强，这才是活下去的关键。</p>
+        <p>不过狮群迭代这些事用不着她操心。</p>
+        <p>随喜刚四个月，还是一只无忧无虑的小狮子，每天要做的事情只有吃奶和玩耍。</p>
+        <p>玩耍也是狮子们建立感情、练习捕猎的过程。</p>
+        <p>所以她去找别的小狮子玩是没错的，绝对不是穿越以后心智也变小了。</p>
+        <p>随喜伸了个懒腰，蹑手蹑脚跑到另一头小狮子身后，趁它不注意直接扑了上去。</p>
+        <p>哈哈！偷袭！</p>
+        <p>本来正睡觉的小狮子被吓了一跳，嗷呜一声，睁大圆溜溜的眼睛，里面满是惊吓。</p>
+        <p>它的眼睛和其它狮子不同，不是黄色，有一只是金绿色，是狮子里非常罕见的异瞳。</p>
+        <p>有奶膘的小狮子身边到处都是，异瞳的可就只有一个，多么稀罕。</p>
+        <p>随喜欢乐地吸着小狮子，对着它的爪子虚虚咬上一口。</p>
+        <p>别睡了，快起来玩！</p>
+        <p>她嗷嗷叫着跑开。</p>
+        <p>惊吓过后就是亲密，幼狮翻过身，紧追着她，其它玩耍的小狮子见到追逐活动，也忍不住加入。</p>
+        <p>四只圆滚滚的幼狮跑成一条线，你扑我，我扑你，奶声奶气，看得人心都化了。</p>
+        <p>不远处坐在车里举着望远镜和摄像头的人们不约而同发出了“awwww……”的声音。</p>
+        <p>“这一窝小狮子真是健壮，看样子成长率或许能比上一窝更高。上一窝七个才活下来三只。”</p>
+        <p>“安塞尔和卡勒姆是一对非常靠谱的爸爸，经常和母狮们一起捕猎，这才能把幼崽们都养好。”</p>
+        <p>“哈哈哈是啊，这一大家子都很会做饭。”</p>
+        <p>“快瞧，珀尔又把别的幼狮丢到一边，只和西尔莎一起玩，它真可爱，不是吗？”</p>
+        <p>“谁会不喜欢西尔莎呢，它的眼睛独一无二，实在是很漂亮。”</p>
+        <p>远处忽然传来阵阵狮吼声，一位摄影师忍不住站起来，向远处看，同时，她的对讲机发出声音。</p>
+        <p>是跟着狮群捕猎队伍的同伴传来消息。</p>
+        <p>留守的几人对视一眼，“看来今天狮群又能吃个饱饭了。”</p>
+        <p>随喜听到狮群呼唤的声音，看守幼狮的两只成年雌狮和两只亚成年站起来，朝着声音发出的方向赶过去。</p>
+        <p>幼崽们也跑着跟上。</p>
+        <p>随喜已经闻到了空气中的血腥气。</p>
+        <p>走近一看，原来是一只野牛！</p>
+        <p>这可是个大家伙，看起来有七八百千克，身上覆盖着黑色的短毛，两根粗壮锋利的牛角比她都长。</p>
+        <p>此时它身上已经长满了狮子。</p>
+        <p>有着黄色皮毛的大狮子们满头满脸都是血，望过来的眼神满是冰冷肃杀，充满了捕食者的野性。</p>
+        <p>不同于其它狮群的是，首先进食的并不是雄狮，而是几只需要哺乳的雌狮。</p>
+        <p>雄狮卡勒姆正喘着粗气，趴在一边，完全没有驱赶的意思，它也是参与捕猎的一员，竟然把进食的位置让了出去。</p>
+        <p>它是累了需要休息吗？</p>
+        <p>随喜不是第一次看到这种场面，她可以明确地说，这只雄狮就是一个“奇葩”，是雄狮中的异类。</p>
+        <p>它是有意让出进食的位置，给雌狮先吃的。</p>
+        <p>相隔大约只有三十来米的地方，两辆车上的拍摄者发出惊叹，这副画面不论看几次都会让人震惊，对这只雄狮的温柔谦让感到不可思议。</p>
+        <p>要知道别的雄狮总是把进食的雌狮赶走，让它们吃剩饭的。雄狮要保证自己的健康和地位，会驱赶幼狮，驱赶雌狮，独占猎物。</p>
+        <p>而在蕾拉狮群，自从卡勒姆和安塞尔这对兄弟加盟，就再也没发生过这种事。</p>
+        <p>卡勒姆是一只温柔的大狮子，总是让幼崽和哺乳雌狮先吃。</p>
+        <p>等需要哺乳的雌狮吃饱了退下来，雄狮卡勒姆才和赶过来的兄弟，以及其它雌狮一同吃第二波。</p>
+        <p>血腥味随风飘远，引来秃鹫和鬣狗，可它们只敢在远处观望，不敢靠近。</p>
+        <p>鬣狗的叫声像鬼哭鬼笑，嘶哑又尖利，它们是杀害幼狮的主力军。</p>
+        <p>可随喜不怕，这群鬣狗疯了才会过来抢这么多狮子的猎物。</p>
+        <p>果然没多久，它们就离开了，只有秃鹫还盘旋着，在远处落下，等待一份白得的餐食。</p>
+        <p>随喜皱皱鼻子，她能感受到血腥气的吸引力。</p>
+        <p>穿成狮子，食谱变化，生肉在她这里也变成了美妙大餐，只不过她还没到吃肉的岁数，牙没长好，只能吃奶。</p>
+        <p>一只脸上沾满血迹的雌狮慢悠悠走过来，舔着嘴巴，走到她身边，低下头对她进行了一番温柔的舔毛梳理。</p>
+        <p>随喜被舔得晃来晃去，最后一屁股坐到地上，连肚皮也被翻了过来。</p>
+        <p>刚刚她还吸别的小狮子，现在就成了被吸的一员。</p>
+        <p>风水轮流转。</p>
+        <p>随喜嗷呜一声，一点反抗的意思都没有。</p>
+        <p>没别的原因。</p>
+        <p>这是她这辈子的亲妈。</p>
+        <p>被亲妈舔毛那叫照顾，必然不能躲啊。</p>
+        <p>随喜听到拍摄的人叫它伊娃。</p>
+        <p>这个名字是母亲的意思。</p>
+        <p>伊娃是一只长得非常标志的雌狮，宽宽的鼻梁，两只耳朵微微向内卷着，有很多豁口在上面。</p>
+        <p>它的鼻梁上有一道伤疤，身上也有，这些伤疤让它看起来更加威严，证明了它的阅历丰富。</p>
+        <p>随喜是伊娃的第三胎，独生子，没有姐妹兄弟，获得了全部的爱。</p>
+        <p>伊娃对她很是关注，总给她舔毛，甚至还会叼她回来吃奶。</p>
+        <p>这在别的雌狮身上也是很不常见的举动，不过……这倒不是伊娃的个性，要怪随喜自己。</p>
+        <p>随喜刚穿过来的时候，对吃奶这件事还是蛮有心理压力的，有点抗拒。</p>
+        <p>她下不去口。</p>
+        <p>到了该吃奶的时候，她没吃。可能就是这样，导致伊娃对她吃奶这件事格外上心。</p>
+        <p>别的小狮子是要自己追着妈妈要奶吃，到她这儿反了过来，是妈追着娃喂奶。</p>
+        <p>伊娃奶水充足，就算偶尔要喂一喂姐妹的孩子，剩下的奶也份量十足，根本不是随喜吃得完的。</p>
+        <p>偏偏喂得次数多，她撑得不行，只好多动动，试图快点消化。运动多了，饿得就快。</p>
+        <p>不曾想她吃得越多，伊娃喂得越频繁。</p>
+        <p>也许在它看来，幼崽能吃是一件好事，证明它健康、健壮。</p>
+        <p>温柔的洗脸过后，伊娃果然躺下，露出肚皮，低低叫了一声。</p>
+        <p>她金棕色的眼睛注视着随喜，明明狮子脸上没有表情，随喜却感到了一种压力。</p>
+        <p>亲妈is watching you。</p>
+        <p>还能怎么办，吃吧。</p>
+        <p>正好她也饿了。</p>
+        <p>整个狮群都享用了一顿美餐，它们并没有离开，而是在野牛尸体旁边驻扎下来。</p>
+        <p>这具野牛还没吃完，足够狮群再吃一顿的。</p>
+        <p>黄色的大猫横七竖八躺着，懒洋洋打盹，就连最调皮的幼崽也打着哈欠，被困意骚扰。</p>
+        <p>随喜倒在母亲怀里，美滋滋睡觉。</p>
+        <p>这可不能说她懒惰，狮子就是这样，吃饱了当然要睡觉。</p>
+        <p>这一觉就睡到了半夜，有狮子去啃牛骨头，咬得嘎吱嘎吱响。</p>
+        <p>随喜睡饱了，精力旺盛，和同样醒着的西尔莎对上眼。</p>
+        <p>是邀请我一起玩的意思吗？</p>
+        <p>她甩甩尾巴。</p>
+        <p>异瞳幼狮原地打了个滚。</p>
+        <p>噢噢噢！你也喜欢和我一起玩吧？</p>
+        <p>随喜欢乐地跑过去，和西尔莎抱在一起，在草地上打了好几个滚。</p>
+        <p>对于幼狮来说，草原上的一切都充满了诱惑。</p>
+        <p>狮子的尾巴是天然的逗猫棒，末端坠着的黑色小球在幼狮眼里，是再完美不过的玩具。</p>
+        <p>随喜也抵抗不了这种诱惑。</p>
+        <p>会动的毛球实在是太好玩了，她的身体在催促她快扑过去。</p>
+        <p>随喜扭着屁股潜行了两步，跳着咬住一边，西尔莎咬住另一边，四脚朝天，使出猫科绝学——后腿乱蹬。</p>
+        <p>被两只幼狮骚扰的成年雌狮眼睛都不睁开一下，只是习以为常把尾巴抽出来，甩一甩。</p>
+        <p>没了尾巴，草丛里的小虫子也很有趣。</p>
+        <p>西尔莎叼着一只甲壳虫，肥墩墩地坐到随喜跟前，和她分享这个玩具。</p>
+        <p>西尔莎是一只圆滚滚的肥美小狮子。</p>
+        <p>比随喜大一个月，不过随喜吃得太好，营养充足，体型上倒是和它差不多。</p>
+        <p>这不是随喜开天眼，而是听到拍摄团队聊天知道的信息。</p>
+        <p>这个拍摄团队已经跟踪拍摄狮群七八年了，一直在记录着狮群一代代的故事。</p>
+        <p>她所在的狮群叫蕾拉狮群，是由上一代传奇母狮蕾拉命名，哪怕有了很有名气的卡勒姆两兄弟加入，这个狮群仍旧没有改换名号。</p>
+        <p>母狮的首领是蕾拉的女儿，一位上了年纪的雌狮米兰达，论辈分，随喜要管它叫姥姥。</p>
+        <p>不过狮子之间不讲究这些。</p>
+        <p>米兰达是一只充满智慧和经验的狮子，旱季的时候，它会带领狮群寻找绿洲。</p>
+        <p>它知道哪里有猎物，哪里危险，如何对待草原上的其它种群，如何分辨人类的好坏。</p>
+        <p>有她的带领，狮群才有如今的繁荣。</p>
+        <p>米兰达有不少粉丝。</p>
+        <p>经常有观光车来专门拍它，两只雄狮的粉丝也很多，随喜的母亲伊娃也有一些粉丝，她的一个亚成年姐姐和哥哥同样小有名气。</p>
+        <p>非洲的狮子大约都被拍习惯了，这些拍摄团队的车和游客观光车来来往往，它们一点反应都没有。</p>
+        <p>随喜对人类抱有天然的好感，她当人都当了二十多年了，当小狮子才几个月而已。</p>
+        <p>但她决定和拍摄团队亲近一些，倒不是因为这个。</p>
+        <p>虽然拍摄纪录片的团队都倡导不干预自然法则，不过人类经常自相矛盾。</p>
+        <p>随喜在的地方是自然保护区内，保护区是有救援队的，很多时候，摄影师虽然自己不会动手救受伤的狮子，但会通知救援队来。</p>
+        <p>最关键的，就是人气。</p>
+        <p>人气越大，关注的粉丝越多，受伤后得到救治的可能越大。</p>
+        <p>纪录片也是要流量的。拍摄团队舍不得明星狮子死去，对它们的关注比普通狮子要多很多。</p>
+        <p>随喜也要成为明星狮子。</p>
+        <p>值夜班的人把摄像机转过来，夜色漆黑，但随喜看得清楚，人类正在拍摄自己。</p>
+        <p>那她表演得更卖力些吧！</p>
+        <p>随喜扭着屁股，和西尔莎一起咬空气，菜鸡互啄。</p>
+        <p>夜晚的草原很安静，除了西尔莎奶奶的嗷呜声，随喜还能听见车内的话。</p>
+        <p>“珀尔长得真大啊，完全看不出来才四个月。”</p>
+        <p>“哈哈，它被伊娃追着喂奶的视频已经破三十万点击了，等它长大了，再看这些一定很好笑。”</p>
+        <p>“其实我昨天还贡献了三次。”</p>
+        <p>“不瞒你说，我也。”</p>
+        <p>随喜一僵，被西尔莎咬了个正着。</p>
+        <p>等等，你说她的黑历史多少点击了？</p>
+    </template>
+
+<template id="ch1">
+  <p>第二章。</p>
+  <p>这是一段测试文本。</p>
+  <p>多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段多写几段。</p>
+</template>
+
+<template id="ch2">
+  <p>第三章。</p>
+  <p>故事到此结束。</p>
+</template>
+
+
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+
+  // 收集所有章节模板
+  const templates = Array.from(document.querySelectorAll('template[id^="ch"]'))
+    .sort((a, b) => +a.id.slice(2) - +b.id.slice(2));
+
+  const chapters = templates.map((tpl, i) => {
+    const h2 = tpl.content.querySelector('h2');
+    const title = h2 ? h2.textContent.trim() : `第 ${i + 1} 章`;
+    return { title, templateId: tpl.id };
+  });
+
+  let current = 0;
+  let shouldRestoreScroll = false; 
+  let isRestoring = false; // 防止恢复滚动时触发保存覆盖
+
+  // ===== 本地存储管理 =====
+  function getReadData() {
+    return JSON.parse(localStorage.getItem('novel_read_data') || '{}');
+  }
+  function saveReadData(data) {
+    localStorage.setItem('novel_read_data', JSON.stringify(data));
+  }
+
+  // ===== 渲染目录 =====
+  function renderToc() {
+    const readData = getReadData();
+    $('toc').innerHTML = chapters.map((c, i) => {
+      let progressHtml = '';
+      const record = readData[i];
+      if (record) {
+        const percent = Math.floor(record.percent || 0);
+        if (percent >= 98) {
+          progressHtml = `<span class="toc-progress done">已读完</span>`;
+        } else if (percent > 0) {
+          progressHtml = `<span class="toc-progress">已读 ${percent}%</span>`;
+        }
+      }
+      return `<li data-i="${i}">
+        <span>${escapeHtml(c.title)}</span>
+        ${progressHtml}
+      </li>`;
+    }).join('');
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, m => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[m]));
+  }
+
+  // 目录点击
+  $('toc').addEventListener('click', e => {
+    const li = e.target.closest('li');
+    if (li) {
+      const i = +li.dataset.i;
+      const readData = getReadData();
+      // 如果已有记录，并且不是读完的，准备恢复位置
+      if (readData[i] && readData[i].scroll > 0 && readData[i].percent < 98) {
+        shouldRestoreScroll = true;
+      } else {
+        shouldRestoreScroll = false;
+      }
+      showChapter(i);
+    }
+  });
+
+  // ===== 显示章节 =====
+  function showChapter(i) {
+    if (i < 0 || i >= chapters.length) return;
+    current = i;
+
+    const tpl = document.getElementById(chapters[i].templateId);
+    const content = $('content');
+
+    // 1. 渲染 DOM
+    content.innerHTML = '';
+    content.appendChild(tpl.content.cloneNode(true));
+
+    $('chapterTitle').textContent = chapters[i].title;
+    $('prev').disabled = current === 0;
+    $('next').disabled = current === chapters.length - 1;
+
+    $('toc').classList.add('hidden');
+    $('reader').classList.remove('hidden');
+    $('topBack').classList.add('show');
+
+    // 重播动画
+    content.style.animation = 'none';
+    void content.offsetWidth;
+    content.style.animation = '';
+
+    localStorage.setItem('novel_last_chapter', current);
+    
+    // 2. 滚动处理
+    if (shouldRestoreScroll) {
+      const readData = getReadData();
+      const targetScroll = readData[current]?.scroll || 0;
+      isRestoring = true;
+      
+      // 延迟稍微久一点(50ms)，确保字体和排版已经渲染完毕，计算高度才准确
+      setTimeout(() => {
+        window.scrollTo(0, targetScroll);
+        updateProgress(); // 更新顶部的线
+        isRestoring = false;
+      }, 50);
+    } else {
+      window.scrollTo(0, 0);
+      setTimeout(updateProgress, 50);
+    }
+
+    shouldRestoreScroll = false;
+  }
+
+  // ===== 返回目录 =====
+  function showToc() {
+    if ($('reader').classList.contains('hidden')) return;
+
+    $('reader').classList.add('hidden');
+    $('toc').classList.remove('hidden');
+    $('topBack').classList.remove('show');
+    window.scrollTo(0, 0);
+    $('progress-bar').style.width = '0%';
+    
+    renderToc();
+  }
+
+  // ===== 核心：更新并保存阅读进度 =====
+  function updateProgress() {
+    if ($('reader').classList.contains('hidden') || isRestoring) return;
+
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+    let percent = 0;
+    
+    // 修复 Bug：如果内容不够长，scrollHeight 会是负数或 0
+    if (scrollHeight <= 0) {
+      // 如果屏幕还没显示完一章，默认算作 100% 已读完
+      percent = 100; 
+    } else {
+      percent = (scrollTop / scrollHeight) * 100;
+    }
+    
+    // 防止越界
+    percent = Math.min(100, Math.max(0, percent));
+
+    // 更新顶部进度线
+    $('progress-bar').style.width = percent + '%';
+
+    // 保存进度
+    const readData = getReadData();
+    const oldRecord = readData[current] || { percent: 0, scroll: 0 };
+    
+    // 如果比原来读得多，或者快到底了，就保存
+    if (scrollTop > oldRecord.scroll || percent > 98) {
+      readData[current] = {
+        percent: percent,
+        scroll: scrollTop
+      };
+      saveReadData(readData);
+    }
+  }
+
+  // 监听滚动
+  window.addEventListener('scroll', () => {
+    window.requestAnimationFrame(updateProgress);
+  });
+
+  // ===== 清空记录 =====
+  $('btnClear').addEventListener('click', () => {
+    if (confirm('确定要清空所有阅读进度吗？清空后不可恢复。')) {
+      localStorage.removeItem('novel_read_data');
+      localStorage.removeItem('novel_last_chapter');
+      renderToc();
+      $('progress-bar').style.width = '0%';
+    }
+  });
+
+  // ===== 按键 / 点击绑定 =====
+  // 如果是通过翻页按钮进入，强制从顶部开始看
+  $('prev').addEventListener('click', () => { shouldRestoreScroll = false; showChapter(current - 1); });
+  $('next').addEventListener('click', () => { shouldRestoreScroll = false; showChapter(current + 1); });
+  $('back').addEventListener('click', showToc);
+  $('topBack').addEventListener('click', showToc);
+
+  // 键盘翻页
+  document.addEventListener('keydown', e => {
+    if ($('reader').classList.contains('hidden')) return;
+    if (e.key === 'ArrowLeft')  { shouldRestoreScroll = false; showChapter(current - 1); }
+    if (e.key === 'ArrowRight') { shouldRestoreScroll = false; showChapter(current + 1); }
+    if (e.key === 'Escape')     showToc();
+  });
+
+  // ===== 解决手机/浏览器返回键问题 =====
+  window.addEventListener('popstate', (e) => {
+    if (!$('reader').classList.contains('hidden')) {
+      showToc();
+    }
+  });
+
+  const originalShowChapter = showChapter;
+  showChapter = function(i) {
+    if (i < 0 || i >= chapters.length) return;
+    if ($('reader').classList.contains('hidden')) {
+      history.pushState({ page: 'reader' }, '', '#chapter-' + i);
+    } else {
+      history.replaceState({ page: 'reader' }, '', '#chapter-' + i);
+    }
+    originalShowChapter(i);
+  };
+
+  // ===== 字号调节 =====
+  let fontSize = 18;
+  function applyFontSize() {
+    document.body.style.fontSize = fontSize + 'px';
+    localStorage.setItem('novel_fontSize', fontSize);
+    if (!$('reader').classList.contains('hidden')) {
+      setTimeout(updateProgress, 100);
+    }
+  }
+  $('btnFontUp').addEventListener('click', () => {
+    fontSize = Math.min(28, fontSize + 2); applyFontSize();
+  });
+  $('btnFontDown').addEventListener('click', () => {
+    fontSize = Math.max(14, fontSize - 2); applyFontSize();
+  });
+
+  // ===== 夜间模式 =====
+  function applyNight(on) {
+    document.body.classList.toggle('night', on);
+    localStorage.setItem('novel_night', on ? '1' : '0');
+  }
+  $('btnNight').addEventListener('click', () => {
+    applyNight(!document.body.classList.contains('night'));
+  });
+
+  // ===== 初始化 =====
+  renderToc();
+
+  if (localStorage.getItem('novel_night') === '1') applyNight(true);
+  const savedFont = localStorage.getItem('novel_fontSize');
+  if (savedFont) { fontSize = +savedFont; applyFontSize(); }
+
+  // 自动续读
+  // const savedChapter = localStorage.getItem('novel_last_chapter');
+  // if (savedChapter !== null && +savedChapter < chapters.length) {
+  //   shouldRestoreScroll = true; 
+  //   showChapter(+savedChapter);
+  // }
+})();
+</script>
+</body>
+</html>
