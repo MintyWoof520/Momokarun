@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>变成动物后和大猫猫恋爱啦</title>
+    <link rel="icon" href="../../Images/gemashou.ico">
+    <link rel="stylesheet" href="bcdwh.css">
+    <link rel="stylesheet" href="../../Iconfont/Iconfont1/iconfont.css">
+    <link rel="stylesheet" href="../../Iconfont/Iconfont2/iconfont.css">
+</head>
+
+<body>
+    <!-- 顶部阅读进度线 -->
+    <div id="progress-bar"></div>
+
+    <div class="toolbar">
+        <div>
+            <button id="topBack">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-shouye"></use>
+                </svg>返回目录</button>
+        </div>
+        <div class="toolbar-right">
+            <button id="btnFontDown" title="缩小字号">A-</button>
+            <button id="btnFontUp" title="放大字号">A+</button>
+            <button id="btnNight" title="夜间模式">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-yueliang"></use>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="book-header">
+        <div class="book-info">
+            <h1 id="bookTitle">变成动物后和大猫猫恋爱啦</h1>
+            <div class="subtitle">作者 · 一勺蓝</div>
+        </div>
+        <button id="btnClear" title="清除所有章节的阅读进度">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-tianyuanquan"></use>
+            </svg> 清空记录</button>
+    </div>
+
+    <ul id="toc"></ul>
+
+    <div id="reader" class="hidden">
+        <h2 id="chapterTitle"></h2>
+        <div id="content"></div>
+        <div class="bar">
+            <button id="prev">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-arrow-left"></use>
+                </svg>上一章</button>
+            <button id="back">返回目录</button>
+            <button id="next">下一章
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-arrow-right"></use>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+</body>
+<script src="bcdwh.js" defer></script>
+<script src="volume1.js"></script>
+<script src="volume2.js"></script>
+<script src="../../Iconfont/Iconfont2/iconfont.js"></script>
+<script src="../../Iconfont/Iconfont1/iconfont.js"></script>
+
+</html>
