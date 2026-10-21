@@ -45,8 +45,8 @@ body {
   font-display: swap;
 }
 @font-face {
-  font-family: speak2;
-  src: url(../../fonts/YuWoErYanNiZuiKeAi-2.ttf);
+  font-family: speak3;
+  src: url(../../fonts/zaozigongfanghaidaoshaonianti.otf);
   font-display: swap;
 }
 
@@ -102,14 +102,14 @@ body {
 
 .toolbar button {
   padding: 6px 12px;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   background: transparent;
   color: var(--fg);
   border: 1px solid var(--line);
   border-radius: 6px;
   transition: all .2s;
-  font-family: "speak2";
+  font-family: "speak3";
 }
 
 .toolbar button:hover {
@@ -148,7 +148,7 @@ body {
 
 /* 清空记录按钮 */
 #btnClear {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--muted);
   background: transparent;
   border: 1px solid var(--line);
@@ -156,7 +156,7 @@ body {
   border-radius: 6px;
   cursor: pointer;
   transition: all .2s;
-  font-family: "speak2";
+  font-family: "speak3";
 }
 
 #btnClear:hover {
@@ -180,7 +180,8 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  font-family: "speak2";
+  font-family: "speak3";
+  font-size: 1.2rem;
 }
 
 #toc li:hover {
@@ -212,11 +213,12 @@ body {
 }
 
 #chapterTitle {
-  font-size: 22px;
+  font-size: 2.2rem;
   margin: 16px 0 32px;
   text-align: center;
   color: var(--accent);
   font-weight: normal;
+  font-family: "speak3";
 }
 
 #content {
