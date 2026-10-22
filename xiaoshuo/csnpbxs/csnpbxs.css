@@ -1,0 +1,306 @@
+:root {
+  --bg: #faf8f5;
+  --fg: #2b2b2b;
+  --muted: #888;
+  --accent: #8a5a2b;
+  --line: #e0d8cc;
+  --bar-bg: rgba(250, 248, 245, 0.9);
+  --danger: #c0392b;
+}
+
+body.night {
+  --bg: #1a1a1a;
+  --fg: #c9c9c9;
+  --muted: #888;
+  --accent: #c9a06a;
+  --line: #333;
+  --bar-bg: rgba(26, 26, 26, 0.9);
+  --danger: #e74c3c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0 auto;
+  padding: 0 16px 40px;
+  max-width: 720px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 18px/1.9 "Georgia", "Songti SC", "SimSun", serif;
+  transition: background .3s, color .3s;
+}
+
+.icon {
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+}
+@font-face {
+  font-family: speak1;
+  src: url(../../fonts/FontsLab-FuGuShouJi-2.ttf);
+  font-display: swap;
+}
+@font-face {
+  font-family: speak3;
+  src: url(../../fonts/zaozigongfanghaidaoshaonianti.otf);
+  font-display: swap;
+}
+
+/* 美化滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(150, 150, 150, 0.2);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ===== 顶部阅读进度线 ===== */
+#progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--accent);
+  width: 0%;
+  z-index: 100;
+  transition: width 0.1s;
+}
+
+/* ===== 顶部工具栏 ===== */
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  background: var(--bar-bg);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.toolbar-right {
+  display: flex;
+  gap: 8px;
+}
+
+.toolbar button {
+  padding: 6px 12px;
+  font-size: 16px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  transition: all .2s;
+  font-family: "speak3";
+}
+
+.toolbar button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* 隐藏的返回按钮 */
+#topBack {
+  display: none;
+}
+
+#topBack.show {
+  display: block;
+}
+
+/* ===== 首页头部信息 ===== */
+.book-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin: 24px 0 32px;
+  font-family: "speak1";
+}
+
+.book-info h1 {
+  font-size: 26px;
+  margin: 0 0 8px;
+  letter-spacing: 1px;
+}
+
+.book-info .subtitle {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* 清空记录按钮 */
+#btnClear {
+  font-size: 15px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: "speak3";
+}
+
+#btnClear:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* ===== 目录列表 ===== */
+#toc {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#toc li {
+  padding: 14px 8px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: background .2s, padding-left .2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  font-family: "speak3";
+  font-size: 1.2rem;
+}
+
+#toc li:hover {
+  background: rgba(138, 90, 43, .06);
+  padding-left: 16px;
+  color: var(--accent);
+}
+
+/* 目录里的进度标签 */
+.toc-progress {
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--line);
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+  font-family: "speak2";
+}
+
+.toc-progress.done {
+  color: #fff;
+  background: var(--accent);
+}
+
+/* ===== 阅读区 ===== */
+#reader {
+  padding-top: 16px;
+  position: relative;
+}
+
+#chapterTitle {
+  font-size: 2.2rem;
+  margin: 16px 0 32px;
+  text-align: center;
+  color: var(--accent);
+  font-weight: normal;
+  font-family: "speak3";
+}
+
+#content {
+  animation: fadeIn .4s ease both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 正文排版 */
+h2{
+  font-family: "speak1";
+}
+/* 重点：隐藏正文模板里自带的 h2 标题，防止重复 */
+  #content h2 {
+    display: none !important;
+  }
+
+#content p {
+  margin: 0 0 1em;
+  text-indent: 2em;
+  line-height: 1.9;
+  text-align: justify;
+  font-family: "speak1";
+}
+
+/* 底部翻页栏 */
+.bar {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin: 40px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.bar button {
+  flex: 1;
+  padding: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  transition: all .2s;
+  font-family: "speak1";
+}
+
+.bar button:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(138, 90, 43, .06);
+}
+
+.bar button:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  body {
+    font-size: 17px;
+    padding: 0 14px 40px;
+  }
+
+  .book-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
