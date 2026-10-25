@@ -76,15 +76,12 @@ p {
 
 .bga1 {
     padding: 20px;
-    gap: 20px;
     font-family: "speak";
     font-size: 1.2rem;
     color: rgb(255, 124, 124);
     font-style: italic;
 }
 .bga3 {
-    padding: 20px;
-    gap: 20px;
     font-family: "speak2";
     font-size: 1.1rem;
     color: rgb(216, 241, 255);
