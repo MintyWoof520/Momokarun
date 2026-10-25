@@ -1,32 +1,38 @@
-
-.page{
+.page {
     margin: 30px;
 }
 
-.hututu{
+.hututu {
     width: 160px;
 }
+
 @font-face {
     font-family: speak;
     src: url(../fonts/FontsLab-FuGuShouJi-2.ttf);
 }
+
 @font-face {
     font-family: speak2;
     src: url(../fonts/zaozigongfanghaidaoshaonianti.otf);
 }
-p{
+
+p {
     text-indent: 2em;
     line-height: 1.6;
 }
+
 .baihea0 {
     background-image: linear-gradient(to right,
-    #8888ed38,
-    #63e5cb3a,
-    #f2f2a53a);
+            #8888ed38,
+            #63e5cb3a,
+            #f2f2a53a);
     border-radius: 30px;
     backdrop-filter: blur(4px);
     box-shadow: 0 0 8px 3px #8888ed7c;
+    position: relative;
+    top: 40px;
 }
+
 .baihea1 {
     /* display: flex; */
     padding: 20px;
@@ -36,13 +42,19 @@ p{
     color: rgb(255, 177, 104);
     font-style: italic;
 }
-.baihea3{
+
+.baihea3 {
     padding: 20px;
     font-family: "speak2";
     font-size: 1.1rem;
-    color: rgb(255, 167, 167);
+    color: rgb(255, 230, 230);
 }
-.jingyu{
+.caidan {
+    display: flex;
+    gap: 30px;
+}
+
+.jingyu {
     background-color: #3131da27;
     border-radius: 10px;
     backdrop-filter: blur(4px);
@@ -50,4 +62,31 @@ p{
     font-family: "speak2";
     color: rgb(203, 234, 255);
     font-size: large;
+}
+
+.bga0 {
+    background-image: linear-gradient(to right,
+            #c967e738,
+            #e285ac3a,
+            #a2ddff3a);
+    border-radius: 30px;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 0 8px 3px #8888ed7c;
+}
+
+.bga1 {
+    padding: 20px;
+    gap: 20px;
+    font-family: "speak";
+    font-size: 1.2rem;
+    color: rgb(255, 124, 124);
+    font-style: italic;
+}
+.bga3 {
+    padding: 20px;
+    gap: 20px;
+    font-family: "speak2";
+    font-size: 1.1rem;
+    color: rgb(216, 241, 255);
+    font-style: normal;
 }

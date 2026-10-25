@@ -610,7 +610,8 @@ body::after {
 }
 
 #egg.show {
-    display: block;
+    display: flex;
+    flex-direction: column;
     animation: fadeUp .6s ease;
 }
 
