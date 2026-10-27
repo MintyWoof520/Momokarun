@@ -70,6 +70,12 @@
                 </svg>
                 <div>小说</div>
             </button>
+            <button class="nav-btn" data-page="comic">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-ic_userlevel_6"></use>
+                </svg>
+                <div>漫画</div>
+            </button>
             <button class="nav-btn" data-page="music">
                 <svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-jinmao"></use>
@@ -122,7 +128,8 @@
                                 <div class="bga2">
                                     <p>晋江bg文</p>
                                     <p>《穿书女配不想死》——作者：酸奶蛋糕</p>
-                                    <a href="javascript:void(0)" onclick="goLink('eGlhb3NodW8vY3NucGJ4cy9jc25wYnhzLmh0bWw=')">
+                                    <a href="javascript:void(0)"
+                                        onclick="goLink('eGlhb3NodW8vY3NucGJ4cy9jc25wYnhzLmh0bWw=')">
                                         <svg class="icon" aria-hidden="true">
                                             <use xlink:href="#icon-luxiangdai"></use>
                                         </svg>
@@ -208,6 +215,41 @@
                             <use xlink:href="#icon-sousuo"></use>
                         </svg>
                     </span>
+                </div>
+
+                <!-- 漫画 -->
+                <div id="page-comic" class="page">
+                    <div class="momokarun">
+                        <div class="momo">
+                            <img class="manhua" src="Images/mokarun.jpg" alt="Momokarun">
+                            <div>
+                                <p>《超自然武装当哒当》作者：龍幸伸</p>
+                                <p>你们两个就不能好好的搞纯爱吗！！！！</p>
+                            </div>
+                        </div>
+                        <div class="okarun">
+                            <div class="toc-header" onclick="toggleToc(this)">
+                                <span class="toc-title">
+                                    <svg class="icon" aria-hidden="true">
+                                        <use xlink:href="#icon-xigua"></use>
+                                    </svg>目录</span>
+                                <span class="toc-arrow">▼</span>
+                            </div>
+                            <ul class="toc-list" style="display: none;">
+
+                                <li>
+                                    <img class="toc-thumb" src="Images/juan1.png" alt="第1话封面">
+                                    <a href="Comic/DANDADAN/juan1.html" target="_blank">
+                                        <svg class="icon" aria-hidden="true">
+                                            <use xlink:href="#icon-huahua"></use>
+                                        </svg></span>
+                                    </a>
+                                    <div>
+                                        <p>第一卷</p>
+                                    </div>
+                                </li>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 音乐 -->
@@ -315,6 +357,12 @@
     <script>
         function goLink(encoded) {
             window.open(atob(encoded), "_blank");
+        }
+        function toggleToc(header) {
+            const list = header.nextElementSibling;
+            const isOpen = list.style.display !== 'none';
+            list.style.display = isOpen ? 'none' : 'block';
+            header.classList.toggle('open', !isOpen);
         }
     </script>
 </body>

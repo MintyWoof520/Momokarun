@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>我的漫画</title>
+    <link rel="icon" href="../../Images/jiabushou.ico">
+    <link rel="stylesheet" href="../CSS/tongyong.css">
+    <link rel="stylesheet" href="../../Iconfont/Iconfont2/iconfont.css">
+</head>
+
+<body>
+
+    <div id="toolbar">
+        <button id="btnFirst" title="第一页">
+            <span class="iconfont icon-fast-backward icon0"></span>
+        </button>
+        <button id="btnPrev">
+            <svg class="icon icon0" aria-hidden="true">
+                <use xlink:href="#icon-left-circle-fill"></use>
+            </svg>上一页</button>
+        <span id="pageInfo">1 / 104</span>
+        <button id="btnNext">下一页
+            <svg class="icon icon0" aria-hidden="true">
+                <use xlink:href="#icon-right-circle-fill"></use>
+            </svg>
+        </button>
+        <button id="btnLast" title="最后一页">
+            <span class="iconfont icon-fast-forward icon0"></span>
+        </button>
+    </div>
+
+    <div id="stage">
+        <div class="hotzone" id="zonePrev"></div>
+        <div class="hotzone" id="zoneNext"></div>
+        <img id="page" alt="漫画页">
+        <div id="loading">加载中…</div>
+    </div>
+
+    <script>
+        /* ========= 配置区 ========= */
+        const CONFIG = {
+            total: 104,
+            ext: '.jpg',                                  // .jpg / .webp / .png
+            prefix: 'https://22tk1lscp-comic01-10i3bxv3bn.maozi.io/DANDADAN01/',                             // 可换成完整 URL
+            pad: 2,                                       // 文件名补零位数：01.jpg
+            rememberProgress: true,                       // 记住上次看到第几页
+            swipeEnabled: true,                           // 移动端左右滑动翻页
+        };
+        /* ========================== */
+
+        const pad = n => String(n).padStart(CONFIG.pad, '0');
+        const urlOf = n => `${CONFIG.prefix}${pad(n)}${CONFIG.ext}`;
+
+        const $ = id => document.getElementById(id);
+        const img = $('page');
+        const info = $('pageInfo');
+        const loading = $('loading');
+        const btnPrev = $('btnPrev');
+        const btnNext = $('btnNext');
+        const btnFirst = $('btnFirst');
+        const btnLast = $('btnLast');
+
+        let current = 1;
+        let loadToken = 0;          // 防止快速翻页时旧图覆盖新图
+
+        /* ---- 初始化：读进度 ---- */
+        if (CONFIG.rememberProgress) {
+            const saved = Number(localStorage.getItem('comicPage'));
+            if (saved >= 1 && saved <= CONFIG.total) current = saved;
+        }
+
+        /* ---- 核心：显示某一页 ---- */
+        function showPage(n, { animate = true } = {}) {
+            n = Math.min(Math.max(n, 1), CONFIG.total);
+            if (n === current && img.src) return;   // 已在当前页
+            current = n;
+
+            const token = ++loadToken;
+            img.classList.remove('loaded');
+            loading.classList.add('show');
+
+            const newImg = new Image();
+            newImg.onload = () => {
+                if (token !== loadToken) return;      // 已被更新的请求取代
+                img.src = newImg.src;
+                img.classList.add('loaded');
+                loading.classList.remove('show');
+            };
+            newImg.onerror = () => {
+                if (token !== loadToken) return;
+                loading.textContent = `第 ${n} 页加载失败`;
+                loading.classList.add('show');
+            };
+            newImg.src = urlOf(n);
+
+            updateUI();
+            if (CONFIG.rememberProgress) localStorage.setItem('comicPage', n);
+
+            // 预加载相邻页，翻页更顺
+            [n + 1, n - 1].forEach(p => {
+                if (p >= 1 && p <= CONFIG.total) {
+                    const pre = new Image();
+                    pre.src = urlOf(p);
+                }
+            });
+        }
+
+        function updateUI() {
+            info.textContent = `${current} / ${CONFIG.total}`;
+            btnPrev.disabled = btnFirst.disabled = current <= 1;
+            btnNext.disabled = btnLast.disabled = current >= CONFIG.total;
+        }
+
+        /* ---- 翻页动作 ---- */
+        const next = () => showPage(current + 1);
+        const prev = () => showPage(current - 1);
+        const first = () => showPage(1);
+        const last = () => showPage(CONFIG.total);
+
+        btnNext.onclick = next;
+        btnPrev.onclick = prev;
+        btnFirst.onclick = first;
+        btnLast.onclick = last;
+
+        /* ---- 点击左右热区翻页 ---- */
+        $('zoneNext').onclick = next;
+        $('zonePrev').onclick = prev;
+
+        /* ---- 键盘 ---- */
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); next(); }
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prev(); }
+            if (e.key === 'Home') first();
+            if (e.key === 'End') last();
+        });
+
+        /* ---- 移动端滑动 ---- */
+        if (CONFIG.swipeEnabled) {
+            let startX = 0, startY = 0, tracking = false;
+            const stage = $('stage');
+            stage.addEventListener('touchstart', e => {
+                const t = e.touches[0];
+                startX = t.clientX; startY = t.clientY; tracking = true;
+            }, { passive: true });
+            stage.addEventListener('touchend', e => {
+                if (!tracking) return;
+                tracking = false;
+                const t = e.changedTouches[0];
+                const dx = t.clientX - startX;
+                const dy = t.clientY - startY;
+                if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return; // 太短或主要是竖向滑动
+                if (dx < 0) next();   // 左滑 → 下一页
+                else prev();          // 右滑 → 上一页
+            }, { passive: true });
+        }
+
+        /* ---- 鼠标滚轮翻页（可选，不想要可删） ---- */
+        let wheelLock = 0;
+        window.addEventListener('wheel', e => {
+            const now = Date.now();
+            if (now - wheelLock < 300) return;
+            if (Math.abs(e.deltaY) < 10) return;
+            wheelLock = now;
+            if (e.deltaY > 0) next(); else prev();
+        }, { passive: true });
+
+        /* ---- 启动 ---- */
+        showPage(current);
+    </script>
+</body>
+<script src="../../Iconfont/Iconfont2/iconfont.js"></script>
+
+</html>

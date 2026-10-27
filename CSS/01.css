@@ -311,99 +311,160 @@ body::after {
 
 
 /* 导航区 —— 自动从 HTML 按钮收集 */
-/* ========== 桌面端：横排（保持原方案五） ========== */
+/* ============================================================
+   方案 A · 精致玻璃 Glassmorphism 2.0
+   特点：渐变玻璃、顶部高光、悬停流光扫过、激活态青色柔光胶囊
+   ============================================================ */
+
 .nav {
     display: flex;
     flex-direction: row;
-    gap: 0.8rem;
-    padding: 0.9rem 1rem;
-    border-bottom: 1px solid #ffffff33;
-    justify-content: space-around;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
     width: 100%;
-    background: #ffffff08;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    box-sizing: border-box;
+    padding: 0.7rem 1.25rem;
+
     position: sticky;
     top: 0;
     z-index: 100;
-    box-sizing: border-box;
+
+    /* 容器完全透明，去掉所有背景装饰 */
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+/* 底部呼吸光带，替代生硬的分割线 */
+.nav::after {
+    content: "";
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    bottom: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #c1fff066, transparent);
+    pointer-events: none;
 }
 
 .nav-btn {
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 3px;
-    min-width: 120px;
-    min-height: 54px;
-    padding: 0.5rem;
-    border: none;
-    border-radius: 25px;
-    background: #ffffff12;
-    color: #ffffffcc;
-    font-family: "speak1";
-    font-size: 0.9rem;
+    gap: 4px;
+
+    min-width: 112px;
+    min-height: 52px;
+    padding: 0.5rem 0.8rem;
+
+    border: 1px solid #ffffff14;
+    border-radius: 18px;
+    background: #ffffff0a;
+    color: #ffffffb3;
+
+    font-family: "speak1", system-ui, sans-serif;
+    font-size: 0.86rem;
     font-weight: 600;
+    letter-spacing: 0.02em;
     cursor: pointer;
+
     box-shadow:
-        3px 3px 8px #00000055,
-        -2px -2px 6px #ffffff18;
-    transition: all 0.18s ease;
+        0 4px 14px -8px #00000080,
+        inset 0 1px 0 #ffffff1a;
+
+    transition:
+        color 0.18s ease,
+        background 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     user-select: none;
     -webkit-user-select: none;
 }
 
-.nav-btn:active {
-    transform: scale(0.94);
+/* 悬停时的高光扫过 */
+.nav-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 32%, #ffffff26 50%, transparent 68%);
+    transform: translateX(-130%);
+    transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
 }
 
 @media (hover: hover) {
     .nav-btn:hover {
-        color: #fff;
+        color: #ffffff;
+        background: #ffffff14;
+        border-color: #ffffff26;
         transform: translateY(-1px);
+    }
+
+    .nav-btn:hover::before {
+        transform: translateX(130%);
     }
 }
 
-.nav-btn.active {
-    background: #ffffff08;
-    color: #c1fff0;
-    box-shadow:
-        inset 3px 3px 8px #00000066,
-        inset -2px -2px 6px #ffffff14,
-        0 0 0 1px #c1fff033;
+.nav-btn:active {
+    transform: scale(0.955);
 }
 
-/* ========== 手机端：竖排侧边导航 ========== */
+.nav-btn:focus-visible {
+    outline: 2px solid #c1fff099;
+    outline-offset: 2px;
+}
+
+/* 激活态：青色柔光胶囊 */
+.nav-btn.active {
+    color: #c1fff0;
+    background: linear-gradient(180deg, #c1fff01f, #c1fff00a);
+    border-color: #c1fff052;
+    box-shadow:
+        0 0 0 1px #c1fff01a,
+        0 8px 24px -12px #c1fff07a,
+        inset 0 1px 0 #ffffff24;
+}
+
+/* ========== 手机端 ========== */
 @media (max-width: 640px) {
 
-    /* ---- 悬浮开关按钮（默认显示）---- */
     .nav-toggle {
         display: flex;
-        /* 手机上显示 */
         position: fixed;
         left: max(14px, env(safe-area-inset-left));
         bottom: max(20px, env(safe-area-inset-bottom));
-        width: 52px;
-        height: 52px;
+        width: 54px;
+        height: 54px;
         align-items: center;
         justify-content: center;
-        border: none;
+
+        border: 1px solid #ffffff1f;
         border-radius: 50%;
-        background: #ffffff14;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        background: linear-gradient(180deg, #ffffff1c, #ffffff0a);
+        backdrop-filter: blur(12px) saturate(160%);
+        -webkit-backdrop-filter: blur(12px) saturate(160%);
         color: #c1fff0;
-        font-size: 1.4rem;
+        font-size: 1.35rem;
         cursor: pointer;
+
         box-shadow:
-            3px 3px 10px #00000066,
-            -2px -2px 6px #ffffff18,
-            0 0 0 1px #c1fff033;
+            0 12px 30px -12px #000000cc,
+            inset 0 1px 0 #ffffff24;
+
         z-index: 1100;
-        transition: transform 0.2s ease;
+        transition:
+            transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+            background 0.2s ease;
         -webkit-tap-highlight-color: transparent;
         touch-action: manipulation;
     }
@@ -412,43 +473,42 @@ body::after {
         transform: scale(0.9);
     }
 
-    /* 展开时图标旋转成"关闭" */
     .nav-toggle.open {
         transform: rotate(45deg);
     }
 
-    /* ---- 竖排导航本体：默认收缩隐藏 ---- */
     .nav {
         flex-direction: column;
+        align-items: stretch;
         justify-content: flex-start;
-        gap: 0.6rem;
+        gap: 0.45rem;
 
         position: fixed;
         left: max(14px, env(safe-area-inset-left));
-        bottom: calc(52px + max(20px, env(safe-area-inset-bottom)) + 12px);
-        /* ↑ 正好在开关按钮正上方 12px */
+        bottom: calc(54px + max(20px, env(safe-area-inset-bottom)) + 14px);
 
         width: auto;
-        padding: 0.7rem;
-        border: none;
-        border-radius: 18px;
-        background: #ffffff10;
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        box-shadow: 4px 4px 24px #00000066;
+        padding: 0.6rem;
 
-        /* 收缩动画 */
+        border: 1px solid #ffffff1f;
+        border-radius: 20px;
+        background: linear-gradient(180deg, #9affdd44, #ffffff1f);
+        backdrop-filter: blur(18px) saturate(160%);
+        -webkit-backdrop-filter: blur(18px) saturate(160%);
+        box-shadow:
+            0 24px 50px -20px #000000cc,
+            inset 0 1px 0 #ffffff1f;
+
         opacity: 0;
         visibility: hidden;
-        transform: translateY(12px) scale(0.92);
+        transform: translateY(10px) scale(0.94);
         transform-origin: left bottom;
-        /* 从开关按钮处展开 */
         transition:
-            opacity 0.22s ease,
-            transform 0.22s ease,
-            visibility 0.22s;
-        z-index: 1050;
+            opacity 0.24s ease,
+            transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1),
+            visibility 0.24s;
 
+        z-index: 1050;
         max-height: 70vh;
         overflow-y: auto;
         scrollbar-width: none;
@@ -458,24 +518,26 @@ body::after {
         display: none;
     }
 
-    /* 展开状态 */
+    .nav::after {
+        display: none;
+    }
+
     .nav.open {
         opacity: 1;
         visibility: visible;
         transform: translateY(0) scale(1);
     }
 
-    /* 竖排按钮：图标+文字横排小胶囊 */
     .nav-btn {
         flex-direction: row;
         justify-content: flex-start;
-        gap: 8px;
+        gap: 10px;
         width: 100%;
         min-width: 0;
-        min-height: 44px;
-        padding: 0.45rem 0.9rem;
-        border-radius: 12px;
-        font-size: 0.85rem;
+        min-height: 46px;
+        padding: 0.5rem 0.95rem;
+        border-radius: 14px;
+        font-size: 0.86rem;
     }
 
     .nav-btn svg,
@@ -486,7 +548,6 @@ body::after {
     }
 }
 
-/* 桌面端隐藏开关按钮 */
 @media (min-width: 641px) {
     .nav-toggle {
         display: none;
@@ -586,7 +647,7 @@ body::after {
     font-family: "speak";
 }
 
-#dialog p{
+#dialog p {
     color: #ffffff;
     font-family: "speak";
 }
@@ -637,4 +698,74 @@ body::after {
         transform: translateY(105vh) rotate(540deg);
         opacity: 0;
     }
+}
+
+.collapsible-toc {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+    max-width: 480px;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.toc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    cursor: pointer;
+    user-select: none;
+    background: #f7f7f731;
+    border-radius: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+
+.toc-arrow {
+    transition: transform 0.2s ease;
+    font-size: 12px;
+    color: #888;
+}
+
+/* 展开时箭头旋转（由 JS 切换类名） */
+.toc-header.open .toc-arrow {
+    transform: rotate(180deg);
+}
+
+.toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 6px 0;
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.toc-list li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    text-decoration: none;
+    color: #333;
+    transition: background 0.15s;
+}
+
+
+/* 目录项缩略图 */
+.toc-thumb {
+    width: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    flex-shrink: 0;
+    background: #f0f0f0;
+}
+
+.toc-text {
+    font-size: 14px;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

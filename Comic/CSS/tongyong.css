@@ -1,0 +1,132 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    font-family: system-ui, -apple-system, sans-serif;
+    overflow: hidden;
+    /* 翻页模式禁止整页滚动 */
+}
+
+.icon {
+    width: 1.2em;
+    height: 1.2em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+}
+.icon0{
+    color: rgb(52, 223, 166);
+}
+
+/* 顶部工具栏 */
+#toolbar {
+    flex: 0 0 auto;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #222;
+    color: #ddd;
+    font-size: 14px;
+    user-select: none;
+}
+
+#toolbar button {
+    background: #333;
+    color: #ddd;
+    border: 0;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#toolbar button:disabled {
+    opacity: .35;
+    cursor: default;
+}
+
+#pageInfo {
+    min-width: 80px;
+    text-align: center;
+}
+
+/* 阅读区 */
+#stage {
+    flex: 1 1 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#page {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    /* 完整显示整页，不裁切 */
+    display: block;
+    transition: opacity .15s;
+    opacity: 0;
+}
+
+#page.loaded {
+    opacity: 1;
+}
+
+/* 左右点击热区 */
+.hotzone {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 30%;
+    cursor: pointer;
+    z-index: 2;
+}
+
+#zonePrev {
+    left: 0;
+}
+
+#zoneNext {
+    right: 0;
+}
+
+/* 加载中的小提示 */
+#loading {
+    position: absolute;
+    color: #888;
+    font-size: 14px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .2s;
+}
+
+#loading.show {
+    opacity: 1;
+}
+
+/* 移动端工具栏简化 */
+@media (max-width: 600px) {
+    #toolbar {
+        height: 40px;
+        font-size: 13px;
+        gap: 6px;
+    }
+
+    #toolbar button {
+        padding: 4px 10px;
+    }
+}

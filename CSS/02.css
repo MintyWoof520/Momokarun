@@ -5,6 +5,9 @@
 .hututu {
     width: 160px;
 }
+.manhua {
+    width: 200px;
+}
 
 @font-face {
     font-family: speak;
@@ -86,4 +89,24 @@ p {
     font-size: 1.1rem;
     color: rgb(216, 241, 255);
     font-style: normal;
+}
+
+.momokarun {
+    background-color: rgba(0, 0, 0, 0.219);
+    border-radius: 20px;
+    width: fit-content;
+}
+
+.momo {
+    display: flex;
+    font-family: "speak";
+    font-size: 1.5rem;
+    padding: 30px;
+    color: rgb(243, 255, 251);
+}
+@media (max-width: 640px) {
+    .momo {
+        display: block;
+        font-size: 1.2rem;
+    }
 }
