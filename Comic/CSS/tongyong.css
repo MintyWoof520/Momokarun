@@ -177,11 +177,6 @@ body {
         font-size: 12px;
     }
 
-    /* 把"上一页/下一页"改成短词，或者用图标 */
-    #btnFirst,
-    #btnLast {
-        display: none;
-    }
 
     /* 手机上直接隐藏首尾按钮，腾出空间 */
     .text-hide-mobile {

@@ -1,23 +1,17 @@
-
-
-/* ========================== */
-
 const pad = n => String(n).padStart(CONFIG.pad, '0');
 const urlOf = n => `${CONFIG.prefix}${pad(n)}${CONFIG.ext}`;
 
 const $ = id => document.getElementById(id);
 
-let mode = 'flip'; // 'flip' | 'scroll'
+let mode = 'flip';
 let current = 1;
 let loadToken = 0;
 
-// 翻页模式专属
 const img = $('page');
 const wrapper = $('imgWrapper');
 const flipContainer = $('flipContainer');
 let scale = 1, translateX = 0, translateY = 0, isZoomed = false;
 
-// 滚动模式专属
 const scrollContainer = $('scrollContainer');
 let scrollBuilt = false;
 
@@ -33,22 +27,15 @@ function updateUI() {
 
     if (mode === 'scroll' && scrollBuilt) {
         const targetImg = scrollContainer.children[current - 1];
-        if (targetImg) {
-            // 计算滚动位置，减去工具栏高度
-            const top = targetImg.offsetTop - 48;
-            scrollContainer.scrollTo({ top: top, behavior: 'smooth' });
-        }
+        if (targetImg) targetImg.scrollIntoView({ block: 'center' });
     }
 }
 
-/* =========================================
-   模式 1：翻页模式
-   ========================================= */
+/* ===== 翻页模式 ===== */
 function applyTransform(withAnimation = true) {
     wrapper.style.transition = (withAnimation && !isZoomed) ? 'transform 0.2s ease-out' : 'none';
     wrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
 }
-
 function resetZoom() {
     scale = 1; translateX = 0; translateY = 0; isZoomed = false;
     applyTransform(true);
@@ -62,7 +49,6 @@ function showFlipPage(n) {
     resetZoom();
     const token = ++loadToken;
     img.classList.remove('loaded');
-    $('loading').textContent = '加载中…';
     $('loading').classList.add('show');
 
     const newImg = new Image();
@@ -72,24 +58,16 @@ function showFlipPage(n) {
         img.classList.add('loaded');
         $('loading').classList.remove('show');
     };
-    newImg.onerror = () => {
-        if (token !== loadToken) return;
-        $('loading').textContent = `第 ${n} 页加载失败`;
-        $('loading').classList.add('show');
-    };
     newImg.src = urlOf(n);
 
     updateUI();
     if (CONFIG.rememberProgress) localStorage.setItem('comicPage', n);
-
     [n + 1, n - 1].forEach(p => {
         if (p >= 1 && p <= CONFIG.total) new Image().src = urlOf(p);
     });
 }
 
-/* =========================================
-   模式 2：滚动模式
-   ========================================= */
+/* ===== 滚动模式 ===== */
 function buildScrollMode() {
     if (scrollBuilt) return;
     scrollContainer.innerHTML = '';
@@ -97,28 +75,15 @@ function buildScrollMode() {
         const simg = document.createElement('img');
         simg.src = urlOf(i);
         simg.loading = 'lazy';
-        simg.dataset.page = i;
         scrollContainer.appendChild(simg);
     }
     scrollBuilt = true;
 
-    let lastScrollTop = 0;
     scrollContainer.addEventListener('scroll', () => {
         if (mode !== 'scroll') return;
-
-        // 1. 自动隐藏/显示顶部工具栏
-        const st = scrollContainer.scrollTop;
-        if (st > lastScrollTop && st > 50) {
-            $('toolbar').classList.add('hidden');
-        } else if (st < lastScrollTop) {
-            $('toolbar').classList.remove('hidden');
-        }
-        lastScrollTop = st;
-
-        // 2. 更新当前页码
         let closestPage = 1;
         let minDiff = Infinity;
-        const containerCenter = st + scrollContainer.clientHeight / 2;
+        const containerCenter = scrollContainer.scrollTop + scrollContainer.clientHeight / 2;
 
         for (let i = 0; i < scrollContainer.children.length; i++) {
             const child = scrollContainer.children[i];
@@ -137,7 +102,7 @@ function buildScrollMode() {
             $('btnNext').disabled = $('btnLast').disabled = current >= CONFIG.total;
             if (CONFIG.rememberProgress) localStorage.setItem('comicPage', current);
         }
-    });
+    }, { passive: true });
 }
 
 function showScrollPage(n) {
@@ -147,22 +112,18 @@ function showScrollPage(n) {
     if (CONFIG.rememberProgress) localStorage.setItem('comicPage', n);
 }
 
-/* =========================================
-   全局：切换与公共逻辑
-   ========================================= */
+/* ===== 切换与按钮 ===== */
 function switchMode(newMode) {
     mode = newMode;
-    $('toolbar').classList.remove('hidden'); // 切换时保证工具栏可见
-
     if (mode === 'flip') {
         flipContainer.style.display = 'flex';
         scrollContainer.style.display = 'none';
-        $('modeBtn').textContent = '切换到滚动';
+        $('modeBtn').innerHTML = '<i class="iconfont icon0 icon-dingdan"></i> <span class="text-hide-mobile">切换滚动</span>';
         showFlipPage(current);
     } else {
         flipContainer.style.display = 'none';
-        scrollContainer.style.display = 'flex'; // 这里改成 flex
-        $('modeBtn').textContent = '切换到翻页';
+        scrollContainer.style.display = 'flex';
+        $('modeBtn').innerHTML = '<i class="iconfont icon0 icon-yuedu"></i> <span class="text-hide-mobile">切换翻页</span>';
         showScrollPage(current);
     }
 }
@@ -181,7 +142,7 @@ $('btnLast').onclick = last;
 $('zoneNext').onclick = () => { if (mode === 'flip') next(); };
 $('zonePrev').onclick = () => { if (mode === 'flip') prev(); };
 
-/* ---- 翻页模式的手势 ---- */
+/* ===== 手势处理 ===== */
 let startX = 0, startY = 0, initialDistance = 0, initialScale = 1, isSwiping = false, isDraggingImg = false;
 const getDistance = (touches) => Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
 
@@ -264,6 +225,6 @@ window.addEventListener('wheel', e => {
     e.deltaY > 0 ? next() : prev();
 }, { passive: true });
 
-/* ---- 启动 ---- */
+/* 启动 */
 updateUI();
 showFlipPage(current);
