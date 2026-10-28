@@ -124,26 +124,25 @@ body {
 /* ===== 模式 2：上下滚动区 ===== */
 #scrollContainer {
     position: absolute;
-    top: 0;
+    top: 50px;
     bottom: 0;
     left: 0;
     right: 0;
-    /* 去掉 top:48px，实现全屏 */
     overflow-y: auto;
     overflow-x: hidden;
     display: none;
-    /* 修复：默认隐藏，由 JS 控制变成 block */
     flex-direction: column;
     align-items: center;
-    touch-action: pan-y;
-    padding-top: 48px;
-    /* 留出工具栏的空间 */
+    /* 核心修复：去掉 pan-y 限制，允许原生双指缩放！ */
+    touch-action: auto;
 }
 
 #scrollContainer img {
     max-width: 100%;
     height: auto;
     display: block;
+    /* 防止图片原生拖拽 */
+    pointer-events: none;
 }
 
 /* 加载提示 */

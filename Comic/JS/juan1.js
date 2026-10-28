@@ -142,7 +142,7 @@ $('btnLast').onclick = last;
 $('zoneNext').onclick = () => { if (mode === 'flip') next(); };
 $('zonePrev').onclick = () => { if (mode === 'flip') prev(); };
 
-/* ===== 手势处理 ===== */
+/* ===== 手势处理（仅翻页模式） ===== */
 let startX = 0, startY = 0, initialDistance = 0, initialScale = 1, isSwiping = false, isDraggingImg = false;
 const getDistance = (touches) => Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
 
