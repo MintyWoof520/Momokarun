@@ -123,7 +123,7 @@ function switchMode(newMode) {
     } else {
         flipContainer.style.display = 'none';
         scrollContainer.style.display = 'flex';
-        $('modeBtn').innerHTML = '<i class="iconfont icon0 icon-yuedu"></i> <span class="text-hide-mobile">切换翻页</span>';
+        $('modeBtn').innerHTML = '<i class="iconfont icon0 icon-dingdan"></i> <span class="text-hide-mobile">切换翻页</span>';
         showScrollPage(current);
     }
 }
@@ -142,7 +142,7 @@ $('btnLast').onclick = last;
 $('zoneNext').onclick = () => { if (mode === 'flip') next(); };
 $('zonePrev').onclick = () => { if (mode === 'flip') prev(); };
 
-/* ===== 手势处理（仅翻页模式） ===== */
+/* ===== 手势处理 ===== */
 let startX = 0, startY = 0, initialDistance = 0, initialScale = 1, isSwiping = false, isDraggingImg = false;
 const getDistance = (touches) => Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
 
