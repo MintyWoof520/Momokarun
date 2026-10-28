@@ -25,21 +25,25 @@ body {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background: rgba(34, 34, 34, 0.95);
+    background: rgba(34, 34, 34, 0.37);
     color: #ddd;
     font-size: 14px;
     z-index: 100;
     backdrop-filter: blur(5px);
-    transition: transform 0.3s ease;
+    /* 平滑过渡 */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s, visibility 0.3s;
 }
 
-/* 滚动模式下隐藏工具栏的类 */
-#toolbar.hidden {
+/* 核心修复：彻底隐藏工具栏，不留黑边 */
+#toolbar.hide-toolbar {
     transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    /* 不可见且不可点击 */
 }
 
 #toolbar button {
-    background: #333;
+    background: #072c1e9c;
     color: #ddd;
     border: 0;
     border-radius: 6px;
@@ -122,9 +126,11 @@ body {
 }
 
 /* ===== 模式 2：上下滚动区 ===== */
+/* 滚动容器完全铺满，用 padding-top 留出工具栏的位置 */
 #scrollContainer {
     position: absolute;
-    top: 50px;
+    top: 0;
+    /* 改为 0 */
     bottom: 0;
     left: 0;
     right: 0;
@@ -133,8 +139,10 @@ body {
     display: none;
     flex-direction: column;
     align-items: center;
-    /* 核心修复：去掉 pan-y 限制，允许原生双指缩放！ */
     touch-action: auto;
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+    /* 加上顶部内边距，防止最上面的图被手机刘海挡住 */
+    padding-top: 48px;
 }
 
 #scrollContainer img {
@@ -163,6 +171,7 @@ body {
     opacity: 1;
 }
 
+/* 手机端适配微调 */
 @media (max-width: 600px) {
     #toolbar {
         height: 44px;
@@ -176,16 +185,23 @@ body {
         font-size: 12px;
     }
 
-
-    /* 手机上直接隐藏首尾按钮，腾出空间 */
     .text-hide-mobile {
         display: none;
     }
 
-    /* 隐藏“切换到滚动”的文字 */
     #modeBtn {
         font-size: 12px;
         padding: 0 10px;
+    }
+
+    #flipContainer {
+        top: 44px;
+    }
+
+    /* 滚动容器同样用 padding 代替 top */
+    #scrollContainer {
+        top: 0;
+        padding-top: 44px;
     }
 }
 

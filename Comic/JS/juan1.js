@@ -2,6 +2,7 @@ const pad = n => String(n).padStart(CONFIG.pad, '0');
 const urlOf = n => `${CONFIG.prefix}${pad(n)}${CONFIG.ext}`;
 
 const $ = id => document.getElementById(id);
+const toolbar = $('toolbar'); // 获取工具栏 DOM
 
 let mode = 'flip';
 let current = 1;
@@ -79,11 +80,26 @@ function buildScrollMode() {
     }
     scrollBuilt = true;
 
+    let lastScrollTop = 0;
+
     scrollContainer.addEventListener('scroll', () => {
         if (mode !== 'scroll') return;
+
+        const scrollTop = scrollContainer.scrollTop;
+
+        // 核心逻辑：往下滑就隐藏，往上滑就显示，不再自动弹出
+        if (scrollTop > lastScrollTop && scrollTop > 50) {
+            toolbar.classList.add('hide-toolbar');
+        } else if (scrollTop < lastScrollTop || scrollTop <= 50) {
+            toolbar.classList.remove('hide-toolbar');
+        }
+
+        lastScrollTop = scrollTop;
+
+        // 计算当前页码
         let closestPage = 1;
         let minDiff = Infinity;
-        const containerCenter = scrollContainer.scrollTop + scrollContainer.clientHeight / 2;
+        const containerCenter = scrollTop + scrollContainer.clientHeight / 2;
 
         for (let i = 0; i < scrollContainer.children.length; i++) {
             const child = scrollContainer.children[i];
