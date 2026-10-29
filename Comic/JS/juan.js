@@ -126,8 +126,6 @@
             if (closestPage !== current) {
                 current = closestPage;
                 $('pageInfo').textContent = `${current} / ${CONFIG.total}`;
-                $('btnPrev').disabled = $('btnFirst').disabled = current <= 1;
-                $('btnNext').disabled = $('btnLast').disabled = current >= CONFIG.total;
                 updateCatalogActive(current);
                 if (CONFIG.rememberProgress) localStorage.setItem('comicPage', current);
             }
@@ -169,13 +167,9 @@
 
     const next = () => { mode === 'flip' ? showFlipPage(current + 1) : showScrollPage(current + 1); };
     const prev = () => { mode === 'flip' ? showFlipPage(current - 1) : showScrollPage(current - 1); };
-    const first = () => { mode === 'flip' ? showFlipPage(1) : showScrollPage(1); };
-    const last = () => { mode === 'flip' ? showFlipPage(CONFIG.total) : showScrollPage(CONFIG.total); };
 
     $('btnNext').onclick = next;
     $('btnPrev').onclick = prev;
-    $('btnFirst').onclick = first;
-    $('btnLast').onclick = last;
     $('zoneNext').onclick = () => { if (mode === 'flip') next(); };
     $('zonePrev').onclick = () => { if (mode === 'flip') prev(); };
 

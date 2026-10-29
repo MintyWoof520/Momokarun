@@ -72,14 +72,15 @@
 
     /* ========== UI 更新 ========== */
     function updateUI() {
-        const total = totalOf();
-        $('pageInfo').textContent = `${chapter().title} ${current} / ${total}`;
-        $('btnPrev').disabled = $('btnFirst').disabled = current <= 1 && currentChapter === 0;
-        $('btnNext').disabled = $('btnLast').disabled =
-            current >= total && currentChapter === CONFIG.chapters.length - 1;
+            const total = totalOf();
+            $('pageInfo').textContent = `${chapter().title} ${current} / ${total}`;
+            
+            // 只保留上一页和下一页的禁用逻辑
+            $('btnPrev').disabled = current <= 1 && currentChapter === 0;
+            $('btnNext').disabled = current >= total && currentChapter === CONFIG.chapters.length - 1;
 
-        updateCatalogActive();
-    }
+            updateCatalogActive();
+        }
 
     /* ============================================================
        翻页模式
@@ -267,8 +268,6 @@
 
     $('btnNext').onclick = next;
     $('btnPrev').onclick = prev;
-    $('btnFirst').onclick = first;
-    $('btnLast').onclick = last;
     $('zoneNext').onclick = () => { if (mode === 'flip') next(); };
     $('zonePrev').onclick = () => { if (mode === 'flip') prev(); };
 
