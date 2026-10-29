@@ -16,6 +16,10 @@
     let current = 1;
     let loadToken = 0;
 
+    // 修复核心：增加一个“锁定滚动”的变量，防止跳转时被监听事件覆盖
+    let isAutoScrolling = false;
+    let scrollTimeout = null;
+
     const img = $('page');
     const wrapper = $('imgWrapper');
     const flipContainer = $('flipContainer');
@@ -39,8 +43,17 @@
     // ---------- 通用UI更新 ----------
     function updateUI() {
         $('pageInfo').textContent = `${current} / ${CONFIG.total}`;
-        $('btnPrev').disabled = $('btnFirst').disabled = current <= 1;
-        $('btnNext').disabled = $('btnLast').disabled = current >= CONFIG.total;
+
+        // 兼容你删除了第一页/最后一页按钮的情况
+        const btnFirst = $('btnFirst');
+        const btnLast = $('btnLast');
+        if (btnFirst) btnFirst.disabled = (current <= 1);
+        if (btnLast) btnLast.disabled = (current >= CONFIG.total);
+
+        const btnPrev = $('btnPrev');
+        const btnNext = $('btnNext');
+        if (btnPrev) btnPrev.disabled = (current <= 1);
+        if (btnNext) btnNext.disabled = (current >= CONFIG.total);
 
         // 更新目录高亮
         updateCatalogActive(current);
@@ -100,6 +113,9 @@
         scrollContainer.addEventListener('scroll', () => {
             if (mode !== 'scroll') return;
 
+            // 【核心修复】如果正在自动跳转，忽略滚动监听的计算，防止页码被错误覆盖
+            if (isAutoScrolling) return;
+
             const scrollTop = scrollContainer.scrollTop;
 
             if (scrollTop > lastScrollTop && scrollTop > 50) {
@@ -137,10 +153,16 @@
         current = n;
         updateUI();
         if (CONFIG.rememberProgress) localStorage.setItem('comicPage', n);
+
         if (scrollBuilt && scrollContainer.children[current - 1]) {
-            setTimeout(() => {
-                scrollContainer.children[current - 1]?.scrollIntoView({ block: 'center' });
-            }, 50);
+            // 【核心修复】开启锁定，平滑滚动，并在滚动结束后解除锁定
+            isAutoScrolling = true;
+            scrollContainer.children[current - 1].scrollIntoView({ block: 'center', behavior: 'smooth' });
+
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                isAutoScrolling = false;
+            }, 600); // 600ms 后解除锁定，足够平滑滚动完成
         }
     }
 
@@ -267,6 +289,7 @@
             item.dataset.page = i;
             item.addEventListener('click', () => {
                 const targetPage = i;
+                // 目录点击直接跳转
                 if (mode === 'flip') {
                     showFlipPage(targetPage);
                 } else {
@@ -321,21 +344,21 @@
     });
 
     /* ===== 启动 ===== */
-    // 初始化目录
     buildCatalog();
 
-    // 【核心修复】首次进入，不调用 switchMode（避免重绘按钮导致图标消失）
-    // 直接设置初始状态并渲染内容
     flipContainer.style.display = 'none';
     scrollContainer.style.display = 'flex';
     buildScrollMode();
 
     updateUI();
 
-    // 首次进入安全定位
     setTimeout(() => {
         if (scrollContainer.children[current - 1]) {
+            isAutoScrolling = true;
             scrollContainer.children[current - 1].scrollIntoView({ block: 'center' });
+            scrollTimeout = setTimeout(() => {
+                isAutoScrolling = false;
+            }, 600);
         }
     }, 100);
 
