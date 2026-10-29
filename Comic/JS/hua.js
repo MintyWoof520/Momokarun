@@ -73,7 +73,7 @@
     /* ========== UI 更新 ========== */
     function updateUI() {
         const total = totalOf();
-        $('pageInfo').textContent = `${chapter().title} ${current} / ${total}`;
+        $('pageInfo').textContent = chapter().title;
 
         // 上一章 / 下一章 的禁用逻辑
         $('btnPrev').disabled = currentChapter <= 0;
