@@ -31,7 +31,7 @@
 
     // 目录
     const catalogPanel = $('catalogPanel');
-    const catalogGrid = $('catalogGrid'); // 改为单级目录容器
+    const catalogGrid = $('catalogGrid');
     const catalogBtn = $('catalogBtn');
     const catalogClose = $('catalogClose');
     const catalogTitle = $('catalogTitle');
@@ -72,15 +72,40 @@
 
     /* ========== UI 更新 ========== */
     function updateUI() {
-            const total = totalOf();
-            $('pageInfo').textContent = `${chapter().title} ${current} / ${total}`;
-            
-            // 只保留上一页和下一页的禁用逻辑
-            $('btnPrev').disabled = current <= 1 && currentChapter === 0;
-            $('btnNext').disabled = current >= total && currentChapter === CONFIG.chapters.length - 1;
+        const total = totalOf();
+        $('pageInfo').textContent = `${chapter().title} ${current} / ${total}`;
 
-            updateCatalogActive();
+        // 上一章 / 下一章 的禁用逻辑
+        $('btnPrev').disabled = currentChapter <= 0;
+        $('btnNext').disabled = currentChapter >= CONFIG.chapters.length - 1;
+
+        updateCatalogActive();
+    }
+
+    /* ============================================================
+       章节切换（核心新增）
+       ============================================================ */
+    function gotoChapter(idx) {
+        // 边界保护
+        if (idx < 0 || idx >= CONFIG.chapters.length) return;
+        if (idx === currentChapter) return; // 同一章不重复加载
+
+        currentChapter = idx;
+        current = 1; // 进入新章节从第 1 页开始
+
+        // 强制重建滚动容器（新章节内容不同）
+        rebuildScrollForNewChapter();
+
+        // 根据当前模式跳转到第 1 页
+        if (mode === 'flip') {
+            showFlipPage(1);
+        } else {
+            showScrollPage(1);
         }
+    }
+
+    const prevChapter = () => gotoChapter(currentChapter - 1);
+    const nextChapter = () => gotoChapter(currentChapter + 1);
 
     /* ============================================================
        翻页模式
@@ -255,19 +280,15 @@
 
     $('modeBtn').onclick = () => switchMode(mode === 'flip' ? 'scroll' : 'flip');
 
+    // 页面内翻页（手势、点击热区、键盘、滚轮用）
     const next = () => { mode === 'flip' ? showFlipPage(current + 1) : showScrollPage(current + 1); };
     const prev = () => { mode === 'flip' ? showFlipPage(current - 1) : showScrollPage(current - 1); };
-    const first = () => {
-        if (mode === 'flip') showFlipPage(1);
-        else showScrollPage(1);
-    };
-    const last = () => {
-        if (mode === 'flip') showFlipPage(totalOf());
-        else showScrollPage(totalOf());
-    };
 
-    $('btnNext').onclick = next;
-    $('btnPrev').onclick = prev;
+    // 工具栏按钮改为章节切换
+    $('btnNext').onclick = nextChapter;
+    $('btnPrev').onclick = prevChapter;
+
+    // 左右热区仍然保持翻页（保持原有阅读习惯）
     $('zoneNext').onclick = () => { if (mode === 'flip') next(); };
     $('zonePrev').onclick = () => { if (mode === 'flip') prev(); };
 
@@ -362,8 +383,8 @@
     }, { passive: true });
 
     /* ============================================================
-目录（单级：只展示第几话）
-============================================================ */
+    目录（单级：只展示第几话）
+    ============================================================ */
     function buildCatalog() {
         if (!catalogGrid) return;
         catalogGrid.innerHTML = '';
@@ -384,14 +405,12 @@
             }
 
             item.addEventListener('click', () => {
-                // 切换章节
+                // 切换章节（复用 gotoChapter，但允许跳到同一章）
                 currentChapter = idx;
-                current = 1; // 进入新章节默认从第 1 页开始
+                current = 1;
 
-                // 强制重建滚动容器
                 rebuildScrollForNewChapter();
 
-                // 根据当前模式跳转
                 if (mode === 'flip') {
                     showFlipPage(1);
                 } else {
