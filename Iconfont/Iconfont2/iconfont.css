@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 5244454 */
-  src: url('iconfont.woff2?t=1793159592103') format('woff2'),
-       url('iconfont.woff?t=1793159592103') format('woff'),
-       url('iconfont.ttf?t=1793159592103') format('truetype');
+  src: url('iconfont.woff2?t=1793253473565') format('woff2'),
+       url('iconfont.woff?t=1793253473565') format('woff'),
+       url('iconfont.ttf?t=1793253473565') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,26 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-caidan:before {
+  content: "\e613";
+}
+
+.icon-shuqian:before {
+  content: "\e615";
+}
+
+.icon-notebook:before {
+  content: "\e616";
+}
+
+.icon-bookmark:before {
+  content: "\e617";
+}
+
+.icon-file:before {
+  content: "\e618";
 }
 
 .icon-yuedu:before {
