@@ -58,8 +58,13 @@ body {
 }
 
 #pageInfo {
-    min-width: 70px;
+    flex: 1; /* 让页码区域自动撑满剩余空间 */
+    min-width: 0; /* 防止内容撑破容器 */
     text-align: center;
+    white-space: nowrap; /* 禁止文字折行 */
+    overflow: hidden;
+    text-overflow: ellipsis; /* 文字过长时显示省略号 */
+    padding: 0 5px;
 }
 
 #modeBtn {
