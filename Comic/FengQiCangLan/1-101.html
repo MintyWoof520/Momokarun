@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>11111</title>
+    <title>超自然武装当哒当</title>
+    <link rel="icon" href="../../Images/jiabushou.ico">
+    <link rel="stylesheet" href="../CSS/tongyong.css">
+    <link rel="stylesheet" href="../../Iconfont/Iconfont2/iconfont.css">
+</head>
+
+<body>
+    <div id="toolbar">
+        <button id="modeBtn">
+            <i class="iconfont icon0 icon-dingdan"></i><span class="text-hide-mobile">切换滚动</span></button>
+        <button id="btnFirst" title="第一页">
+            <span class="iconfont icon-fast-backward icon0"></span>
+        </button>
+        <button id="btnPrev">
+            <svg class="icon icon0" aria-hidden="true">
+                <use xlink:href="#icon-left-circle-fill"></use>
+            </svg>上一页</button>
+        <span id="pageInfo">1 / 104</span>
+        <button id="btnNext">下一页
+            <svg class="icon icon0" aria-hidden="true">
+                <use xlink:href="#icon-right-circle-fill"></use>
+            </svg>
+        </button>
+        <button id="btnLast" title="最后一页">
+            <span class="iconfont icon-fast-forward icon0"></span>
+        </button>
+        <button id="catalogBtn" title="目录">
+            <i class="iconfont icon0 icon-caidan"></i><span class="text-hide-mobile">目录</span>
+        </button>
+    </div>
+
+    <!-- 目录面板：两级结构 -->
+    <div id="catalogPanel">
+        <div class="catalog-header">
+            <span id="catalogTitle">
+                章节目录</span>
+            <button class="catalog-close" id="catalogClose">✕</button>
+        </div>
+        <!-- 只需要这一个容器即可，不需要 pageList 了 -->
+        <div id="catalogGrid" class="catalog-grid"></div>
+    </div>
+
+    <div id="flipContainer">
+        <div class="hotzone" id="zonePrev"></div>
+        <div class="hotzone" id="zoneNext"></div>
+        <div id="imgWrapper">
+            <img id="page" alt="漫画页">
+        </div>
+    </div>
+
+    <!-- 模式 2：滚动 -->
+    <div id="scrollContainer"></div>
+
+    <div id="loading">加载中…</div>
+
+    <script>
+        /* ============================================================
+           配置区：章节列表
+           - title:  章节名称（显示在目录中）
+           - total:  该章节总页数
+           - prefix: 图片 URL 前缀（到目录为止）
+           - pad:    文件名补零位数
+           - ext:    扩展名
+           ============================================================ */
+        const CONFIG = {
+            rememberProgress: true,
+            chapters: [
+                {
+                    title: '第1-3话 苍岚之巅',
+                    total: 34,
+                    prefix: 'https://comic01-10i3bxv3bn.maozi.io//FengQiCangLan/1-101/1-3/',
+                    pad: 2,
+                    ext: '.jpg'
+                },
+                {
+                    title: '第2话',
+                    total: 34,
+                    prefix: 'https://comic01-10i3bxv3bn.maozi.io//FengQiCangLan/1-101/1-3/',
+                    pad: 2,
+                    ext: '.jpg'
+                }
+            ]
+        };
+    </script>
+</body>
+<script src="../JS/hua.js"></script>
+<script src="../../Iconfont/Iconfont2/iconfont.js"></script>
+</html>

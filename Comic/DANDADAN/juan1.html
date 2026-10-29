@@ -14,7 +14,7 @@
 
     <div id="toolbar">
         <button id="modeBtn">
-            <i class="iconfont icon0 icon-dingdan"></i><span class="text-hide-mobile">切换滚动</span></button>
+            <i class="iconfont icon0 icon-yuedu"></i><span class="text-hide-mobile">切换翻页</span></button>
         <button id="btnFirst" title="第一页">
             <span class="iconfont icon-fast-backward icon0"></span>
         </button>
@@ -31,6 +31,24 @@
         <button id="btnLast" title="最后一页">
             <span class="iconfont icon-fast-forward icon0"></span>
         </button>
+        <!-- 新增目录按钮 -->
+        <button id="catalogBtn" title="目录">
+            <i class="iconfont icon0 icon-caidan"></i><span class="text-hide-mobile">目录</span>
+        </button>
+    </div>
+
+    <!-- 目录面板 -->
+    <div id="catalogPanel">
+        <div class="catalog-header">
+            <span>
+                <svg class="icon icon0" aria-hidden="true">
+                    <use xlink:href="#icon-file"></use>
+                </svg>章节目录 共104页</span>
+            <button class="catalog-close" id="catalogClose">✕</button>
+        </div>
+        <div class="catalog-grid" id="catalogGrid">
+            <!-- JS动态生成页码 -->
+        </div>
     </div>
 
     <div id="flipContainer">
@@ -58,7 +76,7 @@
         };
     </script>
 </body>
-<script src="../JS/juan1.js"></script>
+<script src="../JS/juan.js"></script>
 <script src="../../Iconfont/Iconfont2/iconfont.js"></script>
 
 </html>

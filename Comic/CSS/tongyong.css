@@ -216,3 +216,111 @@ body {
 .icon0 {
     color: rgb(52, 223, 166);
 }
+
+/* 新增目录按钮与目录面板样式 */
+#catalogBtn {
+    background: #6b4eff;
+    color: #fff;
+}
+
+#catalogPanel {
+    position: fixed;
+    top: 48px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.521);
+    backdrop-filter: blur(12px);
+    z-index: 200;
+    display: none;
+    flex-direction: column;
+    padding: 16px;
+    overflow-y: auto;
+    color: #eee;
+    transition: opacity 0.2s;
+}
+
+#catalogPanel.show {
+    display: flex;
+}
+
+.catalog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #444;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.catalog-close {
+    background: #444;
+    border: none;
+    color: #fff;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 8px;
+    padding-bottom: 30px;
+}
+
+.catalog-item {
+    background: #20202094;
+    border-radius: 8px;
+    padding: 10px 4px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ddd;
+    cursor: pointer;
+    transition: 0.15s;
+    border: 1px solid #3a3a3a;
+    user-select: none;
+}
+
+.catalog-item:hover,
+.catalog-item:active {
+    background: #4a3aff;
+    color: #fff;
+    border-color: #6b4eff;
+}
+
+.catalog-item.active {
+    background: #4a9eff;
+    color: #fff;
+    border-color: #4a9eff;
+    box-shadow: 0 0 10px #4a9eff88;
+}
+
+/* 移动端适配 */
+@media (max-width: 600px) {
+    #catalogPanel {
+        top: 44px;
+        padding: 12px;
+    }
+
+    .catalog-grid {
+        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+        gap: 6px;
+    }
+
+    .catalog-item {
+        padding: 8px 2px;
+        font-size: 13px;
+    }
+
+    #toolbar button {
+        padding: 0 6px;
+    }
+}
