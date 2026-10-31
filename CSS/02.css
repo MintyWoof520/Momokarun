@@ -1,7 +1,37 @@
 .page {
     margin: 30px;
 }
+/* 1. 滚动条整体部分 */
+::-webkit-scrollbar {
+    width: 8px; /* 纵向滚动条的宽度 */
+    height: 8px; /* 横向滚动条的高度 */
+}
 
+/* 2. 滚动条轨道（背景） */
+::-webkit-scrollbar-track {
+    background: transparent; /* 透明背景，让它融入你的深色背景 */
+    /* 如果背景太花，可以使用半透明黑色：background: rgba(0, 0, 0, 0.2); */
+    border-radius: 4px;
+}
+
+/* 3. 滚动条滑块（那个可以拖动的部分） */
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2); /* 默认状态下：半透明白色，低调且不抢眼 */
+    border-radius: 4px; /* 圆角，看起来更柔和 */
+    border: 2px solid transparent; /* 增加内边距感，让滑块看起来更细 */
+    background-clip: padding-box;
+}
+
+/* 4. 鼠标悬停在滑块上时 */
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4); /* 悬停时变亮一点 */
+    border-radius: 4px;
+}
+
+/* 5. 滚动条两端的按钮（图中上下的小箭头） */
+::-webkit-scrollbar-button {
+    display: none; /* 直接隐藏掉，现代 UI 不需要这个，非常破坏美感 */
+}
 .hututu {
     width: 160px;
 }
@@ -103,6 +133,15 @@ p {
     font-size: 1.5rem;
     padding: 30px;
     color: rgb(243, 255, 251);
+}
+.okamomo {
+    color: aliceblue;
+    font-family: "speak2";
+    font-size: 1.2rem;
+}
+.hua {
+    width: 100px;
+    border-radius: 20px;
 }
 @media (max-width: 640px) {
     .momo {
