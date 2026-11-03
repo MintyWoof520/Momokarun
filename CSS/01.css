@@ -327,8 +327,9 @@ body::after {
     box-sizing: border-box;
     padding: 0.7rem 1.25rem;
 
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
     z-index: 100;
 
     /* 容器完全透明，去掉所有背景装饰 */
@@ -337,6 +338,13 @@ body::after {
     box-shadow: none;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 当滚动向下时添加这个类 */
+.nav.nav-hidden {
+    transform: translateY(-100%);
 }
 
 /* 底部呼吸光带，替代生硬的分割线 */
@@ -563,6 +571,14 @@ body::after {
 
 .page.active {
     display: block;
+    margin: 0;
+    padding: 0;
+}
+.page.xiaoshuo {
+    margin: 40px;
+}
+.page.comic {
+    margin: 40px;
 }
 
 /* 隐藏内容 */
@@ -716,10 +732,11 @@ body::after {
     padding: 10px 14px;
     cursor: pointer;
     user-select: none;
-    background: #f7f7f731;
+    background: none;
     border-radius: 20px;
     font-weight: bold;
-    color: #333;
+    color: #b9b9b9;
+    font-family: "speak2";
 }
 
 
