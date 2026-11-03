@@ -1,0 +1,217 @@
+/* 首页主图区域 —— 占据屏幕高度的 4/5 */
+.hero {
+    position: relative;
+    height: 80vh;
+    /* 占屏幕 4/5 */
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    isolation: isolate;
+}
+
+/* 动态创建的背景图层 */
+.hero-bg-layer {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center 30%;
+    transition: opacity 1.5s ease-in-out;
+    /* 1.5秒丝滑过渡 */
+    z-index: 0;
+    opacity: 0;
+}
+
+/* 优雅的深色遮罩，让文字更清晰且不喧宾夺主 */
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+            rgba(10, 20, 30, 0.35) 0%,
+            rgba(10, 20, 30, 0.45) 60%,
+            rgba(10, 20, 30, 0.65) 100%);
+    z-index: 1;
+}
+
+/* 主图文字容器 */
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    padding: 2rem 1.5rem;
+    color: #ffffff;
+    text-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    animation: fadeUp 1.2s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.hero-content h1 {
+    font-family: "speak";
+    font-size: clamp(2.8rem, 8vw, 5.5rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+    text-wrap: balance;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+
+/* 向下滚动的小提示箭头（优雅半透明） */
+.scroll-hint {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 400;
+    transition: opacity 0.3s;
+    opacity: 0.75;
+    animation: bounceSoft 2.2s infinite;
+}
+
+.scroll-hint span {
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+/* 内容区域 —— 向下滑动的页面内容 */
+.content {
+    background-color: #faf9f7;
+    padding: 5rem 2rem 7rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+}
+
+
+/* 页脚 */
+.footer {
+    background: #eae7e0;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    color: #4d4d4d;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    border-top: 1px solid #dad6ce;
+}
+
+/* 动画 */
+@keyframes fadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(28px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounceSoft {
+
+    0%,
+    100% {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(8px);
+    }
+}
+
+/* 响应式调整 */
+@media (max-width: 600px) {
+    .hero {
+        height: 80vh;
+        /* 保持 4/5 占比，小屏同样舒适 */
+        background-position: center 40%;
+    }
+
+    .hero-content h1 {
+        font-size: 2.7rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+        padding: 0.35rem 1rem;
+    }
+
+    .content {
+        padding: 3rem 1.5rem 5rem;
+    }
+
+    .card {
+        padding: 2rem 1.5rem;
+    }
+}
+
+/* 对非常矮的屏幕 (例如横屏手机) 微调高度避免过度压缩 */
+@media (max-height: 500px) {
+    .hero {
+        height: 80vh;
+        min-height: 280px;
+    }
+}
+
+/* 保证鼠标滚轮体验柔和 */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 打字机容器通用样式 */
+.typewriter-box {
+    width: fit-content;
+    max-width: 800px;
+    padding: 5px 5px;
+    font-family: "speak2";
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: #aef0dc;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 1px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+/* 下划线光标 */
+.typewriter-box .text-content::after {
+    content: "_";
+    display: inline-block;
+    color: rgba(1, 255, 170, 0.945);
+    margin-left: 4px;
+    font-weight: 400;
+    transform: translateY(-2px);
+    animation: blink 0.8s step-end infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
