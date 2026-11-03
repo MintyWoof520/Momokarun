@@ -574,12 +574,7 @@ body::after {
     margin: 0;
     padding: 0;
 }
-.page.xiaoshuo {
-    margin: 40px;
-}
-.page.comic {
-    margin: 40px;
-}
+
 
 /* 隐藏内容 */
 /* 角落的小鲸鱼，半透明，鼠标移上去才明显 */

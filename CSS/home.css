@@ -63,27 +63,6 @@
 }
 
 
-/* 向下滚动的小提示箭头（优雅半透明） */
-.scroll-hint {
-    position: absolute;
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.4rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 400;
-    transition: opacity 0.3s;
-    opacity: 0.75;
-    animation: bounceSoft 2.2s infinite;
-}
-
 .scroll-hint span {
     font-size: 1.4rem;
     line-height: 1;
@@ -91,24 +70,11 @@
 
 /* 内容区域 —— 向下滑动的页面内容 */
 .content {
-    background-color: #faf9f7;
+    background-color: #c1f1e3;
     padding: 5rem 2rem 7rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3rem;
-}
-
-
-/* 页脚 */
-.footer {
-    background: #eae7e0;
-    padding: 2.5rem 1rem;
-    text-align: center;
-    color: #4d4d4d;
-    font-size: 0.95rem;
-    letter-spacing: 0.3px;
-    border-top: 1px solid #dad6ce;
 }
 
 /* 动画 */
@@ -124,17 +90,6 @@
     }
 }
 
-@keyframes bounceSoft {
-
-    0%,
-    100% {
-        transform: translateX(-50%) translateY(0);
-    }
-
-    50% {
-        transform: translateX(-50%) translateY(8px);
-    }
-}
 
 /* 响应式调整 */
 @media (max-width: 600px) {

@@ -55,18 +55,15 @@ p {
 }
 
 .baihea0 {
-    background-image: linear-gradient(to right,
-            #8888ed38,
-            #63e5cb3a,
-            #f2f2a53a);
+    background-color: #5d68cc52;
     border-radius: 15px;
     backdrop-filter: blur(8px);
-    /* box-shadow: 0 0 8px 3px #8888ed7c; */
-    margin-top: 120px;
+    border: 2px solid #a3aae9;
+    max-width: 800px;
+    margin-top: 30px;
 }
 
 .baihea1 {
-    /* display: flex; */
     padding: 20px;
     gap: 20px;
     font-family: "speak";
@@ -90,11 +87,12 @@ p {
     background-color: #3131da27;
     border-radius: 10px;
     backdrop-filter: blur(8px);
+    border: 2px solid #a3aae9;
     box-shadow: 0 0 8px 3px #8888ed7c;
     font-family: "speak2";
     color: rgb(203, 234, 255);
     font-size: large;
-    margin-top: 80px;
+    max-width: 800px;
 }
 
 .bga0 {
@@ -104,7 +102,8 @@ p {
             #a2ddff3a);
     border-radius: 15px;
     backdrop-filter: blur(8px);
-    /* box-shadow: 0 0 8px 3px #8888ed7c; */
+    border: 2px solid #e9a3e9;
+    max-width: 800px;
 }
 
 .bga1 {
@@ -122,11 +121,14 @@ p {
 }
 
 .momokarun {
-    background-color: rgba(0, 0, 0, 0.219);
+    background-color: #97eccc38;
     backdrop-filter: blur(8px);
+    border: 2px solid #ffffff8a;
+    box-shadow: 0 0 8px 3px #bbeeda3d;
     border-radius: 20px;
     max-width: 800px;
-    margin-top: 120px;
+    margin-top: 30px;
+    margin-left: 30px;
 }
 
 .momo {
@@ -144,6 +146,30 @@ p {
 .hua {
     width: 100px;
     border-radius: 20px;
+}
+.wzall {
+    background-image: linear-gradient(to bottom,
+    #472823,
+    #80291bc5,
+    #47282300
+    );
+    padding: 5rem 2rem 7rem;
+}
+.xsall {
+    background-image: linear-gradient(to bottom,
+        #212652,
+        #34639975,
+        #ffffff00
+    );
+    padding: 5rem 2rem 7rem;
+}
+.cmall {
+    background-image: linear-gradient(to bottom,
+    #1f5e40,
+    #4c7e6677,
+    #1f5e4000
+    );
+    padding: 5rem 2rem 7rem;
 }
 @media (max-width: 640px) {
     .momo {

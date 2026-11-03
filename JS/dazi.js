@@ -160,4 +160,11 @@ document.addEventListener('DOMContentLoaded', () => {
         loopDelay: 1500,
         removeSpeed: 60
     });
+    new Typewriter('type2', [
+        "我是第二个盒子，我没有开启循环。",
+        "我只打一次，打完就停留在原地。"
+    ], {
+        loop: false,
+        startDelay: 1500
+    });
 });

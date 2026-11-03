@@ -138,3 +138,91 @@
       }, MIN_LOADING_TIME + 2000);
 
     })();
+
+    // ==========================================
+    // ❄️ 全屏下雪特效引擎 ❄️
+    // ==========================================
+    function initSnow() {
+        const canvas = document.getElementById('snowCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let snowflakes = [];
+
+        // 初始化画布尺寸 (处理高分屏)
+        function resize() {
+            const dpr = window.devicePixelRatio || 1;
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.scale(dpr, dpr);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // 雪花类
+        class Snowflake {
+            constructor() {
+                this.reset();
+                // 初始化时随机分布在屏幕各个位置，避免刚开始全在顶部
+                this.y = Math.random() * height; 
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = -10; // 从屏幕上方外面开始
+                this.size = Math.random() * 2.5 + 1; // 雪花大小 1~3.5
+                this.speedY = Math.random() * 1.5 + 0.5; // 下落速度
+                this.speedX = Math.random() * 1 - 0.5; // 左右飘动速度
+                this.opacity = Math.random() * 0.6 + 0.3; // 透明度
+                this.swing = Math.random() * Math.PI * 2; // 飘动相位
+                this.swingSpeed = Math.random() * 0.02 + 0.01; // 飘动速度
+            }
+
+            update() {
+                this.y += this.speedY;
+                // 左右摇摆（正弦波轨迹）
+                this.swing += this.swingSpeed;
+                this.x += Math.sin(this.swing) * 0.5 + this.speedX;
+
+                // 如果掉出屏幕底部或左右两边，重置回顶部
+                if (this.y > height + 10 || this.x < -10 || this.x > width + 10) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                // 画白色的雪花，带一点透明度
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                // 加一点点阴影，让白色雪花在浅色背景上也能看清
+                ctx.shadowBlur = 2;
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+                ctx.fill();
+            }
+        }
+
+        // 生成雪花数量 (根据屏幕宽度自适应，防止手机卡顿)
+        const snowCount = window.innerWidth < 768 ? 50 : 120;
+        for (let i = 0; i < snowCount; i++) {
+            snowflakes.push(new Snowflake());
+        }
+
+        // 动画循环
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            snowflakes.forEach(flake => {
+                flake.update();
+                flake.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    }
+
+    // 页面加载完成后启动下雪
+    window.addEventListener('load', initSnow);
