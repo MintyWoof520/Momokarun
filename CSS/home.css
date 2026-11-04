@@ -633,13 +633,19 @@ body.no-scroll-d3z9 {
 .card-r5t8y {
     position: relative;
     display: flex;
+    flex-direction: row;
+    /* 强制水平排列 */
     align-items: center;
     gap: 20px;
+    width: 100%;
+    /* 宽度占满父容器 */
+    max-width: 430px;
+    /* 最大宽度限制，防止在电脑上太大 */
     margin: 0 auto;
-    width: min(430px, 100%);
+    /* 水平居中 */
     padding: 22px 24px;
     border-radius: 24px;
-    background: rgba(255, 255, 255, 0.432);
+    background: rgba(255, 255, 255, 0.72);
     border: 1px solid rgba(255, 255, 255, 0.9);
     box-shadow:
         0 20px 45px -18px rgba(110, 110, 180, 0.45),
@@ -708,7 +714,13 @@ body.no-scroll-d3z9 {
 .content-r5t8y {
     flex: 1 1 auto;
     min-width: 0;
-    font-family: 'speak';
+    /* 关键：防止内部文字把盒子撑破 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    /* 文字靠左对齐 */
+    font-family: "speak";
 }
 
 .name-r5t8y {
@@ -728,9 +740,12 @@ body.no-scroll-d3z9 {
     font-weight: 600;
     color: #3b3b4f;
     min-height: 52px;
-    /* 防止换句子时卡片高度跳动 */
     display: flex;
     align-items: center;
+    width: 100%;
+    text-align: left;
+    word-break: break-word;
+    /* 关键：防止长英文或标点把宽度撑破 */
 }
 
 @keyframes bubbleIn {
