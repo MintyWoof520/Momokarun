@@ -1,0 +1,379 @@
+.zhangui-a {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ================= 3D 展示组件样式 ================= */
+
+.c3d-wrapper-z7k2p {
+    position: relative;
+    width: min(1200px, 96vw);
+    height: 560px;
+    overflow: hidden;
+    border-radius: 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+}
+
+.c3d-stage-z7k2p {
+    position: absolute;
+    inset: 0;
+    perspective: 1000px;
+    perspective-origin: 50% 45%;
+}
+
+.c3d-scene-z7k2p {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+}
+
+/* 单张卡片 */
+.c3d-card-z7k2p {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 210px;
+    height: 340px;
+    margin-left: -105px;
+    margin-top: -170px;
+    transform-style: preserve-3d;
+    will-change: transform, opacity;
+    cursor: pointer;
+    /* 整张卡片可点击 */
+}
+
+.c3d-inner-z7k2p {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+    /* background: #1a1f2800; */
+    box-shadow:
+        0 16px 30px rgba(0, 0, 0, .6),
+        inset 0 0 0 1px rgba(255, 255, 255, .08);
+    transition: transform .35s cubic-bezier(.22, .8, .3, 1),
+        box-shadow .35s ease;
+}
+
+.c3d-card-z7k2p:hover .c3d-inner-z7k2p {
+    transform: translateZ(50px);
+    box-shadow:
+        0 26px 50px rgba(0, 0, 0, .8),
+        inset 0 0 0 1px rgba(255, 255, 255, .2);
+}
+
+/* 居中卡片的高亮（金框）效果 */
+.c3d-inner-z7k2p.is-center-z7k2p {
+    box-shadow:
+        0 0 0 3px #00ffd5b6,
+        0 24px 50px rgba(0, 0, 0, 0.8),
+        inset 0 0 0 1px rgba(255, 255, 255, .2) !important;
+}
+
+.c3d-cover-z7k2p {
+    flex: 1;
+    min-height: 0;
+    background: #11151c;
+    overflow: hidden;
+}
+
+.c3d-cover-z7k2p img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .5s ease;
+    pointer-events: none;
+    /* 让点击事件穿透到父级卡片 */
+}
+
+.c3d-info-z7k2p {
+    flex: none;
+    padding: 10px 12px 12px;
+    background: linear-gradient(180deg, #1c253385 0%, #aaffe662 100%);
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+    /* 让点击事件穿透到父级卡片 */
+}
+
+.c3d-title-z7k2p {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #f2f5fa;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.c3d-author-z7k2p {
+    margin-top: 4px;
+    font-size: 12px;
+    line-height: 1.2;
+    color: #8b95a6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 查看详情按钮（现在纯粹是视觉提示，点击卡片任何位置都可以） */
+.c3d-detail-btn-z7k2p {
+    margin-top: 8px;
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    text-align: center;
+    transition: background 0.2s;
+}
+
+.c3d-card-z7k2p:hover .c3d-detail-btn-z7k2p {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ================= 手机端竖向排列适配 ================= */
+@media (max-width: 767px) {
+    .c3d-wrapper-z7k2p {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    .c3d-stage-z7k2p {
+        perspective: 750px;
+        perspective-origin: 50% 50%;
+    }
+
+    .c3d-card-z7k2p {
+        width: 240px;
+        height: 155px;
+        margin-left: -120px;
+        margin-top: -77.5px;
+    }
+
+    .c3d-inner-z7k2p {
+        position: relative;
+        border-radius: 10px;
+    }
+
+    .c3d-cover-z7k2p {
+        position: absolute;
+        inset: 0;
+    }
+
+    .c3d-info-z7k2p {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 100%);
+        padding: 30px 12px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .c3d-title-z7k2p {
+        font-size: 14px;
+        color: #fff;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .c3d-author-z7k2p {
+        font-size: 10px;
+        color: #ccc;
+        margin-top: 2px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .c3d-detail-btn-z7k2p {
+        margin-top: 0;
+        padding: 4px 10px;
+        font-size: 11px;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* ================= 弹窗组件样式 ================= */
+.c3d-modal-z7k2p {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    padding: 20px;
+}
+
+.c3d-modal-z7k2p.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.c3d-modal-box-z7k2p {
+    position: relative;
+    width: min(720px, 100%);
+    max-height: 85vh;
+    background: #88c9bb2f;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transform: translateY(20px) scale(0.95);
+    transition: transform 0.35s cubic-bezier(0.22, 0.8, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.c3d-modal-z7k2p.active .c3d-modal-box-z7k2p {
+    transform: translateY(0) scale(1);
+}
+
+@media (min-width: 640px) {
+    .c3d-modal-box-z7k2p {
+        flex-direction: row;
+    }
+}
+
+.c3d-modal-cover-z7k2p {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    max-height: 40vh;
+    background: #11151c;
+    flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+    .c3d-modal-cover-z7k2p {
+        width: 42%;
+        max-height: none;
+    }
+}
+
+.c3d-modal-cover-z7k2p img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.c3d-modal-info-z7k2p {
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.c3d-modal-title-z7k2p {
+    margin: 0 0 8px;
+    font-size: 24px;
+    color: #fff;
+}
+
+.c3d-modal-author-z7k2p {
+    margin: 0 0 16px;
+    font-size: 13px;
+    color: #9ba5b5;
+}
+
+.c3d-modal-desc-z7k2p {
+    margin: 0 0 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #c5ccd8;
+}
+
+.c3d-modal-tags-z7k2p {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.c3d-tag-z7k2p {
+    padding: 4px 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    font-size: 12px;
+    color: #8ab4f8;
+}
+
+/* ================= 多链接按钮组样式 ================= */
+.c3d-modal-links-container-z7k2p {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 10px;
+}
+
+.c3d-modal-link-z7k2p {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    background: #11614d;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    transition: background 0.2s;
+    flex: 1;
+    /* 让按钮均分宽度 */
+    min-width: 120px;
+    /* 防止太窄 */
+    white-space: nowrap;
+}
+
+.c3d-modal-link-z7k2p:hover {
+    background: #1e44e0;
+}
+
+/* 如果只有一个链接，给它加上特定的主题色 */
+.c3d-modal-link-z7k2p:only-child {
+    background: #ff9900;
+}
+
+.c3d-modal-link-z7k2p:only-child:hover {
+    background: #e68a00;
+}
+
+.c3d-modal-close-z7k2p {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.226);
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    line-height: 32px;
+    text-align: center;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s;
+    z-index: 10;
+}
+
+.c3d-modal-close-z7k2p:hover {
+    background: rgba(255, 255, 255, 0.2);
+}

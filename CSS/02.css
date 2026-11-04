@@ -120,33 +120,6 @@ p {
     font-style: normal;
 }
 
-.momokarun {
-    background-color: #97eccc38;
-    backdrop-filter: blur(8px);
-    border: 2px solid #ffffff8a;
-    box-shadow: 0 0 8px 3px #bbeeda3d;
-    border-radius: 20px;
-    max-width: 800px;
-    margin-top: 30px;
-    margin-left: 30px;
-}
-
-.momo {
-    display: flex;
-    font-family: "speak";
-    font-size: 1.5rem;
-    padding: 30px;
-    color: rgb(243, 255, 251);
-}
-.okamomo {
-    color: aliceblue;
-    font-family: "speak2";
-    font-size: 1.2rem;
-}
-.hua {
-    width: 100px;
-    border-radius: 20px;
-}
 .syall {
     background-image: linear-gradient(to bottom,
     #87cfba,
@@ -173,10 +146,12 @@ p {
 .cmall {
     background-image: linear-gradient(to bottom,
     #1f5e40,
-    #4c7e6677,
-    #1f5e4000
-    );
-    padding: 5rem 2rem 7rem;
+    #00000077,
+    #00000056
+    ), url(https://music01-3bxv3bn.maozi.io/wallpaper/13.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 @media (max-width: 640px) {
     .momo {
