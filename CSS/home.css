@@ -762,3 +762,33 @@ body.no-scroll-d3z9 {
     z-index: 999;
     will-change: transform, opacity;
 }
+
+@media (max-width: 500px) {
+    .card-r5t8y {
+        padding: 16px;
+        /* 缩小手机端的内边距 */
+        gap: 12px;
+        /* 缩小头像和文字的间距 */
+        width: calc(100% - 24px);
+        /* 两侧留点空隙，避免贴边 */
+    }
+
+    .avatar-r5t8y {
+        width: 64px;
+        /* 手机上头像改小一点 */
+        height: 64px;
+        font-size: 32px;
+    }
+
+    .name-r5t8y {
+        font-size: 10px;
+        margin-bottom: 4px;
+    }
+
+    .bubble-r5t8y {
+        font-size: 14px;
+        /* 手机上字体略小 */
+        line-height: 1.4;
+        min-height: 40px;
+    }
+}
