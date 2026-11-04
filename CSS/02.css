@@ -149,11 +149,11 @@ p {
 }
 .wzall {
     background-image: linear-gradient(to bottom,
-    #472823,
-    #80291bc5,
+    #482e58,
+    #482e58,
     #47282300
     );
-    padding: 5rem 2rem 7rem;
+    position: relative;
 }
 .xsall {
     background-image: linear-gradient(to bottom,

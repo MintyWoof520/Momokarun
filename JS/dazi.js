@@ -158,13 +158,41 @@ document.addEventListener('DOMContentLoaded', () => {
     ], {
         loop: true,
         loopDelay: 1500,
-        removeSpeed: 60
+        removeSpeed: 90,
+        mistakeChance: 0.2,
+        mistakePause: 400,
+        minSpeed: 50,
+        maxSpeed: 90
     });
     new Typewriter('type2', [
-        "我是第二个盒子，我没有开启循环。",
-        "我只打一次，打完就停留在原地。"
+        "随便看看吧，大家都在做什么呢？"
     ], {
-        loop: false,
-        startDelay: 1500
+        loop: true,
+        startDelay: 1500,
+        removeSpeed: 80,
+        mistakeChance: 0.1,
+        mistakePause: 400,
+        punctuationPause: 800
+    });
+    new Typewriter('type3', [
+        "随便写一写好了"
+    ], {
+        loop: true,
+        startDelay: 1500,
+        mistakeChance: 0,
+        removeSpeed: 40,
+        minSpeed: 40,
+        maxSpeed: 70
+    });
+    new Typewriter('type4', [
+        "强者都是孤独的"
+    ], {
+        loop: true,
+        startDelay: 1500,
+        mistakeChance: 0.1,
+        mistakePause: 400,
+        removeSpeed: 100,
+        minSpeed: 70,
+        maxSpeed: 90
     });
 });

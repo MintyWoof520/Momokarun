@@ -41,7 +41,7 @@ const pageEffectsConfig = {
             ]
         },
         wave: true,
-        waveColor: '#472823'
+        waveColor: '#482e58'
     },
     'page-xiaoshuo': {
         bg: {
@@ -80,7 +80,7 @@ const pageEffectsConfig = {
             ]
         },
         wave: true,
-        waveColor:'#1f5e40'
+        waveColor: '#1f5e40'
     },
     // 音乐页：只要背景
     'page-music': {
@@ -179,6 +179,8 @@ class WaveEffect {
 // ====================================================
 // 3. 初始化页面（传入配置的颜色）
 // ====================================================
+const waveInstances = {}; // 提前声明
+
 function initAllPagesEffects() {
     document.querySelectorAll('.page').forEach(page => {
         const config = pageEffectsConfig[page.id] || {};
@@ -223,16 +225,11 @@ function initAllPagesEffects() {
             canvas.className = 'wave-canvas';
             hero.appendChild(canvas);
 
-            // 👇 这里读取该页面的专属颜色，如果没写就用默认米黄色
             const customColor = config.waveColor || '#f6ebd8';
             waveInstances[page.id] = new WaveEffect(canvas, customColor);
         }
     });
 }
-
-const waveInstances = {};
-
-
 
 // 4. 更新背景
 function updatePageBackground(page, isInit = false) {
@@ -240,9 +237,7 @@ function updatePageBackground(page, isInit = false) {
     if (!config || !config.bg) return;
 
     const isMobile = window.innerWidth <= 768;
-    // 智能回退：如果手机端空，用 PC 图
     const imgs = isMobile ? (config.bg.mobile && config.bg.mobile.length > 0 ? config.bg.mobile : config.bg.pc) : config.bg.pc;
-
     if (!imgs || imgs.length === 0) return;
 
     const state = page._bgState;
@@ -269,9 +264,35 @@ function updatePageBackground(page, isInit = false) {
     state.active = 1 - state.active;
 }
 
+// 初始化所有页面的组件
 initAllPagesEffects();
 
-// 5. 全局背景轮播定时器
+// ====================================================
+// 5. 🌟 核心修复：统一页面切换与特效启停逻辑 🌟
+// ====================================================
+function activatePageEffect(pageId) {
+    // 1. 暂停所有波浪省电
+    Object.values(waveInstances).forEach(wave => wave.pause());
+
+    // 2. 稍微延迟一下，等待你的 index.js 完成 DOM 的 display 切换
+    setTimeout(() => {
+        const targetPage = document.getElementById(pageId);
+        if (!targetPage) return;
+
+        // 3. 刷新背景图
+        if (targetPage._bgState) {
+            updatePageBackground(targetPage, true);
+        }
+
+        // 4. 先重新计算尺寸，再启动波浪（解决 0 宽度问题）
+        if (waveInstances[pageId]) {
+            waveInstances[pageId].resize();
+            waveInstances[pageId].start();
+        }
+    }, 50);
+}
+
+// 6. 全局背景轮播定时器
 setInterval(() => {
     const activePage = document.querySelector('.page.active');
     if (activePage && activePage._bgState) {
@@ -279,7 +300,7 @@ setInterval(() => {
     }
 }, 6000);
 
-// 6. 窗口缩放监听
+// 7. 窗口缩放监听
 let resizeTimer;
 window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
@@ -292,36 +313,29 @@ window.addEventListener('resize', () => {
     }, 300);
 });
 
-// 7. 导航栏切换监听（精准控制波浪启停）
+// 8. 导航栏点击监听
 document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         const targetPageId = 'page-' + btn.getAttribute('data-page');
-
-        // 切页面时暂停所有波浪省电
-        Object.values(waveInstances).forEach(wave => wave.pause());
-
-        setTimeout(() => {
-            const newActivePage = document.getElementById(targetPageId);
-            if (newActivePage) {
-                if (newActivePage._bgState) {
-                    updatePageBackground(newActivePage, true);
-                }
-
-                // 如果目标页面配置了波浪，才启动
-                if (waveInstances[targetPageId]) {
-                    waveInstances[targetPageId].resize();
-                    waveInstances[targetPageId].start();
-                }
-            }
-        }, 50);
+        activatePageEffect(targetPageId);
     });
 });
 
-// 8. 页面加载启动首页
+// 9. 监听浏览器前进/后退 (hash 变化)
+window.addEventListener('hashchange', () => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+        activatePageEffect('page-' + hash);
+    } else {
+        activatePageEffect('page-home');
+    }
+});
+
+// 10. 页面加载完成时（不管带不带锚点，一视同仁）
 window.addEventListener('load', () => {
-    const homeWave = waveInstances['page-home'];
-    if (homeWave) {
-        homeWave.resize();
-        homeWave.start();
+    // 直接去 DOM 里找当前是谁带有 active 类，就启动谁
+    const activePage = document.querySelector('.page.active');
+    if (activePage) {
+        activatePageEffect(activePage.id);
     }
 });
