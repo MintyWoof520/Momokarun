@@ -19,7 +19,7 @@ const pageEffectsConfig = {
             ]
         },
         wave: true,
-        waveColor: '#c1f1e3'
+        waveColor: '#87cfba'
     },
     // 文章页：有背景，但【不要波浪】
     'page-wenzhang': {
