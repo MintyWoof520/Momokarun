@@ -407,6 +407,10 @@
 .mint-page-l-k8v3n {
     border-right: 1px dashed rgba(255, 255, 255, .1);
     background: linear-gradient(90deg, rgba(168, 230, 207, .05), transparent 60%);
+    /* 👇 新增：限制最大高度，超出时内部滚动 */
+    max-height: 360px; 
+    overflow-y: auto;
+    padding-right: 12px; /* 给滚动条留点位置 */
 }
 
 .mint-page-r-k8v3n {
