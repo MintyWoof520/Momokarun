@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="CSS/music.css">
     <link rel="stylesheet" href="CSS/home.css">
     <link rel="stylesheet" href="CSS/zsg.css">
+    <link rel="stylesheet" href="CSS/shujia.css">
     <link rel="stylesheet" href="Iconfont/Iconfont1/iconfont.css">
     <link rel="stylesheet" href="Iconfont/Iconfont2/iconfont.css">
     <style>
@@ -207,119 +208,78 @@
                 <div id="page-xiaoshuo" class="page xiaoshuo">
                     <section class="hero"></section>
                     <div class="xsall">
-                        <div id="dialog">
-                            <div class="box">
-                                <p class="anhao" style="margin:0 0 12px">请输入暗号：</p>
-                                <input id="code" placeholder="暗号" autocomplete="off"
-                                    style="-webkit-text-security: disc;">
-                                <div id="err"></div>
-                                <div class="row">
-                                    <button id="cancel">取消</button>
-                                    <button id="ok" class="primary">确定</button>
+                        <!-- ===== 薄荷书架 开始（后缀 k8v3n） ===== -->
+                        <section class="mint-novel-k8v3n" id="mint-novel-k8v3n">
+                            <div class="mint-head-k8v3n">
+                                <h2 class="mint-title-k8v3n">一个普通的书架</h2>
+                                <p class="mint-sub-k8v3n">似乎没什么特别的？</p>
+                            </div>
+
+                            <div class="mint-filters-k8v3n" id="mint-filters-k8v3n" role="tablist" aria-label="小说标签筛选">
+                                <button class="mint-chip-k8v3n is-on-k8v3n" data-tag="全部" type="button">全部</button>
+                                <button class="mint-chip-k8v3n" data-tag="晋江" type="button">晋江</button>
+                                <button class="mint-chip-k8v3n" data-tag="百合" type="button">百合</button>
+                                <button class="mint-chip-k8v3n" data-tag="已完结" type="button">已完结</button>
+                            </div>
+
+                            <div class="mint-shelf-wrap-k8v3n">
+                                <div class="mint-shelf-k8v3n" id="mint-shelf-k8v3n">
+                                    <!-- 书脊由 JS 渲染 -->
                                 </div>
+                                <div class="mint-shelf-line-k8v3n" aria-hidden="true"></div>
+
+                                <button class="mint-egg-trigger-k8v3n" id="mint-egg-trigger-k8v3n" title="摸一摸胖鲸鱼？">
+                                    <svg class="icon" aria-hidden="true">
+                                        <use xlink:href="#icon-biqiushou"></use>
+                                    </svg>
+                                </button>
                             </div>
-                        </div>
-                        <div id="egg" class="caidan">
-                            <div class="jingyu">
-                                <h2>🐳 彩蛋达成！</h2>
-                                <p>你找到了一条迷路的胖鲸鱼，它决定把这段话送给你：</p>
-                                <p><em>"数据是海洋，算力是潮汐，而好奇心是唯一的渔网"</em></p>
-                            </div>
-                            <div class="bga0">
-                                <div class="bga1">
-                                    <div>
-                                        <img class="hututu" src="Images/bg1.png" alt="">
+
+                            <!-- 抽出的书页 -->
+                            <div class="mint-detail-k8v3n" id="mint-detail-k8v3n">
+                                <div class="mint-detail-inner-k8v3n">
+                                    <div class="mint-page-k8v3n mint-page-l-k8v3n">
+                                        <div class="mint-page-top-k8v3n">
+                                            <h3 class="mint-book-title-k8v3n" id="mint-book-title-k8v3n"></h3>
+                                            <span class="mint-book-status-k8v3n" id="mint-book-status-k8v3n"></span>
+                                        </div>
+                                        <p class="mint-book-author-k8v3n" id="mint-book-author-k8v3n"></p>
+                                        <div class="mint-book-tags-k8v3n" id="mint-book-tags-k8v3n"></div>
+                                        <p class="mint-book-intro-k8v3n" id="mint-book-intro-k8v3n"></p>
                                     </div>
-                                    <div class="bga2">
-                                        <p>晋江bg文</p>
-                                        <p>《穿书女配不想死》——作者：酸奶蛋糕</p>
-                                        <a href="javascript:void(0)"
-                                            onclick="goLink('eGlhb3NodW8vY3NucGJ4cy9jc25wYnhzLmh0bWw=')">
-                                            <svg class="icon" aria-hidden="true">
-                                                <use xlink:href="#icon-luxiangdai"></use>
-                                            </svg>
-                                        </a>
-                                        <div class="bga3">
-                                            <p>简介</p>
-                                            <p>苏余熬夜看完了一本百万字的霸总类小说，然后猝死了，再然后穿成了里头假冒女主的恶毒继妹。</p>
-                                            <p>苏余掰着手指头算了下女主还有几天会携带龙凤胎霸气回国，立马开启疯狂甩男主模式。</p>
-                                            <p>结果，原本对她不上心的男主脑残般的死活不同意分手，眼见着女主已经到了机场。</p>
-                                            <p>苏余求生欲旺盛，一个电话打到男主家，吼道：“我是霍启女朋友，你们必须给我个名分，不然……不然……”</p>
-                                            <p>“不然怎样？”电话里，一个低沉冷冽的声音响起。</p>
-                                            <p>苏余：“？？？”</p>
-                                            <p>你哪位？</p>
-                                            <p>“一个亿，离开我弟。”</p>
-                                            <p>苏余：“好咧！！！！”</p>
-                                            <p>霍秦：“……”</p>
-                                            <p>十分钟后，苏余战战兢兢的看着手机银行短信，含泪再次打电话，她哭了：“哥，你弟给我转了两个亿，不让我跟他分手。”</p>
-                                            <p>“哥，救命！”</p>
-                                            <p>霍秦：“……”</p>
-                                            <p>“哥，你说话啊，哥！”</p>
-                                            <p>“哥！”</p>
-                                            <p>良久良久，霍秦才吐出几个字：“我不是你哥……”</p>
-                                            <p>霍秦这辈子最大的困惑就是，苏余到底是怎么成他媳妇的。</p>
-                                            <p>本文排雷：沙雕文，女主不太聪明，就是个小憨憨，介意的误入。</p>
+                                    <div class="mint-page-k8v3n mint-page-r-k8v3n">
+                                        <p class="mint-book-rec-k8v3n" id="mint-book-rec-k8v3n"></p>
+                                        <div class="mint-page-actions-k8v3n">
+                                            <a class="mint-book-link-k8v3n" id="mint-book-link-k8v3n" href="#"
+                                                target="_blank" rel="noopener">去读
+                                                <svg class="icon" aria-hidden="true">
+                                                    <use xlink:href="#icon-notebook"></use>
+                                                </svg></a>
+                                            <button class="mint-book-close-k8v3n" id="mint-book-close-k8v3n"
+                                                type="button">放回书架</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- 变成动物 -->
-                        <div class="baihea0">
-                            <div class="baihea1">
-                                <div>
-                                    <img class="hututu" src="Images/baihe1.jpg" alt="封面">
-                                </div>
-                                <div class="biahea2">
-                                    <p>推荐一本纯兽百合文~出自晋江文学城</p>
-                                    <p>《变成动物后和大猫猫恋爱啦》</p>
-                                    <p>作者：一勺蓝</p>
-                                    <a href="xiaoshuo/bcdwh/bcdwhhdmmtlal.html" target="_blank">
-                                        <svg class="icon" aria-hidden="true">
-                                            <use xlink:href="#icon-luxiangdai"></use>
-                                        </svg>
-                                    </a>
-                                    <p>上面有个图案耶~我点一下看看</p>
+
+                            <!-- 隐藏的暗号弹窗 -->
+                            <div class="mint-modal-k8v3n" id="mint-modal-k8v3n">
+                                <div class="mint-modal-box-k8v3n">
+                                    <h4 class="mint-modal-title-k8v3n">验证暗号</h4>
+                                    <p class="mint-modal-desc-k8v3n">你发现了不该存在的东西……</p>
+                                    <input class="mint-egg-input-k8v3n" id="mint-egg-input-k8v3n" type="text"
+                                        autocomplete="off" spellcheck="false" placeholder="请输入暗号">
+                                    <p class="mint-egg-msg-k8v3n" id="mint-egg-msg-k8v3n" aria-live="polite"></p>
+                                    <div class="mint-modal-actions-k8v3n">
+                                        <button class="mint-btn-cancel-k8v3n" id="mint-btn-cancel-k8v3n"
+                                            type="button">取消</button>
+                                        <button class="mint-btn-confirm-k8v3n" id="mint-egg-btn-k8v3n"
+                                            type="button">确认</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="baihea3">
-                                <p>简介</p>
-                                <p>【世界一：非洲狮，已完结】</p>
-                                <p>【世界二：东北虎，已完结】</p>
-                                <p>【世界三：狼青犬，已完结】</p>
-                                <p>【世界四：白头海雕，已完结】</p>
-                                <p>【世界五：虎鲸，已完结】</p>
-                                <p>【世界六：雪豹，已完结】</p>
-                                <p>随喜上一秒还在看幼狮打滚卖萌，下一秒就穿成了其中一员。</p>
-                                <p>新妈妈正和别的狮子舔毛，随喜呆呆坐着看视线里的一群黄色毛绒绒，背后突然来了袭击，不知道哪个姐妹兄弟扑过来对着她嗷嗷咬。</p>
-                                <p>随喜：给我整哪儿来了？</p>
-                                <p>自此她过上了每天追着野牛斑马屁股啃，和平头哥比胆气，和狒狒比嗓门的日子。</p>
-                                <p>不过好在随喜运气不错，有一个好闺蜜，嘿嘿。</p>
-                                <p>闺蜜不仅长得好，还很能打，天上飞的水里游的它都能抓到，还动不动就给随喜舔毛。</p>
-                                <p>随喜：幸福！</p>
-                                <p>可到了繁衍期，闺蜜却不喜欢隔壁流浪雄狮，偏偏对她翘起尾巴。</p>
-                                <p>随喜：……不是，怎么办啊？她虽然喜欢女的，但狮子也太超过了吧……</p>
-                                <p>眼看着好闺蜜从意气风发变得蔫头蔫脑，连最爱的斑马都不吃了，随喜焦躁地转了三百个圈，成功磨平一圈草后，咬咬牙，决定献祭自己的节操。</p>
-                                <p>一次，就一次，她就被缠上了。</p>
-                                <p>随喜：这合理吗？你不要过来啊！</p>
-                                <p>【雪豹】</p>
-                                <p>捡到一只雪豹幼崽，含辛茹苦养大了，它却有了非分之想，怎么这么巧，它也是异瞳，和好闺蜜一模一样。</p>
-                                <p>随喜：我是你养母啊！这是不是涉及到一点禁忌问题……</p>
-                                <p>【白头海雕】</p>
-                                <p>好闺蜜真能干啊，窝居然搭得这么漂亮，她俩不能生蛋，要不要捡别鸟的蛋孵一下呢？</p>
-                                <p>【虎鲸】</p>
-                                <p>终于能聊天了！嘿嘿嘿</p>
-                                <p>阅读须知</p>
-                                <p>1.主角一直是动物不会变人，快穿1v1</p>
-                                <p>2.内含0％专业知识，纯瞎编非科普写实向，背景完全架空的，全文都是胡诌的甜甜恋爱文</p>
-                            </div>
-                        </div>
-                        <!-- 彩蛋按钮 -->
-                        <span id="whale" title="?">
-                            <svg class="icon" aria-hidden="true">
-                                <use xlink:href="#icon-sousuo"></use>
-                            </svg>
-                        </span>
+                        </section>
+                        <!-- ===== 薄荷书架 结束 ===== -->
                     </div>
                 </div>
 
@@ -498,6 +458,7 @@
 <script src="JS/page-bg.js"></script>
 <script src="JS/shijianzhou.js"></script>
 <script src="JS/zsg.js"></script>
+<script src="JS/shujia.js"></script>
 <script src="Iconfont/Iconfont1/iconfont.js"></script>
 <script src="Iconfont/Iconfont2/iconfont.js"></script>
 

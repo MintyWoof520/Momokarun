@@ -223,79 +223,50 @@
 })();
 
 
-// 暗号
-const TARGET = "bc98714a";
 
-function hash(str) {
-  let h = 5381;
-  for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) >>> 0;
-  return h.toString(16);
-}
 
-// ---- 点击 5 次触发 ----
-let clicks = 0, timer;
-const whale = document.getElementById('whale');
-const dialog = document.getElementById('dialog');
-const input = document.getElementById('code');
-const err = document.getElementById('err');
+// ================= 撒花特效逻辑 =================
+function triggerConfetti() {
+  // 主题色库：薄荷绿、粉色、淡黄、白色、紫色
+  var colors = ['#a8e6cf', '#f6c9d8', '#ffd3b6', '#ffffff', '#a265be', '#6aa0b1'];
+  var particleCount = 80; // 纸片数量
 
-whale.addEventListener('click', () => {
-  clicks++;
-  clearTimeout(timer);
-  timer = setTimeout(() => clicks = 0, 1500); // 1.5 秒内算连续点击
-  if (clicks >= 5) {
-    clicks = 0;
-    dialog.classList.add('open');
-    err.textContent = '';
-    input.value = '';
-    setTimeout(() => input.focus(), 50);
-  }
-});
+  // 获取屏幕中央位置
+  var startX = window.innerWidth / 2;
+  var startY = window.innerHeight / 2;
 
-function closeDialog() { dialog.classList.remove('open'); }
-document.getElementById('cancel').onclick = closeDialog;
-document.getElementById('ok').onclick = check;
-input.addEventListener('keydown', e => {
-  if (e.key === 'Enter') check();
-  if (e.key === 'Escape') closeDialog();
-});
+  for (var i = 0; i < particleCount; i++) {
+    var particle = document.createElement('div');
+    particle.className = 'mint-confetti-k8v3n';
 
-function check() {
-  if (hash(input.value.trim()) === TARGET) {
-    closeDialog();
-    document.getElementById('egg').classList.add('show');
-    confetti();
-  } else {
-    err.textContent = '暗号不对，再想想～';
-  }
-}
+    // 随机颜色
+    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
-// ---- 撒花 ----
-function confetti() {
-  const emojis = ['🐳', '🐋', '🐟', '🐠', '🐡', '🦈', '🐙', '🦑', '🦀', '🦐', '🐚', '🪸', '🌊', '💧', '🫧', '🎉', '🎊', '✨', '🌟', '💙', '🩵', '🫧', '🐳'];
+    // 随机起始位置（在屏幕中心小范围随机，形成爆炸感）
+    var offsetX = (Math.random() - 0.5) * 200;
+    var offsetY = (Math.random() - 0.5) * 200;
+    particle.style.left = (startX + offsetX) + 'px';
+    particle.style.top = (startY + offsetY) + 'px';
 
-  // 把 30 个增加到 50 个，让覆盖面更大
-  for (let i = 0; i < 80; i++) {
-    const s = document.createElement('span');
-    s.className = 'confetti';
-    s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    // 随机动画参数：飞散的水平距离、下落的垂直距离、旋转角度
+    var tx = (Math.random() - 0.5) * window.innerWidth * 1.5; // 左右飞散范围
+    var ty = window.innerHeight * (0.5 + Math.random() * 0.5); // 向下飘落距离
+    var rot = Math.random() * 1080 - 540; // 旋转圈数
 
-    // 1. 水平位置：允许稍微超出屏幕一点(-5vw到105vw)，边缘就不会那么空
-    s.style.left = (Math.random() * 110 - 5) + 'vw';
+    particle.style.setProperty('--tx', tx + 'px');
+    particle.style.setProperty('--ty', ty + 'px');
+    particle.style.setProperty('--rot', rot + 'deg');
 
-    // 2. 下落速度：差距拉大（2秒到5秒之间随机），有的掉得快，有的飘得慢
-    const duration = 2 + Math.random() * 3;
-    s.style.animationDuration = duration + 's';
+    // 随机持续时间（2.5s - 4s）
+    particle.style.setProperty('--fall-duration', (2.5 + Math.random() * 1.5) + 's');
 
-    // 3. 出发时间：0到2秒之间随机延迟，让它们不要同时出现
-    s.style.animationDelay = (Math.random() * 2) + 's';
+    document.body.appendChild(particle);
 
-    // 4. 初始大小：随机大小（12px 到 28px），显得有远近层次感
-    s.style.fontSize = (12 + Math.random() * 16) + 'px';
-
-    document.body.appendChild(s);
-
-    // 延长清理时间，防止还没掉完就被删掉了
-    setTimeout(() => s.remove(), (duration + 2) * 1000);
+    // 动画结束后自动移除 DOM，防止页面卡顿
+    setTimeout(function () {
+      if (particle.parentNode) {
+        particle.parentNode.removeChild(particle);
+      }
+    }, 4000); // 4秒后清理
   }
 }

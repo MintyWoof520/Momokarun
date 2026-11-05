@@ -1,0 +1,824 @@
+.mint-novel-k8v3n {
+    --mint-k8v3n-ink: #e0e8eb;
+    --mint-k8v3n-mint: #a8e6cf;
+    --mint-k8v3n-mint-soft: rgba(168, 230, 207, 0.2);
+    --mint-k8v3n-cream: #1e2a38;
+    --mint-k8v3n-line: rgba(255, 255, 255, .15);
+    --mint-k8v3n-shadow: 0 15px 35px rgba(0, 0, 0, .4);
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 20px 48px;
+    color: var(--mint-k8v3n-ink);
+    font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    box-sizing: border-box;
+}
+
+.mint-novel-k8v3n *,
+.mint-novel-k8v3n *::before,
+.mint-novel-k8v3n *::after {
+    box-sizing: border-box;
+}
+
+/* 标题与筛选 */
+.mint-title-k8v3n {
+    margin: 0 0 6px;
+    font-size: 24px;
+    color: var(--mint-k8v3n-mint);
+    letter-spacing: 1px;
+}
+
+.mint-sub-k8v3n {
+    margin: 0;
+    font-size: 13px;
+    opacity: .6;
+}
+
+.mint-filters-k8v3n {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 18px 0 26px;
+}
+
+.mint-chip-k8v3n {
+    appearance: none;
+    border: 1px solid rgba(255, 255, 255, .2);
+    background: rgba(255, 255, 255, .05);
+    color: var(--mint-k8v3n-ink);
+    font: inherit;
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.mint-chip-k8v3n:hover {
+    background: rgba(255, 255, 255, .15);
+}
+
+.mint-chip-k8v3n.is-on-k8v3n {
+    background: var(--mint-k8v3n-mint);
+    border-color: transparent;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+/* ========================================= */
+/* 书架展柜：背板 + 层板 */
+/* ========================================= */
+.mint-shelf-wrap-k8v3n {
+    position: relative;
+    margin-bottom: 24px;
+    padding: 22px 14px 0;
+    border-radius: 12px;
+    background: #0f151d;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, .06),
+        0 24px 44px -22px rgba(0, 0, 0, .95);
+    overflow: hidden;
+    isolation: isolate;
+}
+
+/* 背板：四边内阴影，做出被掏空的纵深 */
+.mint-shelf-wrap-k8v3n::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 18px;
+    border-radius: 12px 12px 0 0;
+    background:
+        repeating-linear-gradient(90deg,
+            rgba(255, 255, 255, .02) 0 2px,
+            rgba(0, 0, 0, .03) 2px 4px,
+            transparent 4px 9px),
+        linear-gradient(180deg, #202c3a 0%, #18212d 52%, #131b25 100%);
+    box-shadow:
+        inset 0 24px 36px -24px rgba(0, 0, 0, .95),
+        inset 0 -18px 26px -20px rgba(0, 0, 0, .85),
+        inset 34px 0 50px -36px rgba(0, 0, 0, .95),
+        inset -34px 0 50px -36px rgba(0, 0, 0, .95);
+    z-index: 0;
+}
+
+/* 层板：上表面受光 + 下沿背光 + 向下投影 */
+.mint-shelf-wrap-k8v3n::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 18px;
+    border-radius: 0 0 12px 12px;
+    background: linear-gradient(180deg,
+            #5a6b80 0%,
+            #435364 7%,
+            #2f3d4c 34%,
+            #212c3a 68%,
+            #161e29 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .38),
+        inset 0 -2px 0 rgba(0, 0, 0, .55),
+        0 -14px 24px -12px rgba(0, 0, 0, .95);
+    z-index: 1;
+}
+
+.mint-shelf-line-k8v3n {
+    display: none !important;
+}
+
+/* 滚动容器 */
+.mint-shelf-k8v3n {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    gap: 0;
+    /* 修改这里：底部留出 18px 的空间，让书本踩在层板上 */
+    padding: 26px 24px 18px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    perspective: 1400px;
+    perspective-origin: 50% 64%;
+
+    /* 两侧羽化遮罩 */
+    -webkit-mask-image: linear-gradient(to right,
+            transparent 0%,
+            black 48px,
+            black calc(100% - 48px),
+            transparent 100%);
+    mask-image: linear-gradient(to right,
+            transparent 0%,
+            black 48px,
+            black calc(100% - 48px),
+            transparent 100%);
+
+    /* 隐藏滚动条 */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.mint-shelf-k8v3n::-webkit-scrollbar {
+    display: none;
+}
+
+/* ========================================= */
+/* 书脊：柱面受光 + 自然厚度阴影 */
+/* ========================================= */
+.mint-spine-k8v3n {
+    --ry: -13deg;
+    --rz: 0deg;
+    --ink: #1a1a1a;
+
+    appearance: none;
+    position: relative;
+    flex: 0 0 auto;
+    width: 46px;
+    height: var(--spine-h, 200px);
+    margin: 0 6px 0 0;
+    /* 右边留出一点空间给阴影 */
+    padding: 15px 5px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border: 0;
+    border-radius: 3px 4px 4px 3px;
+    background-color: var(--spine-color, #dcedc1);
+    /* 左暗 → 中间亮 → 右暗，做出圆柱形书脊 */
+    background-image: linear-gradient(90deg,
+            rgba(0, 0, 0, .58) 0%,
+            rgba(0, 0, 0, .32) 8%,
+            rgba(255, 255, 255, .08) 20%,
+            rgba(255, 255, 255, .34) 40%,
+            rgba(255, 255, 255, .42) 50%,
+            rgba(255, 255, 255, .14) 66%,
+            rgba(0, 0, 0, .14) 84%,
+            rgba(0, 0, 0, .55) 100%);
+    color: var(--ink);
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+    transform-origin: 50% 100%;
+    transform: rotateY(var(--ry)) rotateZ(var(--rz));
+    transition: transform .45s cubic-bezier(.22, .9, .3, 1),
+        box-shadow .45s cubic-bezier(.22, .9, .3, 1);
+
+    /* 用多重阴影塑造自然的立体感，替代那个长条 */
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .30),
+        inset 0 -1px 0 rgba(0, 0, 0, .55),
+        inset -3px 0 5px rgba(0, 0, 0, 0.3),
+        /* 右侧内暗角 */
+        4px 4px 6px -2px rgba(0, 0, 0, 0.4),
+        /* 模拟右侧厚度投影 */
+        6px 10px 15px -6px rgba(0, 0, 0, 0.8);
+    /* 落在层板上的接触阴影 */
+    z-index: 2;
+}
+
+/* 书顶面：露出的书页截面 */
+/* 书顶面：带有真实透视的梯形书页截面 */
+.mint-spine-k8v3n::after {
+    content: '';
+    position: absolute;
+    left: 0px;
+    right: 2px;
+    /* 右侧留一点空隙，配合书脊右转的透视 */
+    top: -12px;
+    /* 因为倒下去了，需要把 top 调高一点 */
+    height: 14px;
+    /* 稍微加大高度，透视压缩后才够厚 */
+    border-radius: 2px 4px 0 0;
+    background: repeating-linear-gradient(90deg,
+            #fdf9ef 0 1px,
+            #e3d8bf 1px 2px,
+            #cabda1 2px 2.6px);
+
+    /* 核心：保留圆角和阴影，使用 3D 旋转制造梯形 */
+    transform-origin: bottom center;
+    /* 以底边为轴，和书脊连接 */
+    transform: perspective(100px) rotateX(55deg) rotateZ(-1deg);
+
+    box-shadow:
+        0 -2px 3px rgba(0, 0, 0, .30),
+        inset 0 1px 0 rgba(255, 255, 255, .9);
+}
+
+/* 书脊文字 */
+.mint-spine-k8v3n .mint-spine-title-k8v3n {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    line-height: 1.2;
+    max-height: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    margin-top: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .25);
+    pointer-events: none;
+}
+
+.mint-spine-k8v3n .mint-spine-author-k8v3n {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: 10px;
+    opacity: .62;
+    letter-spacing: .5px;
+    max-height: 52px;
+    overflow: hidden;
+    margin-bottom: 4px;
+    pointer-events: none;
+}
+
+/* ========================================= */
+/* 错落：宽度、高度、轻微倾斜 */
+/* ========================================= */
+.mint-spine-k8v3n:nth-child(6n+1) {
+    --rz: -.7deg;
+}
+
+.mint-spine-k8v3n:nth-child(6n+2) {
+    --rz: .9deg;
+}
+
+.mint-spine-k8v3n:nth-child(6n+3) {
+    --rz: -.35deg;
+}
+
+.mint-spine-k8v3n:nth-child(6n+4) {
+    --rz: 1.15deg;
+}
+
+.mint-spine-k8v3n:nth-child(6n+5) {
+    --rz: -.95deg;
+}
+
+.mint-spine-k8v3n:nth-child(6n+6) {
+    --rz: .4deg;
+}
+
+.mint-spine-k8v3n:nth-child(3n) {
+    width: 54px;
+    height: calc(var(--spine-h, 200px) + 12px);
+}
+
+.mint-spine-k8v3n:nth-child(4n) {
+    width: 40px;
+    height: calc(var(--spine-h, 200px) - 14px);
+}
+
+.mint-spine-k8v3n:nth-child(7n) {
+    height: calc(var(--spine-h, 200px) + 6px);
+}
+
+/* ========================================= */
+/* 悬停：转正 + 抽出 */
+/* ========================================= */
+.mint-spine-k8v3n:hover,
+.mint-spine-k8v3n:focus-visible {
+    transform: rotateY(-2deg) translateY(-18px) rotateZ(0deg);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .40),
+        inset 0 -1px 0 rgba(0, 0, 0, .55),
+        inset -3px 0 5px rgba(0, 0, 0, 0.3),
+        4px 4px 6px -2px rgba(0, 0, 0, 0.4),
+        0 26px 36px -16px rgba(0, 0, 0, .95),
+        0 0 26px rgba(168, 230, 207, .32);
+    z-index: 30;
+    outline: none;
+}
+
+.mint-spine-k8v3n.is-active-k8v3n {
+    transform: rotateY(0deg) translateY(-22px) rotateZ(0deg);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .45),
+        inset 0 -1px 0 rgba(0, 0, 0, .55),
+        inset -3px 0 5px rgba(0, 0, 0, 0.3),
+        4px 4px 6px -2px rgba(0, 0, 0, 0.4),
+        0 30px 42px -18px rgba(0, 0, 0, .95),
+        0 0 32px rgba(168, 230, 207, .55);
+    z-index: 40;
+}
+
+/* ========================================= */
+/* 封面图支持（保留柱面光影） */
+/* ========================================= */
+.mint-spine-k8v3n.has-cover-k8v3n {
+    background-image:
+        linear-gradient(90deg,
+            rgba(0, 0, 0, .62) 0%,
+            rgba(0, 0, 0, .36) 9%,
+            rgba(255, 255, 255, .06) 22%,
+            rgba(255, 255, 255, .22) 42%,
+            rgba(255, 255, 255, .26) 50%,
+            rgba(255, 255, 255, .06) 64%,
+            rgba(0, 0, 0, .12) 82%,
+            rgba(0, 0, 0, .55) 100%),
+        var(--cover, none);
+    background-size: 100% 100%, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+}
+
+.mint-spine-k8v3n.has-cover-k8v3n .mint-spine-title-k8v3n,
+.mint-spine-k8v3n.has-cover-k8v3n .mint-spine-author-k8v3n {
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, .85);
+}
+
+/* ========================================= */
+/* 详情面板（保持原样） */
+/* ========================================= */
+.mint-detail-k8v3n {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-top: 0;
+    transition: max-height .5s ease, opacity .35s ease, margin-top .5s ease;
+}
+
+.mint-detail-k8v3n.is-open-k8v3n {
+    max-height: 800px;
+    opacity: 1;
+    margin-top: 20px;
+}
+
+.mint-detail-inner-k8v3n {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--mint-k8v3n-cream);
+    border: 1px solid var(--mint-k8v3n-line);
+    border-radius: 12px;
+    box-shadow: var(--mint-k8v3n-shadow);
+    overflow: hidden;
+    color: #cfd8dc;
+}
+
+.mint-page-k8v3n {
+    padding: 28px;
+    min-height: 220px;
+}
+
+.mint-page-l-k8v3n {
+    border-right: 1px dashed rgba(255, 255, 255, .1);
+    background: linear-gradient(90deg, rgba(168, 230, 207, .05), transparent 60%);
+}
+
+.mint-page-r-k8v3n {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: linear-gradient(270deg, rgba(168, 230, 207, .05), transparent 60%);
+}
+
+.mint-page-top-k8v3n {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.mint-book-title-k8v3n {
+    margin: 0;
+    font-size: 20px;
+    color: #fff;
+    letter-spacing: .5px;
+}
+
+.mint-book-status-k8v3n {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--mint-k8v3n-mint-soft);
+    color: var(--mint-k8v3n-mint);
+}
+
+.mint-book-author-k8v3n {
+    margin: 8px 0 16px;
+    font-size: 13px;
+    opacity: .5;
+}
+
+.mint-book-tags-k8v3n {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.mint-book-tags-k8v3n span {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--mint-k8v3n-line);
+    opacity: .7;
+}
+
+.mint-book-intro-k8v3n {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    opacity: .8;
+    font-family: 'speak';
+    text-indent: 2em;
+}
+
+.mint-book-rec-k8v3n {
+    margin: 0 0 20px;
+    font-size: 13px;
+    line-height: 1.8;
+    padding: 16px;
+    border-radius: 8px;
+    background: rgba(168, 230, 207, .08);
+    border-left: 3px solid var(--mint-k8v3n-mint);
+    color: #a8e6cf;
+}
+
+.mint-page-actions-k8v3n {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.mint-book-link-k8v3n {
+    font-size: 13px;
+    color: var(--mint-k8v3n-mint);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid currentColor;
+}
+
+.mint-book-close-k8v3n {
+    appearance: none;
+    margin-left: auto;
+    border: 1px solid var(--mint-k8v3n-line);
+    background: rgba(255, 255, 255, .05);
+    color: #fff;
+    font: inherit;
+    font-size: 12px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.mint-book-close-k8v3n:hover {
+    background: rgba(255, 255, 255, .15);
+}
+
+/* ========================================= */
+/* 彩蛋触发与弹窗（保持原样） */
+/* ========================================= */
+.mint-egg-trigger-k8v3n {
+    position: absolute;
+    right: 15px;
+    bottom: 21px;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.14);
+    cursor: pointer;
+    z-index: 10;
+    transition: color .3s, transform .3s;
+}
+
+.mint-egg-trigger-k8v3n:hover {
+    color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1) rotate(-10deg);
+}
+
+.mint-egg-trigger-k8v3n:active {
+    transform: scale(0.9);
+}
+
+.mint-modal-k8v3n {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s;
+}
+
+.mint-modal-k8v3n.is-open-k8v3n {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.mint-modal-box-k8v3n {
+    background: #1e2a38;
+    border: 1px solid rgba(168, 230, 207, .3);
+    padding: 30px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 340px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .5), inset 0 0 20px rgba(168, 230, 207, .1);
+    transform: translateY(20px);
+    transition: transform .3s;
+}
+
+.mint-modal-k8v3n.is-open-k8v3n .mint-modal-box-k8v3n {
+    transform: translateY(0);
+}
+
+.mint-modal-title-k8v3n {
+    margin: 0 0 8px;
+    font-size: 18px;
+    color: #fff;
+}
+
+.mint-modal-desc-k8v3n {
+    margin: 0 0 20px;
+    font-size: 12px;
+    color: var(--mint-k8v3n-mint);
+    opacity: .8;
+}
+
+.mint-egg-input-k8v3n {
+    width: 100%;
+    font: inherit;
+    font-size: 14px;
+    padding: 10px 14px;
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, .3);
+    color: #fff;
+    outline: none;
+    transition: border .2s;
+}
+
+.mint-egg-input-k8v3n:focus {
+    border-color: var(--mint-k8v3n-mint);
+}
+
+.mint-egg-msg-k8v3n {
+    min-height: 1.4em;
+    margin: 10px 0 0;
+    font-size: 12px;
+    color: #ff7675;
+}
+
+.mint-egg-msg-k8v3n.is-good-k8v3n {
+    color: var(--mint-k8v3n-mint);
+}
+
+.mint-modal-actions-k8v3n {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.mint-btn-cancel-k8v3n,
+.mint-btn-confirm-k8v3n {
+    appearance: none;
+    font: inherit;
+    font-size: 13px;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+}
+
+.mint-btn-cancel-k8v3n {
+    background: transparent;
+    color: #fff;
+    opacity: .6;
+}
+
+.mint-btn-cancel-k8v3n:hover {
+    opacity: 1;
+}
+
+.mint-btn-confirm-k8v3n {
+    background: var(--mint-k8v3n-mint);
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.mint-btn-confirm-k8v3n:hover {
+    background: #fff;
+}
+
+/* ========================================= */
+/* 响应式：手机端适配 */
+/* ========================================= */
+@media (max-width: 720px) {
+    .mint-novel-k8v3n {
+        padding: 24px 12px 36px;
+    }
+
+    .mint-shelf-wrap-k8v3n {
+        padding: 16px 8px 0;
+    }
+
+    /* 背板底部的让位距离 */
+    .mint-shelf-wrap-k8v3n::before {
+        inset: 0 0 14px;
+    }
+
+    /* 手机端层板变薄（14px） */
+    .mint-shelf-wrap-k8v3n::after {
+        height: 14px;
+    }
+
+    .mint-shelf-k8v3n {
+        /* 手机端底部 padding 改为 14px，刚好把书放在 14px 的层板上 */
+        padding: 20px 16px 14px;
+        /* 手机端屏幕窄，两侧羽化遮罩缩窄到 24px，避免遮挡太多书 */
+        -webkit-mask-image: linear-gradient(to right,
+                transparent 0%,
+                black 24px,
+                black calc(100% - 24px),
+                transparent 100%);
+        mask-image: linear-gradient(to right,
+                transparent 0%,
+                black 24px,
+                black calc(100% - 24px),
+                transparent 100%);
+    }
+
+    .mint-spine-k8v3n {
+        width: 34px;
+        margin-right: 4px;
+        padding: 10px 3px 8px;
+        border-radius: 2px 3px 3px 2px;
+        /* 手机端不需要太强的 3D 侧转，防止变形过度 */
+        --ry: -10deg;
+    }
+
+    /* 书顶截面在手机端缩小 */
+    .mint-spine-k8v3n::after {
+        top: -9px;
+        height: 10px;
+        transform: perspective(80px) rotateX(55deg) rotateZ(-1deg);
+    }
+
+    /* 书本宽窄交错 */
+    .mint-spine-k8v3n:nth-child(3n) {
+        width: 40px;
+    }
+
+    .mint-spine-k8v3n:nth-child(4n) {
+        width: 30px;
+    }
+
+    /* 缩小书脊文字 */
+    .mint-spine-k8v3n .mint-spine-title-k8v3n {
+        font-size: 11px;
+        letter-spacing: .5px;
+        margin-top: 2px;
+    }
+
+    .mint-spine-k8v3n .mint-spine-author-k8v3n {
+        font-size: 8px;
+        margin-bottom: 2px;
+    }
+
+    /* 详情面板变单列 */
+    .mint-detail-inner-k8v3n {
+        grid-template-columns: 1fr;
+    }
+
+    .mint-page-l-k8v3n {
+        border-right: none;
+        border-bottom: 1px dashed rgba(255, 255, 255, .1);
+    }
+
+    .mint-page-k8v3n {
+        padding: 20px;
+        min-height: 0;
+    }
+
+    .mint-egg-trigger-k8v3n {
+        bottom: 17px;
+    }
+
+    /* 手机上防止点击时触发两次缩放 */
+    .mint-spine-k8v3n:hover {
+        transform: rotateY(var(--ry)) rotateZ(var(--rz));
+        box-shadow: inherit;
+    }
+
+    /* 仅激活状态下抽出 */
+    .mint-spine-k8v3n.is-active-k8v3n {
+        transform: rotateY(0deg) translateY(-16px) rotateZ(0deg);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, .45),
+            inset 0 -1px 0 rgba(0, 0, 0, .55),
+            inset -3px 0 5px rgba(0, 0, 0, 0.3),
+            4px 4px 6px -2px rgba(0, 0, 0, 0.4),
+            0 26px 36px -16px rgba(0, 0, 0, .95),
+            0 0 26px rgba(168, 230, 207, .55);
+        z-index: 40;
+    }
+}
+
+
+/* ========================================= */
+/* 撒花特效 */
+/* ========================================= */
+.mint-confetti-k8v3n {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background-color: #f00;
+    z-index: 10000;
+    pointer-events: none;
+    /* 防止遮挡点击 */
+    border-radius: 2px;
+    opacity: 1;
+    /* 使用 CSS 变量控制不同的动画轨迹 */
+    animation: mint-fall-k8v3n var(--fall-duration, 2.5s) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* 形状各异的纸片 */
+.mint-confetti-k8v3n:nth-child(2n) {
+    border-radius: 50%;
+}
+
+/* 圆形 */
+.mint-confetti-k8v3n:nth-child(3n) {
+    width: 6px;
+    height: 14px;
+    border-radius: 1px;
+}
+
+/* 长条形 */
+.mint-confetti-k8v3n:nth-child(4n) {
+    width: 8px;
+    height: 8px;
+    transform: rotate(45deg);
+}
+
+/* 菱形 */
+
+@keyframes mint-fall-k8v3n {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        /* 最终落点由 JS 传入的变量决定 */
+        transform: translate(var(--tx, 0), var(--ty, 100vh)) rotate(var(--rot, 720deg));
+        opacity: 0;
+    }
+}

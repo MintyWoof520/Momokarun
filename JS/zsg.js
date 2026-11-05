@@ -45,7 +45,7 @@
             title: '死亡笔记',
             author: '作画：小畑健/编剧：大场鸫',
             hue: 260,
-            cover: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?q=80&w=600&auto=format&fit=crop',
+            cover: 'https://music01-3bxv3bn.maozi.io/wallpaper/dn.jpg',
             desc: 'L到底叫啥',
             tags: ['？', '？'],
             links: [

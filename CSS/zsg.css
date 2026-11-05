@@ -1,5 +1,4 @@
 .zhangui-a {
-    margin: 0;
     height: 100vh;
     display: flex;
     align-items: center;
@@ -17,6 +16,7 @@
     user-select: none;
     -webkit-user-select: none;
     touch-action: none;
+    margin: 3.5rem;
 }
 
 .c3d-stage-z7k2p {
