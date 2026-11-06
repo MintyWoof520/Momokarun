@@ -342,11 +342,10 @@ h2 {
         left: auto !important;
         top: auto !important;
 
-        transform: scale(0.7) !important;
+        /* 🌟 关键修改：把 scale 和 rotate 写在一起！ */
+        transform: scale(0.9) rotate(5deg) !important;
         transform-origin: top center !important;
 
-        /* 🌟 关键修改 2：因为用了 scale 缩小，原来的高度会空出很多。
-       用负的底部边距把下面的“清空记录”拉上来 */
         margin-bottom: -160px !important;
     }
 }
@@ -354,9 +353,10 @@ h2 {
 /* 针对小屏幕（比如宽度小于 380px 的手机） */
 @media (max-width: 380px) {
     .b-relative {
-        transform: scale(0.5) !important; 
-        margin-bottom: -200px !important; 
+        transform: scale(0.5) !important;
+        margin-bottom: -200px !important;
     }
+
     .book-info {
         padding-top: 25px !important;
     }
