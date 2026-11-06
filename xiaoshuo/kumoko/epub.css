@@ -315,7 +315,7 @@ h2 {
 
     .book-info {
         width: 300px;
-        height: auto;
+        /* height: auto; */
     }
 }
 
