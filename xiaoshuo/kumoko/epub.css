@@ -148,7 +148,14 @@ body {
     color: var(--muted);
     font-size: 14px;
 }
-
+.book-info {
+    max-width: 100%;
+  height: auto;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
 /* 清空记录按钮 */
 #btnClear {
     font-size: 15px;
