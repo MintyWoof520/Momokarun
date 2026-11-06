@@ -316,45 +316,58 @@ h2 {
 
 }
 
-/* ===== 终极修复：强制大标题适配手机屏幕 ===== */
+/* ===== 终极完美修复大标题 ===== */
 
-/* 1. 防止最外层容器爆出横向滚动条 */
+/* 1. 外层容器：强制切断横向溢出，居中显示 */
 .book-header {
-    overflow: hidden;
     width: 100%;
-    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column; /* 标题和清空按钮上下排 */
+    align-items: center;
 }
 
-/* 2. 让那个 30em 宽的庞然大物按比例缩小 */
+.book-info {
+    /* 给予足够的空间，不让它被手机屏幕挤压变形 */
+    flex-shrink: 0; 
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* 2. 恢复画布原本的尺寸 */
 .b-relative {
-    /* 电脑端保持原样 */
-    transform-origin: top center;
+    /* 强行规定这块画布宽度是 540px (也就是原来的 30em) */
+    width: 540px !important;
+    min-width: 540px !important; 
+    margin: 0 !important;
 }
 
-/* 当屏幕宽度小于 600px（手机端）时启动缩放魔法 */
+/* 3. 核心魔法：在手机上整体缩小 */
 @media (max-width: 600px) {
-
-    /* 恢复被别的代码干扰的宽度限制 */
-    .book-info {
-        width: 100% !important;
-        height: auto !important;
-    }
-
-    /* 将大标题整体缩小到 60%，并从顶部居中开始缩放 */
     .b-relative {
-        transform: scale(0.6);
-        margin-top: 20px;
-        /* 因为缩小了，底部会空出很大一块，用负边距把它拉回来，防止遮挡下面目录 */
-        margin-bottom: -150px;
+        /* 缩放为原来的 60% */
+        transform: scale(0.6); 
+        /* 从顶部中心开始缩放，保证左右居中 */
+        transform-origin: top center; 
+        /* 关键：因为元素本身还是 540px 宽、20em 高，缩小后底部会空出大片高度，用负边距拉回来 */
+        margin-bottom: -160px !important; 
+        margin-top: 20px !important;
     }
 }
 
-/* 针对屏幕特别小的手机（比如老款 iPhone），缩得更小一点 */
+/* 针对特别小的手机（如 iPhone SE）进一步缩放 */
 @media (max-width: 380px) {
     .b-relative {
-        transform: scale(0.5);
-        margin-bottom: -200px;
+        transform: scale(0.5); 
+        margin-bottom: -200px !important; 
     }
+}
+
+/* 4. 修复清空按钮的位置 */
+#btnClear {
+    margin-top: 10px;
+    align-self: flex-start; /* 让按钮靠左对齐，和原版一致 */
 }
 
 /* ===== 卷目录标题 ===== */
