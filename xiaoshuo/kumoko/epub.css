@@ -314,46 +314,46 @@ h2 {
         gap: 16px;
     }
 
-    /* 1. 外层相框：切断所有溢出，并给一个固定高度 */
     .book-info {
-        width: 100% !important;
+        /* 1. 越狱魔法：强制突破父元素的宽度限制，占满整个手机屏幕 */
+        width: 100vw !important;
+        margin-left: calc(-50vw + 50%) !important;
+
+        /* 2. 设定容器高度和居中方式 */
         height: 260px !important;
-        /* 设定一个相框高度，装下缩放后的标题 */
-        position: relative !important;
-        overflow: visible !important;
+        display: flex !important;
+        justify-content: center !important;
+        /* 水平完美居中 */
+        align-items: flex-start !important;
+        /* 靠上对齐 */
         margin-top: 10px !important;
+        overflow: hidden !important;
     }
 
-    /* 2. 恢复画布真实宽度，解除挤压 */
     .b-relative {
-        width: 600px !important;
+        /* 3. 恢复原本的 540px 画布宽度（30em） */
+        width: 540px !important;
+        min-width: 540px !important;
         max-width: none !important;
-        /* 干掉那个 100% 的限制 */
-        min-width: 600px !important;
-
-        /* 3. 悬浮在相框正中间 */
-        position: absolute !important;
-        left: 50% !important;
-        top: 0 !important;
-
-        /* 4. 核心魔法：平移居中 + 缩小到 60% */
-        transform: translateX(-50%) scale(0.7) !important;
-        transform-origin: top center !important;
         margin: 0 !important;
+
+        /* 4. 取消之前的绝对定位，交给 flex 居中 */
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+
+        /* 5. 整体缩放至 60%，并以顶部中心为基准 */
+        transform: scale(0.6) !important;
+        transform-origin: top center !important;
     }
 
 }
 
-/* ===== 终极奥义：完美还原大标题 ===== */
-
-
-
-/* 针对小屏手机进一步微调 */
+/* 针对小屏幕（比如宽度小于 380px 的手机）再缩小一点点 */
 @media (max-width: 380px) {
     .b-relative {
-        transform: translateX(-50%) scale(0.5) !important;
+        transform: scale(0.5) !important; 
     }
-
     .book-info {
         height: 220px !important;
     }
