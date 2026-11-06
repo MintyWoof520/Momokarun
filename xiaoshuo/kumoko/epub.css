@@ -314,60 +314,56 @@ h2 {
         gap: 16px;
     }
 
-}
-
-/* ===== 终极完美修复大标题 ===== */
-
-/* 1. 外层容器：强制切断横向溢出，居中显示 */
-.book-header {
-    width: 100%;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column; /* 标题和清空按钮上下排 */
-    align-items: center;
-}
-
-.book-info {
-    /* 给予足够的空间，不让它被手机屏幕挤压变形 */
-    flex-shrink: 0; 
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-/* 2. 恢复画布原本的尺寸 */
-.b-relative {
-    /* 强行规定这块画布宽度是 540px (也就是原来的 30em) */
-    width: 540px !important;
-    min-width: 540px !important; 
-    margin: 0 !important;
-}
-
-/* 3. 核心魔法：在手机上整体缩小 */
-@media (max-width: 600px) {
-    .b-relative {
-        /* 缩放为原来的 60% */
-        transform: scale(0.6); 
-        /* 从顶部中心开始缩放，保证左右居中 */
-        transform-origin: top center; 
-        /* 关键：因为元素本身还是 540px 宽、20em 高，缩小后底部会空出大片高度，用负边距拉回来 */
-        margin-bottom: -160px !important; 
-        margin-top: 20px !important;
+    /* 1. 外层相框：切断所有溢出，并给一个固定高度 */
+    .book-info {
+        width: 100% !important;
+        height: 260px !important;
+        /* 设定一个相框高度，装下缩放后的标题 */
+        position: relative !important;
+        overflow: visible !important;
+        margin-top: 10px !important;
     }
+
+    /* 2. 恢复画布真实宽度，解除挤压 */
+    .b-relative {
+        width: 600px !important;
+        max-width: none !important;
+        /* 干掉那个 100% 的限制 */
+        min-width: 600px !important;
+
+        /* 3. 悬浮在相框正中间 */
+        position: absolute !important;
+        left: 50% !important;
+        top: 0 !important;
+
+        /* 4. 核心魔法：平移居中 + 缩小到 60% */
+        transform: translateX(-50%) scale(0.7) !important;
+        transform-origin: top center !important;
+        margin: 0 !important;
+    }
+
 }
 
-/* 针对特别小的手机（如 iPhone SE）进一步缩放 */
+/* ===== 终极奥义：完美还原大标题 ===== */
+
+
+
+/* 针对小屏手机进一步微调 */
 @media (max-width: 380px) {
     .b-relative {
-        transform: scale(0.5); 
-        margin-bottom: -200px !important; 
+        transform: translateX(-50%) scale(0.5) !important;
+    }
+
+    .book-info {
+        height: 220px !important;
     }
 }
 
 /* 4. 修复清空按钮的位置 */
 #btnClear {
     margin-top: 10px;
-    align-self: flex-start; /* 让按钮靠左对齐，和原版一致 */
+    align-self: flex-start;
+    /* 让按钮靠左对齐，和原版一致 */
 }
 
 /* ===== 卷目录标题 ===== */
