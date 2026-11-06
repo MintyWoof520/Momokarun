@@ -315,47 +315,50 @@ h2 {
     }
 
     .book-info {
-        /* 1. 越狱魔法：强制突破父元素的宽度限制，占满整个手机屏幕 */
+        /* 越狱魔法：突破父元素宽度，占满全屏 */
         width: 100vw !important;
         margin-left: calc(-50vw + 50%) !important;
 
-        /* 2. 设定容器高度和居中方式 */
-        height: 260px !important;
         display: flex !important;
         justify-content: center !important;
-        /* 水平完美居中 */
-        align-items: flex-start !important;
-        /* 靠上对齐 */
-        margin-top: 10px !important;
-        overflow: hidden !important;
+        /* 水平居中 */
+
+        /* 🌟 关键修改 1：去掉定死的高度和 overflow 裁切，改用 padding 给顶部留白 */
+        height: auto !important;
+        overflow: visible !important;
+        padding-top: 30px !important;
+        /* 给顶端旋转留出空间 */
+        padding-bottom: 10px !important;
+        margin-top: 0 !important;
     }
 
     .b-relative {
-        /* 3. 恢复原本的 540px 画布宽度（30em） */
         width: 540px !important;
         min-width: 540px !important;
         max-width: none !important;
         margin: 0 !important;
 
-        /* 4. 取消之前的绝对定位，交给 flex 居中 */
         position: relative !important;
         left: auto !important;
         top: auto !important;
 
-        /* 5. 整体缩放至 60%，并以顶部中心为基准 */
-        transform: scale(0.6) !important;
+        transform: scale(0.7) !important;
         transform-origin: top center !important;
-    }
 
+        /* 🌟 关键修改 2：因为用了 scale 缩小，原来的高度会空出很多。
+       用负的底部边距把下面的“清空记录”拉上来 */
+        margin-bottom: -160px !important;
+    }
 }
 
-/* 针对小屏幕（比如宽度小于 380px 的手机）再缩小一点点 */
+/* 针对小屏幕（比如宽度小于 380px 的手机） */
 @media (max-width: 380px) {
     .b-relative {
         transform: scale(0.5) !important; 
+        margin-bottom: -200px !important; 
     }
     .book-info {
-        height: 220px !important;
+        padding-top: 25px !important;
     }
 }
 
