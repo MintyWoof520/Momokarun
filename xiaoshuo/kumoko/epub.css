@@ -25,8 +25,8 @@ body.night {
 
 body {
     margin: 0 auto;
-    /* padding: 0 16px 40px; */
-    max-width: 100%;
+    padding: 0 16px 40px;
+    max-width: 720px;
     background: var(--bg);
     color: var(--fg);
     font: 18px/1.9 "Georgia", "Songti SC", "SimSun", serif;
@@ -148,14 +148,12 @@ body {
     color: var(--muted);
     font-size: 14px;
 }
-.book-info {
-    max-width: 75%;
-  height: auto;
-}
+
 img {
-  max-width: 100%;
-  height: auto;
+    max-width: 100%;
+    height: auto;
 }
+
 /* 清空记录按钮 */
 #btnClear {
     font-size: 15px;
@@ -314,6 +312,11 @@ h2 {
         align-items: flex-start;
         gap: 16px;
     }
+
+    .book-info {
+        width: 80%;
+        height: auto;
+    }
 }
 
 /* ===== 卷目录标题 ===== */
@@ -423,10 +426,11 @@ h2 {
 }
 
 .vol-info .vol-toggle {
-  font-family: "speak1";
-  font-size: 1.4rem; /* 稍微放大一点卷名 */
-  color: var(--accent);
-  font-weight: bold;
+    font-family: "speak1";
+    font-size: 1.4rem;
+    /* 稍微放大一点卷名 */
+    color: var(--accent);
+    font-weight: bold;
 }
 
 .vol-info .vol-count {
