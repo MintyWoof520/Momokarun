@@ -333,30 +333,34 @@ h2 {
     }
 
     .b-relative {
-        width: 540px !important;
-        min-width: 540px !important;
-        max-width: none !important;
-        margin: 0 !important;
-
-        position: relative !important;
-        left: auto !important;
-        top: auto !important;
-
-        /* 🌟 关键修改：把 scale 和 rotate 写在一起！ */
-        transform: scale(0.8) rotate(5deg) !important;
-        transform-origin: top center !important;
-
-        margin-bottom: -160px !important;
-    }
+    width: 540px !important;
+    min-width: 540px !important;
+    max-width: none !important; 
+    margin: 0 !important;
+    
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    
+    /* 🌟 关键修改：加上 -webkit- 前缀，并且把旋转角度稍微写明确 */
+    -webkit-transform: scale(0.8) rotate(5deg) !important; 
+    transform: scale(0.8) rotate(5deg) !important; 
+    
+    /* 手机端和电脑端统一缩放原点 */
+    -webkit-transform-origin: top center !important;
+    transform-origin: top center !important; 
+    
+    margin-bottom: -160px !important; 
+}
 }
 
-/* 针对小屏幕（比如宽度小于 380px 的手机） */
+/* 小屏幕的也要同步加上 */
 @media (max-width: 380px) {
     .b-relative {
-        transform: scale(0.5) !important;
-        margin-bottom: -200px !important;
+        -webkit-transform: scale(0.5) rotate(5deg) !important; 
+        transform: scale(0.5) rotate(5deg) !important; 
+        margin-bottom: -200px !important; 
     }
-
     .book-info {
         padding-top: 25px !important;
     }
