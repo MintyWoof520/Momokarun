@@ -343,7 +343,7 @@ h2 {
         top: auto !important;
 
         /* 🌟 关键修改：把 scale 和 rotate 写在一起！ */
-        transform: scale(0.9) rotate(5deg) !important;
+        transform: scale(0.8) rotate(5deg) !important;
         transform-origin: top center !important;
 
         margin-bottom: -160px !important;
