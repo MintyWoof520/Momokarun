@@ -19,29 +19,27 @@
             <svg class="icon icon0" aria-hidden="true">
                 <use xlink:href="#icon-left-circle-fill"></use>
             </svg>上一页</button>
-        <span id="pageInfo">1 / 104</span>
+        <span id="pageInfo">1 / 20</span>
         <button id="btnNext">下一页
             <svg class="icon icon0" aria-hidden="true">
                 <use xlink:href="#icon-right-circle-fill"></use>
             </svg>
         </button>
-        <!-- 新增目录按钮 -->
         <button id="catalogBtn" title="目录">
             <i class="iconfont icon0 icon-caidan"></i><span class="text-hide-mobile">目录</span>
         </button>
     </div>
 
-    <!-- 目录面板 -->
     <div id="catalogPanel">
         <div class="catalog-header">
             <span>
                 <svg class="icon icon0" aria-hidden="true">
                     <use xlink:href="#icon-file"></use>
-                </svg>章节目录 共104页</span>
+                </svg>章节目录</span>
             <button class="catalog-close" id="catalogClose">✕</button>
         </div>
         <div class="catalog-grid" id="catalogGrid">
-            <!-- JS动态生成页码 -->
+            <!-- JS 动态生成章节列表 -->
         </div>
     </div>
 
@@ -53,20 +51,55 @@
         </div>
     </div>
 
-    <!-- 模式 2：滚动 -->
-    <div id="scrollContainer">
-        <!-- 图片将由 JS 动态生成 -->
-    </div>
+    <div id="scrollContainer"></div>
 
     <div id="loading">加载中…</div>
 
     <script>
         const CONFIG = {
-            total: 104,
-            ext: '.jpg',                                  // .jpg / .webp / .png
-            prefix: 'https://comic01-10i3bxv3bn.maozi.io//DANDADAN01/',                             // 可换成完整 URL
-            pad: 2,                                       // 文件名补零位数：01.jpg
-            rememberProgress: true,                       // 记住上次看到第几页
+            rememberProgress: true,
+            chapters: [
+                {
+                    title: '第1-20页',
+                    total: 20,
+                    start: 1,
+                    prefix: 'https://gcore.jsdelivr.net/gh/MintyWoof520/Comic01@main/DANDADAN01/',
+                    pad: 2,
+                    ext: '.jpg'
+                },
+                {
+                    title: '第21-40页',
+                    total: 20,
+                    start: 21,
+                    prefix: 'https://gcore.jsdelivr.net/gh/MintyWoof520/Comic01@main/DANDADAN01/',
+                    pad: 2,
+                    ext: '.jpg'
+                },
+                {
+                    title: '第41-60页',
+                    total: 20,
+                    start: 41,
+                    prefix: 'https://gcore.jsdelivr.net/gh/MintyWoof520/Comic01@main/DANDADAN01/',
+                    pad: 2,
+                    ext: '.jpg'
+                },
+                {
+                    title: '第61-80页',
+                    total: 20,
+                    start: 61,
+                    prefix: 'https://gcore.jsdelivr.net/gh/MintyWoof520/Comic01@main/DANDADAN01/',
+                    pad: 2,
+                    ext: '.jpg'
+                },
+                {
+                    title: '第81-104页',
+                    total: 24,
+                    start: 81,
+                    prefix: 'https://gcore.jsdelivr.net/gh/MintyWoof520/Comic01@main/DANDADAN01/',
+                    pad: 2,
+                    ext: '.jpg'
+                },
+            ]
         };
     </script>
 </body>
