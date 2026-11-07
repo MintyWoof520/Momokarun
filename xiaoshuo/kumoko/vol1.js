@@ -2581,7 +2581,7 @@ window.novelVolumeData["vol1.js"] = [
 <p>因为鉴定也能成长到这种地步，所以只要升到六级左右，操丝术应该也能派上用场吧。</p>
 <p>虽然在此之前的练习时间会有点长就是了……</p>
 <p>如果成功提升等级，我有很多想要尝试的用法。</p>
-<p>例如之前放弃的丝制防护服，或是必杀仕事人那样的用法<a class="duokan-footnote" href="#footnote2"><img class="w10" alt="zhu" src="Images/zhu.png"/></a>。因为探知处于无法使用的状态，我还想试着再次开发探索丝。感觉未来充满着无限的可能性呢。</p>
+<p>例如之前放弃的丝制防护服，或是必杀仕事人那样的用法<i class="duokan-footnote" href="#footnote2"><img class="w10" alt="zhu" src="Images/zhu.png"/></i>。因为探知处于无法使用的状态，我还想试着再次开发探索丝。感觉未来充满着无限的可能性呢。</p>
 <ol class="duokan-footnote-content">
 <li class="duokan-footnote-item" id="footnote2"><p class="po">注：「必杀仕事人」是日本的一部电视剧，内容是杀手们的故事，其中有专门用丝线杀人的角色</p></li>
 </ol>
@@ -5102,7 +5102,7 @@ window.novelVolumeData["vol1.js"] = [
 <p>我好像得到称号了，而且又是个感觉有些危险的称号。</p>
 <p>这已经是第二个附带外道魔法的称号了。</p>
 <p>我只能对此表达遗憾。</p>
-<p>我才不是什么邪魔歪道<a class="duokan-footnote" href="#footnote3"><img class="w10" alt="zhu" src="Images/zhu.png"/></a>！我是说真的！</p>
+<p>我才不是什么邪魔歪道<i class="duokan-footnote" href="#footnote3"><img class="w10" alt="zhu" src="Images/zhu.png"/></i>！我是说真的！</p>
 <ol class="duokan-footnote-content">
 <li class="duokan-footnote-item" id="footnote3"><p class="po">注：此处的原文是「外道」。外道是佛教术语，意指佛法之外的宗教。在日文中有邪魔歪道的意思</p></li>
 </ol>
