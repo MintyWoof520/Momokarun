@@ -40,6 +40,31 @@ window.novelBook = {
     {
       volumeTitle: "第二卷 转生成蜘蛛又怎样！",
       file: "vol2.js",
+      cover: "Images2/cover.jpg",
+      chapters: [
+        { title: "制作信息" },
+        { title: "简介" },
+        { title: "彩页" },
+        { title: "1　神明大人肯定讨厌蜘蛛" },
+        { title: "Y1　勇者团队" },
+        { title: "2　探知与傲慢" },
+        { title: "S1　学校" },
+        { title: "1　神明大人肯定讨厌蜘蛛" },
+        { title: "1　神明大人肯定讨厌蜘蛛" },
+        { title: "1　神明大人肯定讨厌蜘蛛" },
+        { title: "1　神明大人肯定讨厌蜘蛛" },
+        { title: "1　神明大人肯定讨厌蜘蛛" },
+        { title: "1　神明大人肯定讨厌蜘蛛" },
+        { title: "1　神明大人肯定讨厌蜘蛛" },
+        { title: "1　神明大人肯定讨厌蜘蛛" },
+        { title: "1　神明大人肯定讨厌蜘蛛" },
+        { title: "1　神明大人肯定讨厌蜘蛛" },
+        { title: "1　神明大人肯定讨厌蜘蛛" },
+      ]
+    },
+    {
+      volumeTitle: "第三卷 转生成蜘蛛又怎样！",
+      file: "vol2.js",
       cover: "images/cover_vol1.jpg",
       chapters: [
         { title: "占位" }
