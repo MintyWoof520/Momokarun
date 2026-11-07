@@ -6,20 +6,37 @@
         return;
     }
 
+    /* ========== 多 CDN 配置 ========== */
+    const CDN_HOSTS = [
+        'https://gcore.jsdelivr.net',
+        'https://cdn.jsdelivr.net',
+        'https://fastly.jsdelivr.net',
+    ];
+    const LOAD_TIMEOUT = 8000;
+
+    /* ========== 滚动模式分批参数 ========== */
+    const BATCH_SIZE = 8;        // 每批创建几张
+    const LOAD_AHEAD = 1200;     // 距离底部多少 px 加载下一批
+
     /* ========== 基础工具 ========== */
     const $ = id => document.getElementById(id);
 
     /* ========== 状态 ========== */
-    let mode = 'scroll';            // 默认滚动模式
-    let currentChapter = 0;         // 章节索引（0-based）
-    let current = 1;                // 当前章节内的页码（1-based）
+    let mode = 'scroll';
+    let currentChapter = 0;
+    let current = 1;
     let loadToken = 0;
 
-    // 当前章节对象与动态取值
     const chapter = () => CONFIG.chapters[currentChapter];
     const totalOf = () => chapter().total;
     const pad = n => String(n).padStart(chapter().pad, '0');
-    const urlOf = n => `${chapter().prefix}${pad(n)}${chapter().ext}`;
+
+    // 从当前章节 prefix 剥掉域名，只留路径
+    const getPath = () => chapter().prefix.replace(/^https?:\/\/[^/]+/, '');
+    const urlOf = (n, hostIndex = 0) => {
+        const host = CDN_HOSTS[hostIndex] || CDN_HOSTS[0];
+        return `${host}${getPath()}${pad(n)}${chapter().ext}`;
+    };
 
     /* ========== DOM ========== */
     const toolbar = $('toolbar');
@@ -29,18 +46,20 @@
     const scrollContainer = $('scrollContainer');
     const loadingEl = $('loading');
 
-    // 目录
     const catalogPanel = $('catalogPanel');
     const catalogGrid = $('catalogGrid');
     const catalogBtn = $('catalogBtn');
     const catalogClose = $('catalogClose');
     const catalogTitle = $('catalogTitle');
 
-    /* ========== 缩放状态（翻页模式） ========== */
+    /* ========== 缩放状态 ========== */
     let scale = 1, translateX = 0, translateY = 0, isZoomed = false;
 
-    let scrollBuilt = false;        // 滚动内容是否已构建（当前章节）
+    /* ========== 滚动状态 ========== */
+    let scrollBuilt = false;
     let lastScrollTop = 0;
+    let loadedCount = 0;             // 当前章节已创建多少张
+    const imgTimers = new WeakMap(); // 每张图的超时计时器
 
     /* ========== 进度记忆 ========== */
     function saveProgress() {
@@ -70,45 +89,32 @@
         } catch (e) { /* ignore */ }
     }
 
-    /* ========== UI 更新 ========== */
+    /* ========== UI ========== */
     function updateUI() {
-        const total = totalOf();
         $('pageInfo').textContent = chapter().title;
-
-        // 上一章 / 下一章 的禁用逻辑
         $('btnPrev').disabled = currentChapter <= 0;
         $('btnNext').disabled = currentChapter >= CONFIG.chapters.length - 1;
-
         updateCatalogActive();
     }
 
     /* ============================================================
-       章节切换（核心新增）
+       章节切换
        ============================================================ */
     function gotoChapter(idx) {
-        // 边界保护
         if (idx < 0 || idx >= CONFIG.chapters.length) return;
-        if (idx === currentChapter) return; // 同一章不重复加载
-
+        if (idx === currentChapter) return;
         currentChapter = idx;
-        current = 1; // 进入新章节从第 1 页开始
-
-        // 强制重建滚动容器（新章节内容不同）
+        current = 1;
         rebuildScrollForNewChapter();
-
-        // 根据当前模式跳转到第 1 页
-        if (mode === 'flip') {
-            showFlipPage(1);
-        } else {
-            showScrollPage(1);
-        }
+        if (mode === 'flip') showFlipPage(1);
+        else showScrollPage(1);
     }
 
     const prevChapter = () => gotoChapter(currentChapter - 1);
     const nextChapter = () => gotoChapter(currentChapter + 1);
 
     /* ============================================================
-       翻页模式
+       翻页模式（带 CDN fallback + 超时）
        ============================================================ */
     function applyTransform(withAnimation = true) {
         wrapper.style.transition = (withAnimation && !isZoomed) ? 'transform 0.2s ease-out' : 'none';
@@ -121,12 +127,11 @@
     }
 
     function showFlipPage(n) {
-        // 跨章节边界处理
         if (n < 1) {
             if (currentChapter > 0) {
                 currentChapter--;
                 n = chapter().total;
-                scrollBuilt = false;
+                rebuildScrollForNewChapter();
             } else {
                 n = 1;
             }
@@ -134,7 +139,7 @@
             if (currentChapter < CONFIG.chapters.length - 1) {
                 currentChapter++;
                 n = 1;
-                scrollBuilt = false;
+                rebuildScrollForNewChapter();
             } else {
                 n = totalOf();
             }
@@ -149,54 +154,128 @@
         img.classList.remove('loaded');
         loadingEl.classList.add('show');
 
-        // 递归尝试：hostIndex 从 0 开始，失败就 +1
         (function tryLoad(hostIndex) {
             if (hostIndex >= CDN_HOSTS.length) {
-                // 所有 CDN 都失败了
                 if (token === loadToken) loadingEl.classList.remove('show');
                 return;
             }
             const newImg = new Image();
+            let timeoutId = null;
+            const cleanup = () => {
+                if (timeoutId) { clearTimeout(timeoutId); timeoutId = null; }
+                newImg.onload = null;
+                newImg.onerror = null;
+            };
             newImg.onload = () => {
+                cleanup();
                 if (token !== loadToken) return;
                 img.src = newImg.src;
                 img.classList.add('loaded');
                 loadingEl.classList.remove('show');
             };
             newImg.onerror = () => {
+                cleanup();
                 if (token !== loadToken) return;
-                tryLoad(hostIndex + 1);   // 换下一个 CDN
+                tryLoad(hostIndex + 1);
             };
+            timeoutId = setTimeout(() => {
+                cleanup();
+                if (token !== loadToken) return;
+                newImg.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                tryLoad(hostIndex + 1);
+            }, LOAD_TIMEOUT);
             newImg.src = urlOf(n, hostIndex);
         })(0);
 
         updateUI();
         saveProgress();
-
-        // 预加载邻居页，用默认 CDN 就行
         [n + 1, n - 1].forEach(p => {
             if (p >= 1 && p <= totalOf()) new Image().src = urlOf(p);
         });
     }
 
     /* ============================================================
-       滚动模式
+       滚动模式（分批 + CDN fallback + 超时）
        ============================================================ */
-    function buildScrollMode() {
-        if (scrollBuilt) return;
-        scrollContainer.innerHTML = '';
-        const total = totalOf();
-        for (let i = 1; i <= total; i++) {
-            const simg = document.createElement('img');
-            simg.src = urlOf(i);
-            simg.loading = 'lazy';
-            simg.alt = `${chapter().title} 第${i}页`;
-            scrollContainer.appendChild(simg);
-        }
-        scrollBuilt = true;
+    function startScrollImgTimeout(simg) {
+        const old = imgTimers.get(simg);
+        if (old) clearTimeout(old);
 
-        lastScrollTop = 0;
-        scrollContainer.addEventListener('scroll', onScroll, { passive: true });
+        const t = setTimeout(() => {
+            imgTimers.delete(simg);
+            if (simg.complete && simg.naturalWidth > 0) return;
+            const nextIndex = parseInt(simg.dataset.cdnIndex, 10) + 1;
+            if (nextIndex < CDN_HOSTS.length) {
+                simg.dataset.cdnIndex = nextIndex;
+                simg.src = urlOf(parseInt(simg.dataset.page, 10), nextIndex);
+                startScrollImgTimeout(simg);
+            }
+        }, LOAD_TIMEOUT);
+
+        imgTimers.set(simg, t);
+    }
+
+    function onScrollImgError(e) {
+        const simg = e.target;
+        const t = imgTimers.get(simg);
+        if (t) { clearTimeout(t); imgTimers.delete(simg); }
+
+        const nextIndex = parseInt(simg.dataset.cdnIndex, 10) + 1;
+        if (nextIndex < CDN_HOSTS.length) {
+            simg.dataset.cdnIndex = nextIndex;
+            simg.src = urlOf(parseInt(simg.dataset.page, 10), nextIndex);
+            startScrollImgTimeout(simg);
+        }
+    }
+
+    function createScrollImg(i) {
+        const simg = document.createElement('img');
+        simg.alt = `${chapter().title} 第${i}页`;
+        simg.dataset.page = i;
+        simg.dataset.cdnIndex = 0;
+        simg.src = urlOf(i, 0);
+
+        simg.onload = () => {
+            const t = imgTimers.get(simg);
+            if (t) { clearTimeout(t); imgTimers.delete(simg); }
+        };
+        simg.onerror = onScrollImgError;
+        startScrollImgTimeout(simg);
+        scrollContainer.appendChild(simg);
+    }
+
+    function appendBatch() {
+        if (loadedCount >= totalOf()) return;
+        const end = Math.min(loadedCount + BATCH_SIZE, totalOf());
+        for (let i = loadedCount + 1; i <= end; i++) {
+            createScrollImg(i);
+        }
+        loadedCount = end;
+    }
+
+    function ensureLoadedUpTo(page) {
+        while (loadedCount < page && loadedCount < totalOf()) {
+            appendBatch();
+        }
+    }
+
+    function maybeLoadMore() {
+        if (loadedCount >= totalOf()) return;
+
+        let nearBottom = false;
+        if (scrollContainer.scrollHeight > scrollContainer.clientHeight + 10) {
+            const remain = scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight;
+            if (remain < LOAD_AHEAD) nearBottom = true;
+        }
+        if (!nearBottom) {
+            const doc = document.documentElement;
+            const st = window.scrollY || doc.scrollTop;
+            const ch = window.innerHeight;
+            const sh = Math.max(doc.scrollHeight, document.body.scrollHeight);
+            if (sh - st - ch < LOAD_AHEAD) nearBottom = true;
+        }
+
+        if (nearBottom) appendBatch();
     }
 
     function onScroll() {
@@ -230,10 +309,22 @@
             updateUI();
             saveProgress();
         }
+
+        maybeLoadMore();
+    }
+
+    function buildScrollMode() {
+        if (scrollBuilt) return;
+        scrollContainer.innerHTML = '';
+        loadedCount = 0;
+        appendBatch();
+        scrollBuilt = true;
+        lastScrollTop = 0;
+        scrollContainer.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('scroll', onScroll, { passive: true });
     }
 
     function showScrollPage(n) {
-        // 跨章节边界处理
         if (n < 1) {
             if (currentChapter > 0) {
                 currentChapter--;
@@ -253,6 +344,7 @@
         }
 
         buildScrollMode();
+        ensureLoadedUpTo(n);
         current = Math.min(Math.max(n, 1), totalOf());
         updateUI();
         saveProgress();
@@ -267,11 +359,19 @@
 
     function rebuildScrollForNewChapter() {
         scrollContainer.removeEventListener('scroll', onScroll);
+        window.removeEventListener('scroll', onScroll);
         scrollBuilt = false;
+        loadedCount = 0;
         scrollContainer.innerHTML = '';
+        lastScrollTop = 0;
+        // 清理旧计时器
+        for (const simg of scrollContainer.children) {
+            const t = imgTimers.get(simg);
+            if (t) clearTimeout(t);
+        }
     }
 
-    /* ===== 切换与按钮 ===== */
+    /* ===== 切换模式 ===== */
     function switchMode(newMode) {
         mode = newMode;
         if (mode === 'flip') {
@@ -289,21 +389,16 @@
 
     $('modeBtn').onclick = () => switchMode(mode === 'flip' ? 'scroll' : 'flip');
 
-    // 页面内翻页（手势、点击热区、键盘、滚轮用）
     const next = () => { mode === 'flip' ? showFlipPage(current + 1) : showScrollPage(current + 1); };
     const prev = () => { mode === 'flip' ? showFlipPage(current - 1) : showScrollPage(current - 1); };
 
-    // 工具栏按钮改为章节切换
     $('btnNext').onclick = nextChapter;
     $('btnPrev').onclick = prevChapter;
 
-    // 左右热区仍然保持翻页（保持原有阅读习惯）
     $('zoneNext').onclick = () => { if (mode === 'flip') next(); };
     $('zonePrev').onclick = () => { if (mode === 'flip') prev(); };
 
-    /* ============================================================
-       手势处理（翻页模式）
-       ============================================================ */
+    /* ===== 手势 ===== */
     let startX = 0, startY = 0, initialDistance = 0, initialScale = 1;
     let isSwiping = false, isDraggingImg = false;
     const getDistance = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
@@ -391,48 +486,36 @@
         e.deltaY > 0 ? next() : prev();
     }, { passive: true });
 
-    /* ============================================================
-    目录（单级：只展示第几话）
-    ============================================================ */
+    /* ===== 目录 ===== */
     function buildCatalog() {
         if (!catalogGrid) return;
         catalogGrid.innerHTML = '';
-        catalogTitle.innerHTML = `
-    <svg class="icon" aria-hidden="true" style="vertical-align: middle; margin-right: 6px;">
-        <use xlink:href="#icon-file"></use>
-    </svg>章节目录
-`;
+        if (catalogTitle) {
+            catalogTitle.innerHTML = `
+                <svg class="icon" aria-hidden="true" style="vertical-align: middle; margin-right: 6px;">
+                    <use xlink:href="#icon-file"></use>
+                </svg>章节目录
+            `;
+        }
 
         CONFIG.chapters.forEach((ch, idx) => {
             const item = document.createElement('div');
             item.className = 'catalog-item';
             item.textContent = ch.title;
-
-            // 当前阅读的章节高亮
-            if (idx === currentChapter) {
-                item.classList.add('active');
-            }
+            if (idx === currentChapter) item.classList.add('active');
 
             item.addEventListener('click', () => {
-                // 切换章节（复用 gotoChapter，但允许跳到同一章）
                 currentChapter = idx;
                 current = 1;
-
                 rebuildScrollForNewChapter();
-
-                if (mode === 'flip') {
-                    showFlipPage(1);
-                } else {
-                    showScrollPage(1);
-                }
-
+                if (mode === 'flip') showFlipPage(1);
+                else showScrollPage(1);
                 hideCatalog();
             });
             catalogGrid.appendChild(item);
         });
     }
 
-    // 更新高亮
     function updateCatalogActive() {
         if (!catalogGrid) return;
         const items = catalogGrid.children;
@@ -456,12 +539,10 @@
         if (e.target === catalogPanel) hideCatalog();
     });
 
-    /* ============================================================
-       启动
-       ============================================================ */
+    /* ===== 启动 ===== */
     function init() {
         loadProgress();
-        switchMode('scroll');   // 默认滚动；内部会构建滚动内容并定位到当前页
+        switchMode('scroll');
         updateUI();
         saveProgress();
     }
