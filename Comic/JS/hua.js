@@ -149,22 +149,31 @@
         img.classList.remove('loaded');
         loadingEl.classList.add('show');
 
-        const newImg = new Image();
-        newImg.onload = () => {
-            if (token !== loadToken) return;
-            img.src = newImg.src;
-            img.classList.add('loaded');
-            loadingEl.classList.remove('show');
-        };
-        newImg.onerror = () => {
-            if (token !== loadToken) return;
-            loadingEl.classList.remove('show');
-        };
-        newImg.src = urlOf(n);
+        // 递归尝试：hostIndex 从 0 开始，失败就 +1
+        (function tryLoad(hostIndex) {
+            if (hostIndex >= CDN_HOSTS.length) {
+                // 所有 CDN 都失败了
+                if (token === loadToken) loadingEl.classList.remove('show');
+                return;
+            }
+            const newImg = new Image();
+            newImg.onload = () => {
+                if (token !== loadToken) return;
+                img.src = newImg.src;
+                img.classList.add('loaded');
+                loadingEl.classList.remove('show');
+            };
+            newImg.onerror = () => {
+                if (token !== loadToken) return;
+                tryLoad(hostIndex + 1);   // 换下一个 CDN
+            };
+            newImg.src = urlOf(n, hostIndex);
+        })(0);
 
         updateUI();
         saveProgress();
 
+        // 预加载邻居页，用默认 CDN 就行
         [n + 1, n - 1].forEach(p => {
             if (p >= 1 && p <= totalOf()) new Image().src = urlOf(p);
         });
