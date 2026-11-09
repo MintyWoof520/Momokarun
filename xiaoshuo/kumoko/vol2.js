@@ -45,7 +45,15 @@ window.novelVolumeData["vol2.js"] = [
     {
         title: "1　神明大人肯定讨厌蜘蛛",
         content:
-            `<p>事到如今才这么说虽然有点怪，但我这个人的运气相当差。</p>
+            `<div>
+    <div class="logoarea">
+      <img class="logoimage" alt="" src="Images/LK-logo.png"/>
+    </div>
+    <p><br/></p>
+    <p class="center">制作者</p>
+    <p class="color1 center">呆卡喵</p>
+  </div>
+  <p>事到如今才这么说虽然有点怪，但我这个人的运气相当差。</p>
 <p>不对，这已经不是用运气差可以形容，我甚至认为神明大人根本就是讨厌我。我至今为止的人生……更正，蜘蛛生就是如此波澜万丈。</p>
 <p>再说，早在莫名其妙突然转生为蜘蛛魔物的那一刻，一般人就算发疯也不足为奇吧。</p>
 <p>而且出生地还是名为艾尔罗大迷宫的这个异世界的最大迷宫。</p>
