@@ -125,6 +125,14 @@ window.novelBook = {
       chapters: [
         { title: "占位" }
       ]
+    },
+    {
+      volumeTitle: "第五卷 转生成蜘蛛又怎样！",
+      file: "vol5.js",
+      cover: "Images4/cover.jpg",
+      chapters: [
+        { title: "占位" }
+      ]
     }
   ]
 };
