@@ -25,6 +25,40 @@ window.novelBook = {
       file: "vol2.js",
       cover: "Images2/cover.jpg",
       chapters: [
+        { title: "简介" },
+        { title: "序章 怨念的啼哭" },
+        { title: "第1章 骚动的开始" },
+        { title: "第2章 进化和职位" },
+        { title: "第3章 使者和会议" },
+        { title: "第4章 混乱的齿轮" },
+        { title: "第5章 全面对决" },
+        { title: "第6章 吞噬一切者" },
+        { title: "第7章 吉拉森林大同盟" },
+        { title: "终章 安住之地" },
+        { title: "后记" }
+      ]
+    },
+    {
+      volumeTitle: "第三卷 关于我转生后成为史莱姆的那件事",
+      file: "vol3.js",
+      cover: "Images3/cover.jpg",
+      chapters: [
+        { title: "简介" },
+        { title: "序章 魔王会谈" },
+        { title: "第一章 国家之名" },
+        { title: "占位" },
+        { title: "占位" },
+        { title: "占位" },
+        { title: "占位" },
+        { title: "占位" },
+        { title: "占位" }
+      ]
+    },
+    {
+      volumeTitle: "第四卷 关于我转生后成为史莱姆的那件事",
+      file: "vol4.js",
+      cover: "Images4/cover.jpg",
+      chapters: [
         { title: "占位" }
       ]
     }
