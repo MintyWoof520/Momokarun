@@ -80,7 +80,7 @@
             color: '#5bbee6',
             cover: 'https://gcore.jsdelivr.net/gh/MintyWoof520/Music@main/wallpaper/04.jpg',
             height: 250,
-            intro: '关于37岁大叔转生成为美丽的魔武国公主这件事',
+            intro: '关于37岁大叔转生成为美丽的魔物国公主这件事',
             recommend: '萌王！萌王！萌王！',
             link: 'xiaoshuo/rimuru/rimuru.html'
         }
