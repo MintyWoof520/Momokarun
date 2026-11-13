@@ -46,12 +46,12 @@ window.novelBook = {
         { title: "简介" },
         { title: "序章 魔王会谈" },
         { title: "第一章 国家之名" },
-        { title: "占位" },
-        { title: "占位" },
-        { title: "占位" },
-        { title: "占位" },
-        { title: "占位" },
-        { title: "占位" }
+        { title: "第二章 魔王来袭" },
+        { title: "第三章 聚集的人们" },
+        { title: "第四章 悄然靠近的恶意" },
+        { title: "第五章 暴风大妖涡（Charybdis）" },
+        { title: "终章 新的策谋" },
+        { title: "后记" }
       ]
     },
     {
