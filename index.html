@@ -17,6 +17,10 @@
     <style>
         /* 背景层样式 */
         .hero-bg-layer {
+            will-change: opacity;
+            transform: translateZ(0);
+            /* 强制独立合成层 */
+            backface-visibility: hidden;
             position: absolute;
             top: 0;
             left: 0;

@@ -144,84 +144,76 @@
 // ==========================================
 function initSnow() {
   const canvas = document.getElementById('snowCanvas');
-  const ctx = canvas.getContext('2d');
-  let width, height;
-  let snowflakes = [];
+  if (!canvas) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  // 初始化画布尺寸 (处理高分屏)
+  const ctx = canvas.getContext('2d');
+  const TAU = Math.PI * 2;
+  let width = 0, height = 0, flakes = [], rafId = 0;
+
+  const COUNT = window.innerWidth < 768 ? 30 : 60;  // 原来 50/120
+
   function resize() {
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);  // 封顶 2，别在 3x 屏上玩命
     width = window.innerWidth;
     height = window.innerHeight;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    ctx.scale(dpr, dpr);
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  // 雪花类
-  class Snowflake {
-    constructor() {
-      this.reset();
-      // 初始化时随机分布在屏幕各个位置，避免刚开始全在顶部
-      this.y = Math.random() * height;
-    }
-
-    reset() {
-      this.x = Math.random() * width;
-      this.y = -10; // 从屏幕上方外面开始
-      this.size = Math.random() * 2.5 + 1; // 雪花大小 1~3.5
-      this.speedY = Math.random() * 1.5 + 0.5; // 下落速度
-      this.speedX = Math.random() * 1 - 0.5; // 左右飘动速度
-      this.opacity = Math.random() * 0.6 + 0.3; // 透明度
-      this.swing = Math.random() * Math.PI * 2; // 飘动相位
-      this.swingSpeed = Math.random() * 0.02 + 0.01; // 飘动速度
-    }
-
-    update() {
-      this.y += this.speedY;
-      // 左右摇摆（正弦波轨迹）
-      this.swing += this.swingSpeed;
-      this.x += Math.sin(this.swing) * 0.5 + this.speedX;
-
-      // 如果掉出屏幕底部或左右两边，重置回顶部
-      if (this.y > height + 10 || this.x < -10 || this.x > width + 10) {
-        this.reset();
-      }
-    }
-
-    draw() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      // 画白色的雪花，带一点透明度
-      ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-      // 加一点点阴影，让白色雪花在浅色背景上也能看清
-      ctx.shadowBlur = 2;
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
-      ctx.fill();
-    }
+    canvas.width = Math.floor(width * dpr);
+    canvas.height = Math.floor(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  // 生成雪花数量 (根据屏幕宽度自适应，防止手机卡顿)
-  const snowCount = window.innerWidth < 768 ? 50 : 120;
-  for (let i = 0; i < snowCount; i++) {
-    snowflakes.push(new Snowflake());
-  }
+  const makeFlake = (init) => ({
+    x: Math.random() * width,
+    y: init ? Math.random() * height : -10,
+    r: Math.random() * 3.5 + 1.8,
+    vy: (1.2 - Math.min(0.9, 0.9 / (3.5 + 1.8))) + Math.random() * 0.6,
+    vx: Math.random() * 0.4 - 0.2,
+    a: Math.random() * 0.45 + 0.35,
+    swing: Math.random() * TAU,
+    swingSpeed: Math.random() * 0.02 + 0.01,
+  });
 
-  // 动画循环
-  function animate() {
+  function frame() {
     ctx.clearRect(0, 0, width, height);
+    const colors = ['rgba(255,255,255,.35)', 'rgba(255,255,255,.55)', 'rgba(255,255,255,.75)'];
 
-    snowflakes.forEach(flake => {
-      flake.update();
-      flake.draw();
-    });
+    for (let level = 0; level < 3; level++) {
+      ctx.beginPath();
+      for (const f of flakes) {
+        const bucket = f.a < 0.5 ? 0 : (f.a < 0.65 ? 1 : 2);
+        if (bucket !== level) continue;
 
-    requestAnimationFrame(animate);
+        f.y += f.vy;
+        f.swing += f.swingSpeed;
+        f.x += Math.sin(f.swing) * 0.4 + f.vx;
+        if (f.y > height + f.r * 2 || f.x < -f.r || f.x > width + f.r) {
+          Object.assign(f, makeFlake(false));
+          continue;
+        }
+        ctx.moveTo(f.x + f.r, f.y);
+        ctx.arc(f.x, f.y, f.r, 0, TAU);
+      }
+      ctx.fillStyle = colors[level];
+      ctx.fill();          // ⭐ 一帧只 fill 3 次，而不是 120 次
+    }
+    rafId = requestAnimationFrame(frame);
   }
 
-  animate();
+  const start = () => { if (!rafId) rafId = requestAnimationFrame(frame); };
+  const stop = () => { if (rafId) { cancelAnimationFrame(rafId); rafId = 0; } };
+
+  // ⭐ 切到后台标签页就别画了
+  document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+
+  let rz;
+  window.addEventListener('resize', () => {
+    clearTimeout(rz);
+    rz = setTimeout(() => { resize(); flakes = Array.from({ length: COUNT }, () => makeFlake(true)); }, 200);
+  });
+
+  resize();
+  flakes = Array.from({ length: COUNT }, () => makeFlake(true));
+  start();
 }
 
 // 页面加载完成后启动下雪
@@ -247,9 +239,8 @@ const lines = [
   '记得喝水呀 💧',
   '摸摸头，辛苦啦～',
   '事已至此，先睡觉吧！',
-  '偷偷告诉你：有人在想你',
+  '偷偷告诉你，有人在想你',
   '一切都会好起来的',
-  '坏运气到此为止，剩下的全是好运',
   '此刻的你，值得被温柔对待',
   '汪！',
   '你今天的努力，未来会记得',
@@ -262,6 +253,13 @@ const lines = [
   '今天天气怎么样啊=w=',
   '吃饭了没',
   '困困困困困',
+  '我还爱你，一如往昔',
+  '老天爷对我睁一只眼闭一只眼只是在对着我架狙',
+  '我是那亡命而生又痴人说梦的飞鸟',
+  '薄荷也不知道哦',
+  '你知道吗，有的人会叫我破格',
+  '你看得到我吗',
+  '多陪我说说话吧',
 ];
 
 let lastIndex = -1;

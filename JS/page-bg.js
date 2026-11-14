@@ -154,6 +154,7 @@ class WaveEffect {
                 wave.phase += wave.speed;
                 this.ctx.beginPath();
                 this.ctx.moveTo(0, wave.y);
+                const step = this.width > 1200 ? 3 : 2;
                 for (let x = 0; x <= this.width; x++) {
                     let y = Math.sin(x * wave.length + wave.phase) * wave.amplitude + wave.y;
                     this.ctx.lineTo(x, y);
@@ -216,7 +217,7 @@ function initAllPagesEffects() {
                 index: 0,
                 isMobileMode: null
             };
-            updatePageBackground(page, true);
+            // updatePageBackground(page, true);
         }
 
         // 注入波浪（传入 waveColor 参数）
@@ -339,3 +340,18 @@ window.addEventListener('load', () => {
         activatePageEffect(activePage.id);
     }
 });
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    Object.values(waveInstances).forEach(w => w.pause());
+  } else {
+    const active = document.querySelector('.page.active');
+    if (active && waveInstances[active.id]) waveInstances[active.id].start();
+  }
+});
+
+setInterval(() => {
+  if (document.hidden) return;      // ⭐ 后台不换图
+  const activePage = document.querySelector('.page.active');
+  if (activePage && activePage._bgState) updatePageBackground(activePage);
+}, 6000);

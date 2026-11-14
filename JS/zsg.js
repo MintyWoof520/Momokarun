@@ -45,11 +45,25 @@
             title: '死亡笔记',
             author: '作画：小畑健/编剧：大场鸫',
             hue: 260,
-            cover: 'https://music01-3bxv3bn.maozi.io/wallpaper/dn.jpg',
+            cover: 'https://gcore.jsdelivr.net/gh/MintyWoof520/Music@main/wallpaper/dn.jpg',
             desc: 'L到底叫啥',
             tags: ['？', '？'],
             links: [
                 { name: '第一卷', url: 'Comic/DeathNote/juan1.html' },
+                { name: '占位', url: 'https://github.com/MintyWoof520' },
+                { name: '占位', url: 'https://github.com/MintyWoof520' },
+                { name: '占位', url: 'https://github.com/MintyWoof520' }
+            ]
+        },
+        {
+            title: '关于我转生后变成史莱姆这档事',
+            author: '川上泰樹',
+            hue: 120,
+            cover: 'https://gcore.jsdelivr.net/gh/MintyWoof520/Music@main/wallpaper/04.jpg',
+            desc: '美丽的魔物国公主',
+            tags: ['转生'],
+            links: [
+                { name: '第1-50话', url: 'Comic/Rimuru-Tempest/1-50.html' },
                 { name: '占位', url: 'https://github.com/MintyWoof520' },
                 { name: '占位', url: 'https://github.com/MintyWoof520' },
                 { name: '占位', url: 'https://github.com/MintyWoof520' }
