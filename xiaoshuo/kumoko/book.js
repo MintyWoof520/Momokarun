@@ -1,5 +1,5 @@
 window.novelBook = {
-  title: "穿书女配不想死",
+  title: "转生成蜘蛛又怎样！",
   volumes: [
     {
       volumeTitle: "第一卷 转生成蜘蛛又怎样！",
@@ -123,7 +123,37 @@ window.novelBook = {
       file: "vol4.js",
       cover: "Images4/cover.jpg",
       chapters: [
-        { title: "占位" }
+        { title: "制作信息" },
+        { title: "简介" },
+        { title: "彩页" },
+        { title: "1　万里无云的蓝天" },
+        { title: "S1　前往艾尔罗大迷宫" },
+        { title: "幕间　魔王的心腹在会议上再次叹气" },
+        { title: "2　与老妈的精神大战" },
+        { title: "S2　勇闯艾尔罗大迷宫" },
+        { title: "3　老妈来袭" },
+        { title: "S3　攻略艾尔罗大迷宫" },
+        { title: "4　死中求活" },
+        { title: "S4　艾尔罗大迷宫里的怪物" },
+        { title: "5　进化" },
+        { title: "S5　走出艾尔罗大迷宫" },
+        { title: "6　游击战" },
+        { title: "S6　世界的真相" },
+        { title: "幕间　神的走狗" },
+        { title: "7　魔王来袭" },
+        { title: "S7　转生者的现况" },
+        { title: "8　复活怪人的铁则就是死得特别快" },
+        { title: "S8　妖精之里" },
+        { title: "9　水蜘蛛" },
+        { title: "S9　妖精之里的转生者" },
+        { title: "10　人偶游戏" },
+        { title: "S10　转生者们的聚会" },
+        { title: "幕间　管理者手下的转生者" },
+        { title: "11　弒母" },
+        { title: "幕间　魔王" },
+        { title: "幕间　妖精族长" },
+        { title: "终章　初次遭遇" },
+        { title: "后记" }
       ]
     },
     {
