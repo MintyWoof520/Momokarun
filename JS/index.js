@@ -151,10 +151,42 @@ function initSnow() {
   const TAU = Math.PI * 2;
   let width = 0, height = 0, flakes = [], rafId = 0;
 
-  const COUNT = window.innerWidth < 768 ? 30 : 60;  // 原来 50/120
+  const COUNT = window.innerWidth < 768 ? 50 : 110;
+
+  // ⭐ 预渲染雪花 sprite（一次生成，永久复用）
+  // 中心纯白 → 边缘透明，柔边效果≈原版 shadowBlur
+  const SPRITE_SIZE = 48;
+  const sprite = (() => {
+    const c = document.createElement('canvas');
+    c.width = c.height = SPRITE_SIZE;
+    const g = c.getContext('2d');
+    const r = SPRITE_SIZE / 2;
+
+    // 外圈淡淡的深色柔光（模拟原版阴影，让浅色背景也看得见）
+    const shadowGrad = g.createRadialGradient(r + 1, r + 1, 0, r + 1, r + 1, r);
+    shadowGrad.addColorStop(0, 'rgba(0,0,0,0.18)');
+    shadowGrad.addColorStop(0.6, 'rgba(0,0,0,0.06)');
+    shadowGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = shadowGrad;
+    g.beginPath();
+    g.arc(r + 1, r + 1, r, 0, TAU);
+    g.fill();
+
+    // 内圈白色主体，边缘渐隐
+    const whiteGrad = g.createRadialGradient(r, r, 0, r, r, r * 0.85);
+    whiteGrad.addColorStop(0, 'rgba(255,255,255,1)');
+    whiteGrad.addColorStop(0.55, 'rgba(255,255,255,0.9)');
+    whiteGrad.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = whiteGrad;
+    g.beginPath();
+    g.arc(r, r, r * 0.85, 0, TAU);
+    g.fill();
+
+    return c;
+  })();
 
   function resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);  // 封顶 2，别在 3x 屏上玩命
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     width = window.innerWidth;
     height = window.innerHeight;
     canvas.width = Math.floor(width * dpr);
@@ -165,50 +197,50 @@ function initSnow() {
   const makeFlake = (init) => ({
     x: Math.random() * width,
     y: init ? Math.random() * height : -10,
-    r: Math.random() * 3.5 + 1.8,
-    vy: (1.2 - Math.min(0.9, 0.9 / (3.5 + 1.8))) + Math.random() * 0.6,
-    vx: Math.random() * 0.4 - 0.2,
-    a: Math.random() * 0.45 + 0.35,
+    // 雪花大小：1.5 ~ 5px（你要更大就调这两数）
+    r: Math.random() * 3.5 + 1.5,
+    vy: Math.random() * 1.5 + 0.5,        // 恢复原版速度感
+    vx: Math.random() * 1 - 0.5,          // 恢复原版左右漂移
+    a: Math.random() * 0.6 + 0.3,         // ⭐ 每片独立透明度，连续随机
     swing: Math.random() * TAU,
     swingSpeed: Math.random() * 0.02 + 0.01,
   });
 
   function frame() {
     ctx.clearRect(0, 0, width, height);
-    const colors = ['rgba(255,255,255,.35)', 'rgba(255,255,255,.55)', 'rgba(255,255,255,.75)'];
 
-    for (let level = 0; level < 3; level++) {
-      ctx.beginPath();
-      for (const f of flakes) {
-        const bucket = f.a < 0.5 ? 0 : (f.a < 0.65 ? 1 : 2);
-        if (bucket !== level) continue;
+    for (const f of flakes) {
+      f.y += f.vy;
+      f.swing += f.swingSpeed;
+      f.x += Math.sin(f.swing) * 0.5 + f.vx;
 
-        f.y += f.vy;
-        f.swing += f.swingSpeed;
-        f.x += Math.sin(f.swing) * 0.4 + f.vx;
-        if (f.y > height + f.r * 2 || f.x < -f.r || f.x > width + f.r) {
-          Object.assign(f, makeFlake(false));
-          continue;
-        }
-        ctx.moveTo(f.x + f.r, f.y);
-        ctx.arc(f.x, f.y, f.r, 0, TAU);
+      // 完整飘出屏幕才回收（按半径判断，大雪不会半路消失）
+      if (f.y > height + f.r * 2 || f.x < -f.r || f.x > width + f.r) {
+        Object.assign(f, makeFlake(false));
+        continue;
       }
-      ctx.fillStyle = colors[level];
-      ctx.fill();          // ⭐ 一帧只 fill 3 次，而不是 120 次
+
+      ctx.globalAlpha = f.a;               // 每片独立透明度
+      const d = f.r * 2;
+      ctx.drawImage(sprite, f.x - f.r, f.y - f.r, d, d);  // 贴图，极快
     }
+    ctx.globalAlpha = 1;
+
     rafId = requestAnimationFrame(frame);
   }
 
   const start = () => { if (!rafId) rafId = requestAnimationFrame(frame); };
   const stop = () => { if (rafId) { cancelAnimationFrame(rafId); rafId = 0; } };
 
-  // ⭐ 切到后台标签页就别画了
   document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
 
   let rz;
   window.addEventListener('resize', () => {
     clearTimeout(rz);
-    rz = setTimeout(() => { resize(); flakes = Array.from({ length: COUNT }, () => makeFlake(true)); }, 200);
+    rz = setTimeout(() => {
+      resize();
+      flakes = Array.from({ length: COUNT }, () => makeFlake(true));
+    }, 200);
   });
 
   resize();
@@ -216,8 +248,12 @@ function initSnow() {
   start();
 }
 
-// 页面加载完成后启动下雪
-window.addEventListener('load', initSnow);
+// ⭐ 关键：不等 load，DOM 一就绪就开
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSnow);
+} else {
+  initSnow();
+}
 
 
 
