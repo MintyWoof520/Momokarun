@@ -159,7 +159,45 @@ window.novelBook = {
     {
       volumeTitle: "第五卷 转生成蜘蛛又怎样！",
       file: "vol5.js",
-      cover: "Images4/cover.jpg",
+      cover: "Images5/cover.jpg",
+      chapters: [
+        { title: "制作信息" },
+        { title: "简介" },
+        { title: "彩页" },
+        { title: "1　蜘蛛与吸血鬼" },
+        { title: "S1　决战前两天" },
+        { title: "幕间　半妖精的半生" },
+        { title: "2　城镇" },
+        { title: "间章　暗中行动之人们　妖精族长" },
+        { title: "S2　决战前一天" },
+        { title: "幕间　竜和半妖精" },
+        { title: "3　消灭盗贼" },
+        { title: "间章　暗中行动之人们　神言教教皇" },
+        { title: "O1　妖精之里的决战　因为我是老师" },
+        { title: "间章　被玩弄的领主" },
+        { title: "O2　战斗吧" },
+        { title: "4　崇拜我吧！" },
+        { title: "S4　宿命的对决" },
+        { title: "间章　领主的烦恼" },
+        { title: "S5　勇者一行人VS.吸血公主" },
+        { title: "5　暗中展开的阴谋" },
+        { title: "间章　魔王与管理者" },
+        { title: "6　蜘蛛VS.魔王VS.勇者" },
+        { title: "S6　最糟糕的重逢" },
+        { title: "7　重生" },
+        { title: "S7　露出獠牙的鬼" },
+        { title: "8　进化、分裂、增殖" },
+        { title: "间章　仆人的奋战" },
+        { title: "9　这种家伙才不是妖精！" },
+        { title: "幕间　古老之人们的对决" },
+        { title: "终章　崭新的旅程" },
+        { title: "后记" }
+      ]
+    },
+    {
+      volumeTitle: "第六卷 转生成蜘蛛又怎样！",
+      file: "vol6.js",
+      cover: "Images6/cover.jpg",
       chapters: [
         { title: "占位" }
       ]
