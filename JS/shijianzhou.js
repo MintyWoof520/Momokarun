@@ -10,7 +10,7 @@
       date: '2026.11.4',
       title: '第一篇文章',
       desc: '从随便说说到真正实践',
-      cover: 'https://picsum.photos/seed/timeline-a/1200/800',
+      cover: 'https://gcore.jsdelivr.net/gh/MintyWoof520/Music@main/wallpaper/27.jpg',
       content: `
         <p>九月份的时候我突然想看《噩梦时代》了，这是2019年开始连载的一本互动式对话小说</p>
         <p>因其原发布地址“快点阅读”现今广告巨多，小说质量堪忧所以不想给它氪vip（当然还因为我充了vip也可能会看一半懒得看了，这事已经发生过一次了）</p>
@@ -21,6 +21,49 @@
         <p>最后到想要实现互动阅读的效果，放弃了epub转而去做了静态网页，高强度做了半个多月网页还原了一百章，也在b站和贴吧分享了自己的网页，朋友也帮我发了个抖音（虽然很少人看就是了，噩梦时代已经是冷门中的冷门了）</p>
         <p>因为又迷上了做个赛博小窝，所以很久没更新噩梦时代了~~但我还是会继续更新的，虽然不一定有人看吧</p>
         <p>就这样！这个页面不再是空空的了哦！</p>`
+    },
+    {
+      id: 2,
+      date: '2026.11.16',
+      title: '下载b站弹幕文件小技巧',
+      desc: '我比较喜欢收藏番剧和电影，但又喜欢看弹幕，所以……',
+      cover: 'https://images.unsplash.com/photo-1794354040466-f6d50040861a?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D',
+      content: `
+        <p>此方法也可以下载番剧和电影的弹幕且无需大会员</p>
+        <p>方法来自b站up“小哥君666”——视频BV号：BV1Ca411e7au</p>
+        <p>和视频教程的区别是寻找cid的方法</p>
+        <p>找到你想要下载的弹幕视频，按“F12”或者鼠标右键点“检查”，找到“网络”，在搜索栏搜索“aid”（如果没有搜到刷新一下网页即可）</p>
+        <p>详情见图，你可以在这里找到视频BV号，aid和cid（用这种方法可以看到番剧和电影的BV号，虽然没啥大用）</p>
+        <img src="https://gcore.jsdelivr.net/gh/MintyWoof520/Music@main/wen/danmu1.jpg" alt="一张图">
+        <p>然后新建标签页到这个地址https://comment.bilibili.com/视频的cid.xml</p>
+        <p>鼠标右键另存为即可</p>
+        <img src="https://gcore.jsdelivr.net/gh/MintyWoof520/Music@main/wen/danmu2.jpg" alt="一张图">
+        <p>保存下来的文件时xml格式的，可以去https://tiansh.github.io/us-danmaku/bilibili/ 转换成ASS格式</p>
+        <p>转换后就可以用MPV播放器食用了（不过我觉得弹幕速度有些快了，所以问了DS改速度的办法）将下方的代码保存为lua脚本，用Aegisub编辑弹幕文件即可，我是整体延后了四秒，可以按自己喜好来编辑</p>
+        <pre><code class="language-lua">script_name = "只延后 move 弹幕"
+script_description = "只对含 \\move 的行延长 End 时间，跳过 \\pos 固定弹幕"
+script_author = "你"
+script_version = "1.0"
+
+local DELAY = 4000  -- 延后毫秒数
+
+function main(subtitles, selected)
+    for i = 1, #subtitles do
+        if selected[i] then
+            local line = subtitles[i]
+            if line.class == "dialogue" then
+                -- 只处理含 \move 的行，跳过含 \pos 的行
+                if line.text:find("\\move") and not line.text:find("\\pos") then
+                    line.end_time = line.end_time + DELAY
+                    subtitles[i] = line
+                end
+            end
+        end
+    end
+    aegisub.set_undo_point("只延后 move 弹幕")
+end
+
+aegisub.register_macro("只延后 move 弹幕", "只给含 \\move 的行加 " .. DELAY .. "ms", main)</code></pre>`
     }
   ];
 
