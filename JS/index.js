@@ -261,7 +261,7 @@ if (document.readyState === 'loading') {
 const AVATAR_SRC = 'Images/mint.png';
 
 /* ==========================================================
-   ②  元素 & 句子池
+   ①  元素
    ========================================================== */
 
 const card = document.getElementById('card');
@@ -269,45 +269,75 @@ const avatar = document.getElementById('avatar');
 const avatarImg = document.getElementById('avatarImg');
 const bubble = document.getElementById('bubble');
 
-const lines = [
-  '今天也要元气满满哦！',
-  '你已经很棒了，真的',
-  '记得喝水呀 💧',
-  '摸摸头，辛苦啦～',
-  '事已至此，先睡觉吧！',
-  '偷偷告诉你，有人在想你',
-  '一切都会好起来的',
-  '此刻的你，值得被温柔对待',
-  '汪！',
-  '你今天的努力，未来会记得',
-  '偶尔摆烂，也是人生必修课',
-  '你比你自己想象中更厉害',
-  '在做什么？',
-  '嘤QWQ',
-  '喂……你刚刚是不是敲了我的头',
-  '我叫薄荷！薄荷味汪汪',
-  '今天天气怎么样啊=w=',
-  '吃饭了没',
-  '困困困困困',
-  '我还爱你，一如往昔',
-  '老天爷对我睁一只眼闭一只眼只是在对着我架狙',
-  '我是那亡命而生又痴人说梦的飞鸟',
-  '薄荷也不知道哦',
-  '你知道吗，有的人会叫我破格',
-  '你看得到我吗',
-  '多陪我说说话吧',
+/* ==========================================================
+   ②  句子池（带权重）+ 洗牌袋
+   ----------------------------------------------------------
+   权重越高出现越频繁。长句/主句给 2~3，短彩蛋句给 1。
+   洗牌袋保证：一轮内每句必出一次，且不会连续两次相同。
+   ========================================================== */
+
+const LINES = [
+  ['今天也要元气满满哦！', 1],
+  ['你已经很棒了，真的', 2],
+  ['记得喝水呀 💧', 2],
+  ['摸摸头，辛苦啦～', 2],
+  ['事已至此，先睡觉吧！', 2],
+  ['偷偷告诉你，有人在想你', 2],
+  ['一切都会好起来的', 2],
+  ['此刻的你，值得被温柔对待', 2],
+  ['汪！', 3],
+  ['你今天的努力，未来会记得', 1],
+  ['偶尔摆烂，也是人生必修课', 1],
+  ['你比你自己想象中更厉害', 2],
+  ['在做什么？', 2],
+  ['嘤QWQ', 1],
+  ['喂……你刚刚是不是敲了我的头', 3],
+  ['我叫薄荷！薄荷味汪汪', 1],
+  ['今天天气怎么样啊=w=', 1],
+  ['吃饭了没', 2],
+  ['困困困困困', 1],
+  ['我还爱你，一如往昔', 1],
+  ['老天爷对我睁一只眼闭一只眼只是在对着我架狙', 3],
+  ['我是那亡命而生又痴人说梦的飞鸟', 1],
+  ['薄荷也不知道哦', 1],
+  ['你知道吗，有的人会叫我破格', 2],
+  ['你看得到我吗', 1],
+  ['多陪我说说话吧', 1],
 ];
 
-let lastIndex = -1;
+/* Fisher-Yates 洗牌 */
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* 按权重展开成池子，再洗牌 */
+function buildBag() {
+  const pool = [];
+  for (const [text, weight] of LINES) {
+    for (let k = 0; k < weight; k++) pool.push(text);
+  }
+  return shuffle(pool);
+}
+
+let bag = buildBag();
+let lastLine = null;
 
 function nextLine() {
-  if (lines.length < 2) return lines[0];
-  let i;
-  do {
-    i = Math.floor(Math.random() * lines.length);
-  } while (i === lastIndex);          // 避免连续两次同一句
-  lastIndex = i;
-  return lines[i];
+  if (bag.length === 0) {
+    bag = buildBag();
+    // 新一轮首句 == 上一轮末句时，与末尾随机换位，避免跨轮撞车
+    if (bag.length > 1 && bag[0] === lastLine) {
+      const j = 1 + Math.floor(Math.random() * (bag.length - 1));
+      [bag[0], bag[j]] = [bag[j], bag[0]];
+    }
+  }
+  lastLine = bag.pop();
+  return lastLine;
 }
 
 /* ==========================================================
@@ -332,59 +362,104 @@ const SQUASH = [
 ];
 
 function playSquash() {
-  avatar.getAnimations().forEach(a => a.cancel());  // 连点也能立刻重播
+  avatar.getAnimations().forEach(a => a.cancel());   // 连点也能立刻重播
   avatar.animate(SQUASH, { duration: 700, easing: 'ease-out' });
 }
 
 /* ==========================================================
-   ⑤  粒子：从头像中心向外飞散的 emoji
+   ⑤  粒子：emoji + 光点混合，多维随机
+   ----------------------------------------------------------
+   随机维度：类型 / 形状 / 大小 / 颜色 / 数量 / 距离 / 旋转 /
+             时长 / 延迟 / 起始缩放 / 小概率大爆发
    ========================================================== */
 
-function spawnParticles() {
+const EMOJIS = [
+  '✨', '💫', '⭐️', '💗', '🌸', '💖', '🎉',
+  '🍃', '🫧', '☘️', '💚', '🩵', '🌟', '🎀', '🫶',
+];
+
+function spawnParticles(multiplier = 1) {
   const rect = avatar.getBoundingClientRect();
   const cx = rect.left + rect.width / 2;
   const cy = rect.top + rect.height / 2;
-  const emojis = ['✨', '💫', '⭐️', '💗', '🌸', '💖', '🎉'];
-  const count = 5 + Math.floor(Math.random() * 3);
+
+  // 12% 概率触发大爆发
+  const burst = Math.random() < 0.12 ? 2.2 : 1;
+  const count = Math.round((4 + Math.random() * 4) * burst * multiplier);
+  const spread = (burst > 1 ? 1.6 : 1) * multiplier;
 
   for (let i = 0; i < count; i++) {
     const p = document.createElement('span');
-    p.className = 'particle-r5t8y';
-    p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    p.className = 'particle-r5t8y';              // 复用现有定位样式
+    p.style.pointerEvents = 'none';
+
+    const isEmoji = Math.random() < 0.8;         // 80% emoji / 20% 光点
+
+    if (isEmoji) {
+      p.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+      p.style.fontSize = (12 + Math.random() * 12) + 'px';   // 12~24px
+    } else {
+      const d = 4 + Math.random() * 6;                        // 4~10px
+      p.style.width = d + 'px';
+      p.style.height = d + 'px';
+      p.style.background = `hsl(${Math.random() * 360} 85% 70%)`;
+      p.style.borderRadius = '50%';
+      p.style.filter = 'blur(.4px)';
+    }
+
     p.style.left = cx + 'px';
     p.style.top = cy + 'px';
     document.body.appendChild(p);
 
     const angle = Math.random() * Math.PI * 2;
-    const dist = 45 + Math.random() * 75;
+    const dist = (40 + Math.random() * 80) * spread;
     const dx = Math.cos(angle) * dist;
-    const dy = Math.sin(angle) * dist - 35;   // 整体往上飘一点
-    const spin = (Math.random() * 200 - 100).toFixed(0);
+    const dy = Math.sin(angle) * dist - 35;               // 整体上飘一点
+    const spin = (Math.random() * 240 - 120).toFixed(0);
+    const scale0 = 0.2 + Math.random() * 0.3;                 // 起始大小随机
+    const dur = 550 + Math.random() * 500;
+    const delay = Math.random() * 100;                       // 错峰飞出
 
     p.animate([
-      { transform: 'translate(-50%, -50%) scale(.3) rotate(0deg)', opacity: 1 },
+      { transform: `translate(-50%, -50%) scale(${scale0}) rotate(0deg)`, opacity: 1 },
       {
         transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(1) rotate(${spin}deg)`,
-        opacity: 0
+        opacity: 0,
       },
     ], {
-      duration: 650 + Math.random() * 450,
+      duration: dur,
+      delay,
       easing: 'cubic-bezier(.15, .7, .3, 1)',
+      fill: 'forwards',
     }).onfinish = () => p.remove();
   }
 }
 
 /* ==========================================================
-   ⑥  主交互
+   ⑥  特殊句反应：句子 → 粒子倍率 / 额外效果
+   ========================================================== */
+
+const SPECIAL = {
+  '汪！': { particle: 1.8 },
+  '嘤QWQ': { particle: 0.6 },
+  '喂……你刚刚是不是敲了我的头': { particle: 1.4 },
+  '多陪我说说话吧': { particle: 0.5 },
+};
+
+/* ==========================================================
+   ⑦  主交互
    ========================================================== */
 
 function react() {
   playSquash();
-  spawnParticles();
 
-  bubble.textContent = nextLine();
+  const text = nextLine();
+  const effect = SPECIAL[text] || {};
+  spawnParticles(effect.particle ?? 1);
+
+  bubble.textContent = text;
   bubble.classList.remove('anim-r5t8y');
-  void bubble.offsetWidth;      // 强制重排，让动画可以重复播放
+  void bubble.offsetWidth;              // 强制重排，让动画可以重复播放
   bubble.classList.add('anim-r5t8y');
 
   if (navigator.vibrate) navigator.vibrate(12);
