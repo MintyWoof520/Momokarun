@@ -807,3 +807,7 @@ body.no-scroll-d3z9 {
         min-height: 40px;
     }
 }
+
+img {
+    max-width: 100%;
+}
